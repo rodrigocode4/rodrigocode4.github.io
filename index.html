@@ -6,6 +6,15 @@
     <title>Phoenix Framework (pt-br)</title>
 </head>
 <body>
-    <h1>Phoenix Framework (pt-br)</h1>
+    <script>
+        function redirect() {
+            const startPath = "/pt-br/phoenix"
+            
+            if (!window.location.pathname.startsWith(startPath)) {
+                window.location.href = window.location.origin + startPath
+            }
+        }
+        redirect()
+    </script>
 </body>
 </html>
