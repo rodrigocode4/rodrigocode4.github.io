@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Usando SSL — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Usando SSL</h1>
+
+
+  </div>
+
+<p>Para preparar uma aplicação para atender requisições via SSL, precisamos adicionar um pouco de configuração e duas variáveis de ambiente. Para que o SSL realmente funcione, precisaremos de um arquivo de chave e um arquivo de certificado de uma autoridade certificadora. As variáveis de ambiente necessárias são caminhos para esses dois arquivos.</p><p>A configuração consiste em uma nova chave <code class="inline">https:</code> para nosso endpoint, cujo valor é uma lista de palavras-chave contendo a porta, o caminho para o arquivo de chave e o caminho para o arquivo de certificado (PEM). Se adicionarmos a chave <code class="inline">otp_app:</code> cujo valor é o nome da nossa aplicação, o Plug começará a procurar esses arquivos na raiz da nossa aplicação. Podemos então colocar esses arquivos no diretório <code class="inline">priv</code> e definir os caminhos para <code class="inline">priv/nossa_chave.key</code> e <code class="inline">priv/nosso_certificado.crt</code>.</p><p>Aqui está um exemplo de configuração do arquivo <code class="inline">config/runtime.exs</code>.</p><pre><code class="makeup elixir" translate="no"><span class="kn">import</span><span class="w"> </span><span class="nc">Config</span><span class="w">
+
+</span><span class="n">config</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="p">,</span><span class="w">
+  </span><span class="ss">http</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5496445338-1">[</span><span class="ss">port</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5496445338-2">{</span><span class="ss">:system</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;PORT&quot;</span><span class="p" data-group-id="5496445338-2">}</span><span class="p" data-group-id="5496445338-1">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5496445338-3">[</span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example.com&quot;</span><span class="p" data-group-id="5496445338-3">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">cache_static_manifest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;priv/static/cache_manifest.json&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">https</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5496445338-4">[</span><span class="w">
+    </span><span class="ss">port</span><span class="p">:</span><span class="w"> </span><span class="mi">443</span><span class="p">,</span><span class="w">
+    </span><span class="ss">cipher_suite</span><span class="p">:</span><span class="w"> </span><span class="ss">:strong</span><span class="p">,</span><span class="w">
+    </span><span class="ss">otp_app</span><span class="p">:</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w">
+    </span><span class="ss">keyfile</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p" data-group-id="5496445338-5">(</span><span class="s">&quot;SOME_APP_SSL_KEY_PATH&quot;</span><span class="p" data-group-id="5496445338-5">)</span><span class="p">,</span><span class="w">
+    </span><span class="ss">certfile</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p" data-group-id="5496445338-6">(</span><span class="s">&quot;SOME_APP_SSL_CERT_PATH&quot;</span><span class="p" data-group-id="5496445338-6">)</span><span class="p">,</span><span class="w">
+    </span><span class="c1"># OPCIONAL Chave para certificados intermediários:</span><span class="w">
+    </span><span class="ss">cacertfile</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p" data-group-id="5496445338-7">(</span><span class="s">&quot;INTERMEDIATE_CERTFILE_PATH&quot;</span><span class="p" data-group-id="5496445338-7">)</span><span class="w">
+  </span><span class="p" data-group-id="5496445338-4">]</span><span class="w">
+</span></code></pre><p>Sem a chave <code class="inline">otp_app:</code>, precisamos fornecer caminhos absolutos para os arquivos, onde quer que estejam no sistema de arquivos, para que o Plug possa encontrá-los.</p><pre><code class="makeup elixir" translate="no"><span class="nc">Path</span><span class="o">.</span><span class="n">expand</span><span class="p" data-group-id="6401685335-1">(</span><span class="s">&quot;../../../algum/caminho/para/ssl/chave.pem&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">__DIR__</span><span class="p" data-group-id="6401685335-1">)</span></code></pre><p>As opções sob a chave <code class="inline">https:</code> são passadas para o adaptador Plug, tipicamente <code class="inline">Bandit</code>, que por sua vez usa <a href="https://hexdocs.pm/plug/1.16.1/Plug.SSL.html"><code class="inline">Plug.SSL</code></a> para selecionar as opções de socket TLS. Consulte a documentação de <a href="https://hexdocs.pm/plug/Plug.SSL.html#configure/1">Plug.SSL.configure/1</a> para mais informações sobre as opções disponíveis e seus valores padrão. O <a href="https://hexdocs.pm/plug/https.html">Guia HTTPS do Plug</a> e a documentação <a href="https://www.erlang.org/doc/man/ssl.html">Erlang/OTP ssl</a> também fornecem informações valiosas.</p><h2 id="ssl-no-desenvolvimento" class="section-heading">
+  <a href="#ssl-no-desenvolvimento" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">SSL no Desenvolvimento</span>
+</h2>
+<p>Se você deseja usar HTTPS no desenvolvimento, um certificado autoassinado pode ser gerado executando: <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Cert.html"><code class="inline">mix phx.gen.cert</code></a>. Isso requer Erlang/OTP 20 ou posterior.</p><p>Com seu certificado autoassinado, sua configuração de desenvolvimento em <code class="inline">config/dev.exs</code> pode ser atualizada para executar um endpoint HTTPS:</p><pre><code class="makeup elixir" translate="no"><span class="n">config</span><span class="w"> </span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="nc">MyAppWeb.Endpoint</span><span class="p">,</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="ss">https</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4701528893-1">[</span><span class="w">
+    </span><span class="ss">port</span><span class="p">:</span><span class="w"> </span><span class="mi">4001</span><span class="p">,</span><span class="w">
+    </span><span class="ss">cipher_suite</span><span class="p">:</span><span class="w"> </span><span class="ss">:strong</span><span class="p">,</span><span class="w">
+    </span><span class="ss">keyfile</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;priv/cert/selfsigned_key.pem&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="ss">certfile</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;priv/cert/selfsigned.pem&quot;</span><span class="w">
+  </span><span class="p" data-group-id="4701528893-1">]</span></code></pre><p>Isso pode substituir sua configuração <code class="inline">http</code>, ou você pode executar servidores HTTP e HTTPS em portas diferentes.</p><h2 id="forçar-ssl" class="section-heading">
+  <a href="#forçar-ssl" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Forçar SSL</span>
+</h2>
+<p>Em muitos casos, você vai querer forçar todas as requisições recebidas a usar SSL redirecionando HTTP para HTTPS. Isso pode ser realizado definindo a opção <code class="inline">:force_ssl</code> na configuração do seu endpoint. Ela espera uma lista de opções que são encaminhadas para <a href="https://hexdocs.pm/plug/1.16.1/Plug.SSL.html"><code class="inline">Plug.SSL</code></a>. Por padrão, ela define o cabeçalho &quot;strict-transport-security&quot; em requisições HTTPS, forçando os navegadores a sempre usar HTTPS. Se uma requisição insegura (HTTP) for enviada, ela redireciona para a versão HTTPS usando o <code class="inline">:host</code> especificado na configuração <code class="inline">:url</code>. Por exemplo:</p><pre><code class="makeup elixir" translate="no"><span class="n">config</span><span class="w"> </span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="nc">MyAppWeb.Endpoint</span><span class="p">,</span><span class="w">
+  </span><span class="ss">force_ssl</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4797126870-1">[</span><span class="ss">rewrite_on</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4797126870-2">[</span><span class="ss">:x_forwarded_proto</span><span class="p" data-group-id="4797126870-2">]</span><span class="p" data-group-id="4797126870-1">]</span></code></pre><p>Para redirecionar dinamicamente para o <code class="inline">host</code> da requisição atual, defina <code class="inline">:host</code> na configuração <code class="inline">:force_ssl</code> como <code class="inline">nil</code>.</p><pre><code class="makeup elixir" translate="no"><span class="n">config</span><span class="w"> </span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="nc">MyAppWeb.Endpoint</span><span class="p">,</span><span class="w">
+  </span><span class="ss">force_ssl</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6064876961-1">[</span><span class="ss">rewrite_on</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6064876961-2">[</span><span class="ss">:x_forwarded_proto</span><span class="p" data-group-id="6064876961-2">]</span><span class="p">,</span><span class="w"> </span><span class="ss">host</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="6064876961-1">]</span></code></pre><p>Nestes exemplos, a chave <code class="inline">rewrite_on:</code> especifica o cabeçalho HTTP usado por um proxy reverso ou balanceador de carga na frente da aplicação para indicar se a requisição foi recebida via HTTP ou HTTPS. Para mais informações sobre as implicações de descarregar TLS para um elemento externo, em particular relacionado a cookies seguros, consulte o <a href="https://hexdocs.pm/plug/https.html#offloading-tls">Guia HTTPS do Plug</a>. Tenha em mente que as opções passadas para <a href="https://hexdocs.pm/plug/1.16.1/Plug.SSL.html"><code class="inline">Plug.SSL</code></a> nesse documento devem ser definidas usando a opção de endpoint <code class="inline">force_ssl:</code> em uma aplicação Phoenix.</p><p>É importante observar que <code class="inline">force_ssl:</code> é uma configuração de <em>compilação</em>, então normalmente é definida em <code class="inline">prod.exs</code>, não funcionará quando definida a partir de <code class="inline">runtime.exs</code>.</p><h2 id="hsts" class="section-heading">
+  <a href="#hsts" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">HSTS</span>
+</h2>
+<p>HSTS, abreviação de 'HTTP Strict-Transport-Security', é um mecanismo que permite que sites se declarem acessíveis exclusivamente por meio de uma conexão segura (HTTPS). Foi introduzido para prevenir ataques do tipo man-in-the-middle que removem a criptografia SSL/TLS. O HSTS faz com que os navegadores redirecionem de HTTP para HTTPS e se recusem a conectar a menos que a conexão use SSL/TLS.</p><p>Com <code class="inline">force_ssl: [hsts: true]</code> definido, o cabeçalho <code class="inline">Strict-Transport-Security</code> é adicionado com um max-age que define a duração da validade da política. Navegadores modernos responderão a isso redirecionando de HTTP para HTTPS, entre outras consequências. <a href="https://tools.ietf.org/html/rfc6797">RFC6797</a>, que define HSTS, também especifica que <strong>o navegador deve rastrear a política de um host e aplicá-la até que expire.</strong> Ele também especifica que <strong>o tráfego em qualquer porta diferente de 80 é considerado criptografado</strong> de acordo com a política.</p><p>Embora o HSTS seja recomendado em produção, pode levar a comportamentos inesperados ao acessar aplicações no localhost. Por exemplo, acessar uma aplicação com HSTS habilitado em <code class="inline">https://localhost:4000</code> leva a uma situação onde todo o tráfego subsequente de localhost, exceto para a porta 80, é esperado ser criptografado. Isso pode interromper o tráfego para outros servidores locais ou proxies em execução no seu computador que não estão relacionados à sua aplicação Phoenix e podem não suportar tráfego criptografado.</p><p>Se você habilitar inadvertidamente o HSTS para localhost, talvez precise redefinir o cache do seu navegador antes que ele aceite tráfego HTTP do localhost novamente.</p><p>Para Chrome:</p><ol><li>Abra o Painel de Ferramentas do Desenvolvedor.</li><li>Clique e segure o ícone de recarregar ao lado da barra de endereço para revelar um menu suspenso.</li><li>Selecione &quot;Limpar Cache e Recarregar Forçado&quot;.</li></ol><p>Para Safari:</p><ol><li>Limpe o cache do navegador.</li><li>Remova a entrada de <code class="inline">~/Library/Cookies/HSTS.plist</code> ou exclua o arquivo inteiro.</li><li>Reinicie o Safari.</li></ol><p>Para outros navegadores, consulte a documentação para HSTS.</p><p>Alternativamente, definir a opção <code class="inline">:expires</code> em <code class="inline">force_ssl</code> para <code class="inline">0</code> deve expirar a entrada e desabilitar o HSTS.</p><p>Para mais informações sobre as opções de HSTS, consulte <a href="https://hexdocs.pm/plug/Plug.SSL.html">Plug.SSL</a>.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="file_uploads.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Upload de Arquivos
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="writing_a_channels_client.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Escrevendo um Cliente para Channels
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

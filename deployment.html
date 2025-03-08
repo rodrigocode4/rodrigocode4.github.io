@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Introdução ao Deployment — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Introdução ao Deployment</h1>
+
+
+  </div>
+
+<p>Uma vez que temos uma aplicação funcionando, estamos prontos para fazer o deployment. Se você ainda não terminou sua própria aplicação, não se preocupe. Basta seguir o <a href="up_and_running.html">Guia de Primeiros Passos</a> para criar uma aplicação básica para trabalhar.</p><p>Ao preparar uma aplicação para deployment, existem três etapas principais:</p><ul><li>Gerenciamento dos segredos da sua aplicação</li><li>Compilação dos assets da sua aplicação</li><li>Inicialização do seu servidor em produção</li></ul><p>Neste guia, aprenderemos como configurar o ambiente de produção localmente. Você pode usar as mesmas técnicas deste guia para executar sua aplicação em produção, mas dependendo da sua infraestrutura de deployment, etapas adicionais serão necessárias.</p><p>Como exemplos de deployment em outras infraestruturas, também discutimos quatro abordagens diferentes em nossos guias: usando <a href="releases.html">releases do Elixir</a> com <a href="https://hexdocs.pm/mix/Mix.Tasks.Release.html"><code class="inline">mix release</code></a>, <a href="gigalixir.html">usando Gigalixir</a>, <a href="fly.html">usando Fly</a> e <a href="heroku.html">usando Heroku</a>. Também incluímos links para deployment do Phoenix em outras plataformas na seção <a href="#guias-de-deployment-da-comunidade">Guias de Deployment da Comunidade</a>. Finalmente, o guia de release possui um exemplo de Dockerfile que você pode usar se preferir fazer o deployment com tecnologias de contêineres.</p><p>Vamos explorar essas etapas uma por uma.</p><h2 id="gerenciamento-dos-segredos-da-sua-aplicação" class="section-heading">
+  <a href="#gerenciamento-dos-segredos-da-sua-aplicação" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Gerenciamento dos segredos da sua aplicação</span>
+</h2>
+<p>Todas as aplicações Phoenix têm dados que devem ser mantidos seguros, por exemplo, o nome de usuário e senha do seu banco de dados de produção, e o segredo que o Phoenix usa para assinar e criptografar informações importantes. A recomendação geral é manter esses dados em variáveis de ambiente e carregá-los em sua aplicação. Isso é feito no arquivo <code class="inline">config/runtime.exs</code> (anteriormente <code class="inline">config/prod.secret.exs</code> ou <code class="inline">config/releases.exs</code>), que é responsável por carregar segredos e configurações das variáveis de ambiente.</p><p>Portanto, você precisa garantir que as variáveis relevantes estejam configuradas em produção:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.secret
+</span><span class="">REALLY_LONG_SECRET
+</span><span class="gp unselectable">$ </span><span class="">export SECRET_KEY_BASE=REALLY_LONG_SECRET
+</span><span class="gp unselectable">$ </span><span class="">export DATABASE_URL=ecto://USER:PASS@HOST/database
+</span></code></pre><p>Não copie esses valores diretamente, configure <code class="inline">SECRET_KEY_BASE</code> de acordo com o resultado de <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Secret.html"><code class="inline">mix phx.gen.secret</code></a> e <code class="inline">DATABASE_URL</code> de acordo com o endereço do seu banco de dados.</p><p>Se por algum motivo você não quiser depender de variáveis de ambiente, você pode codificar os segredos diretamente no seu <code class="inline">config/runtime.exs</code>, mas certifique-se de não incluir o arquivo no seu sistema de controle de versão.</p><p>Com suas informações secretas devidamente protegidas, é hora de configurar os assets!</p><p>Antes de dar este passo, precisamos fazer um pouco de preparação. Como vamos preparar tudo para produção, precisamos fazer algumas configurações nesse ambiente, obtendo nossas dependências e compilando.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix deps.get --only prod
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix compile
+</span></code></pre><h2 id="compilando-os-assets-da-sua-aplicação" class="section-heading">
+  <a href="#compilando-os-assets-da-sua-aplicação" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Compilando os assets da sua aplicação</span>
+</h2>
+<p>Esta etapa é necessária apenas se você tiver assets compiláveis como JavaScript e folhas de estilo. Por padrão, o Phoenix usa <code class="inline">esbuild</code>, mas tudo está encapsulado em uma única tarefa <code class="inline">mix assets.deploy</code> definida no seu <code class="inline">mix.exs</code>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix assets.deploy
+</span><span class="">Check your digested files at &quot;priv/static&quot;.
+</span></code></pre><p>E é isso! A tarefa Mix, por padrão, compila os assets e então gera digests com um arquivo de manifesto de cache para que o Phoenix possa servir assets rapidamente em produção.</p><blockquote><p>Nota: se você executar a tarefa acima em sua máquina local, ela gerará muitos assets com digest em <code class="inline">priv/static</code>. Você pode limpá-los executando <code class="inline">mix phx.digest.clean --all</code>.</p></blockquote><p>Tenha em mente que, se por acaso você esquecer de executar as etapas acima, o Phoenix mostrará uma mensagem de erro:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">PORT=4001 MIX_ENV=prod mix phx.server
+</span><span class="">10:50:18.732 [info] Running MyAppWeb.Endpoint with Cowboy on http://example.com
+</span><span class="">10:50:18.735 [error] Could not find static manifest at &quot;my_app/_build/prod/lib/foo/priv/static/cache_manifest.json&quot;. Run &quot;mix phx.digest&quot; after building your static files or remove the configuration from &quot;config/prod.exs&quot;.
+</span></code></pre><p>A mensagem de erro é bastante clara: diz que o Phoenix não conseguiu encontrar um manifesto estático. Basta executar os comandos acima para corrigi-lo ou, se você não está servindo ou não se importa com os assets, você pode simplesmente remover a configuração <code class="inline">cache_static_manifest</code> do seu arquivo de configuração.</p><h2 id="iniciando-seu-servidor-em-produção" class="section-heading">
+  <a href="#iniciando-seu-servidor-em-produção" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Iniciando seu servidor em produção</span>
+</h2>
+<p>Para executar o Phoenix em produção, precisamos definir as variáveis de ambiente <code class="inline">PORT</code> e <code class="inline">MIX_ENV</code> ao invocar <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Server.html"><code class="inline">mix phx.server</code></a>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">PORT=4001 MIX_ENV=prod mix phx.server
+</span><span class="">10:59:19.136 [info] Running MyAppWeb.Endpoint with Cowboy on http://example.com
+</span></code></pre><p>Para executar em modo desanexado, de modo que o servidor Phoenix não pare e continue em execução mesmo se você fechar o terminal:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">PORT=4001 MIX_ENV=prod elixir --erl &quot;-detached&quot; -S mix phx.server
+</span></code></pre><p>Caso você receba uma mensagem de erro, por favor, leia-a cuidadosamente e abra um relatório de bug se ainda não estiver claro como resolvê-lo.</p><p>Você também pode executar sua aplicação dentro de um shell interativo:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">PORT=4001 MIX_ENV=prod iex -S mix phx.server
+</span><span class="">10:59:19.136 [info] Running MyAppWeb.Endpoint with Cowboy on http://example.com
+</span></code></pre><h2 id="juntando-tudo" class="section-heading">
+  <a href="#juntando-tudo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Juntando tudo</span>
+</h2>
+<p>As seções anteriores fornecem uma visão geral sobre as principais etapas necessárias para fazer o deployment da sua aplicação Phoenix. Na prática, você acabará adicionando etapas próprias também. Por exemplo, se você estiver usando um banco de dados, também vai querer executar <a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Migrate.html"><code class="inline">mix ecto.migrate</code></a> antes de iniciar o servidor para garantir que seu banco de dados esteja atualizado.</p><p>No geral, aqui está um script que você pode usar como ponto de partida:</p><pre><code class="makeup console" translate="no"><span class=""># Configuração inicial
+</span><span class="gp unselectable">$ </span><span class="">mix deps.get --only prod
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix compile
+</span><span class="">
+</span><span class=""># Compilação de assets
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix assets.deploy
+</span><span class="">
+</span><span class=""># Tarefas personalizadas (como migrações de banco de dados)
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix ecto.migrate
+</span><span class="">
+</span><span class=""># Finalmente, execute o servidor
+</span><span class="gp unselectable">$ </span><span class="">PORT=4001 MIX_ENV=prod mix phx.server
+</span></code></pre><p>E é isso. Em seguida, você pode usar um dos nossos guias oficiais para fazer o deployment:</p><ul><li><a href="releases.html">com releases do Elixir</a></li><li><a href="gigalixir.html">para o Gigalixir</a>, uma Plataforma como Serviço (PaaS) centrada em Elixir</li><li><a href="fly.html">para o Fly.io</a>, um PaaS que implanta seus servidores próximos aos seus usuários com suporte integrado para distribuição</li><li>e <a href="heroku.html">para o Heroku</a>, um dos PaaS mais populares.</li></ul><h2 id="guias-de-deployment-da-comunidade" class="section-heading">
+  <a href="#guias-de-deployment-da-comunidade" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Guias de Deployment da Comunidade</span>
+</h2>
+<ul><li><a href="https://render.com">Render</a> tem suporte de primeira classe para aplicações Phoenix. Existem guias para hospedar Phoenix com <a href="https://render.com/docs/deploy-phoenix">Mix releases</a>, <a href="https://render.com/docs/deploy-phoenix-distillery">Distillery</a> e como um <a href="https://render.com/docs/deploy-elixir-cluster">Cluster Elixir Distribuído</a>.</li></ul>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="testing_channels.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Testando Canais
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="releases.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Implantando com Releases
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

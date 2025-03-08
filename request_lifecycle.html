@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Ciclo de vida da requisição — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Ciclo de vida da requisição</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">em execução</a>.</p></blockquote><p>O objetivo deste guia é falar sobre o ciclo de vida da requisição do Phoenix. Este guia adotará uma abordagem prática onde aprenderemos fazendo: adicionaremos duas novas páginas ao nosso projeto Phoenix e comentaremos como as peças se encaixam ao longo do caminho.</p><p>Vamos começar com nossa primeira nova página Phoenix!</p><h2 id="adicionando-uma-nova-página" class="section-heading">
+  <a href="#adicionando-uma-nova-página" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Adicionando uma nova página</span>
+</h2>
+<p>Quando seu navegador acessa <a href="http://localhost:4000/">http://localhost:4000/</a>, ele envia uma requisição HTTP para qualquer serviço que esteja rodando nesse endereço, neste caso, nossa aplicação Phoenix. A requisição HTTP é composta por um verbo e um caminho. Por exemplo, as seguintes requisições do navegador se traduzem em:</p><table><thead><tr><th style="text-align: left;">Barra de endereço do navegador</th><th style="text-align: left;">Verbo</th><th style="text-align: left;">Caminho</th></tr></thead><tbody><tr><td style="text-align: left;"><a href="http://localhost:4000/">http://localhost:4000/</a></td><td style="text-align: left;">GET</td><td style="text-align: left;">/</td></tr><tr><td style="text-align: left;"><a href="http://localhost:4000/hello">http://localhost:4000/hello</a></td><td style="text-align: left;">GET</td><td style="text-align: left;">/hello</td></tr><tr><td style="text-align: left;"><a href="http://localhost:4000/hello/world">http://localhost:4000/hello/world</a></td><td style="text-align: left;">GET</td><td style="text-align: left;">/hello/world</td></tr></tbody></table><p>Existem outros verbos HTTP. Por exemplo, enviar um formulário geralmente usa o verbo POST.</p><p>Aplicações web normalmente tratam requisições mapeando cada par verbo/caminho para uma parte específica da sua aplicação. Esse mapeamento no Phoenix é feito pelo roteador. Por exemplo, podemos mapear &quot;/articles&quot; para uma parte da nossa aplicação que mostra todos os artigos. Portanto, para adicionar uma nova página, nossa primeira tarefa é adicionar uma nova rota.</p><h3 id="uma-nova-rota" class="section-heading">
+  <a href="#uma-nova-rota" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Uma nova rota</span>
+</h3>
+<p>O roteador mapeia pares únicos de verbo/caminho HTTP para pares de controlador/ação que irão tratá-los. Controladores no Phoenix são simplesmente módulos Elixir. Ações são funções que são definidas dentro desses controladores.</p><p>O Phoenix gera um arquivo de roteador para nós em novas aplicações em <code class="inline">lib/hello_web/router.ex</code>. É aqui que estaremos trabalhando nesta seção.</p><p>A rota para nossa página &quot;Bem-vindo ao Phoenix!&quot; do <a href="up_and_running.html">Guia de Execução</a> anterior se parece com isso:</p><pre><code class="makeup elixir" translate="no"><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span></code></pre><p>Vamos entender o que esta rota nos diz. Visitar <a href="http://localhost:4000/">http://localhost:4000/</a> emite uma requisição HTTP <code class="inline">GET</code> para o caminho raiz. Todas as requisições como esta serão tratadas pela função <code class="inline">home/2</code> no módulo <code class="inline">HelloWeb.PageController</code> definido em <code class="inline">lib/hello_web/controllers/page_controller.ex</code>.</p><p>A página que vamos construir dirá &quot;Hello World, from Phoenix!&quot; quando apontarmos nosso navegador para <a href="http://localhost:4000/hello">http://localhost:4000/hello</a>.</p><p>A primeira coisa que precisamos fazer é criar a rota da página para uma nova página. Vamos abrir <code class="inline">lib/hello_web/router.ex</code> em um editor de texto. Para uma aplicação nova, ele se parece com isto:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="2104201517-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="2104201517-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2104201517-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="2104201517-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_live_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_root_layout</span><span class="p">,</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2104201517-4">{</span><span class="nc">HelloWeb.Layouts</span><span class="p">,</span><span class="w"> </span><span class="ss">:root</span><span class="p" data-group-id="2104201517-4">}</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+  </span><span class="k" data-group-id="2104201517-2">end</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:api</span><span class="w"> </span><span class="k" data-group-id="2104201517-5">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2104201517-6">[</span><span class="s">&quot;json&quot;</span><span class="p" data-group-id="2104201517-6">]</span><span class="w">
+  </span><span class="k" data-group-id="2104201517-5">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="2104201517-7">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="k" data-group-id="2104201517-7">end</span><span class="w">
+
+  </span><span class="c1"># Other scopes may use custom stacks.</span><span class="w">
+  </span><span class="c1"># scope &quot;/api&quot;, HelloWeb do</span><span class="w">
+  </span><span class="c1">#   pipe_through :api</span><span class="w">
+  </span><span class="c1"># end</span><span class="w">
+
+  </span><span class="c1"># ...</span><span class="w">
+</span><span class="k" data-group-id="2104201517-1">end</span></code></pre><p>Por enquanto, vamos ignorar os pipelines e o uso de <code class="inline">scope</code> aqui e apenas focar em adicionar uma rota. Discutiremos isso no <a href="routing.html">guia de Roteamento</a>.</p><p>Vamos adicionar uma nova rota ao roteador que mapeia uma requisição <code class="inline">GET</code> para <code class="inline">/hello</code> para a ação <code class="inline">index</code> de um <code class="inline">HelloWeb.HelloController</code> que criaremos em breve dentro do bloco <code class="inline">scope &quot;/&quot; do</code> do roteador:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="3937891897-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloController</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="w">
+</span><span class="k" data-group-id="3937891897-1">end</span></code></pre><h3 id="um-novo-controlador" class="section-heading">
+  <a href="#um-novo-controlador" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Um novo controlador</span>
+</h3>
+<p>Controladores são módulos Elixir, e ações são funções Elixir definidas neles. O propósito das ações é reunir os dados e realizar as tarefas necessárias para a renderização. Nossa rota especifica que precisamos de um módulo <code class="inline">HelloWeb.HelloController</code> com uma função <code class="inline">index/2</code>.</p><p>Para fazer a ação <code class="inline">index</code> acontecer, vamos criar um novo arquivo <code class="inline">lib/hello_web/controllers/hello_controller.ex</code>, e fazê-lo parecer com o seguinte:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloController</span><span class="w"> </span><span class="k" data-group-id="3805239089-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="3805239089-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_params</span><span class="p" data-group-id="3805239089-2">)</span><span class="w"> </span><span class="k" data-group-id="3805239089-3">do</span><span class="w">
+    </span><span class="n">render</span><span class="p" data-group-id="3805239089-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="p" data-group-id="3805239089-4">)</span><span class="w">
+  </span><span class="k" data-group-id="3805239089-3">end</span><span class="w">
+</span><span class="k" data-group-id="3805239089-1">end</span></code></pre><p>Deixaremos uma discussão de <code class="inline">use HelloWeb, :controller</code> para o <a href="controllers.html">guia de Controladores</a>. Por enquanto, vamos focar na ação <code class="inline">index</code>.</p><p>Todas as ações do controlador recebem dois argumentos. O primeiro é <code class="inline">conn</code>, uma struct que contém uma tonelada de dados sobre a requisição. O segundo é <code class="inline">params</code>, que são os parâmetros da requisição. Aqui, não estamos usando <code class="inline">params</code>, e evitamos avisos do compilador prefixando-o com <code class="inline">_</code>.</p><p>O núcleo desta ação é <code class="inline">render(conn, :index)</code>. Ele diz ao Phoenix para renderizar o template <code class="inline">index</code>. Os módulos responsáveis pela renderização são chamados de views. Por padrão, as views do Phoenix são nomeadas após o controlador (<code class="inline">HelloController</code>) e formato (<code class="inline">HTML</code> neste caso), então o Phoenix espera que exista um <code class="inline">HelloWeb.HelloHTML</code> e defina uma função <code class="inline">index/1</code>.</p><h3 id="uma-nova-view" class="section-heading">
+  <a href="#uma-nova-view" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Uma nova view</span>
+</h3>
+<p>As views do Phoenix atuam como a camada de apresentação. Por exemplo, esperamos que a saída da renderização <code class="inline">index</code> seja uma página HTML completa. Para facilitar nossas vidas, frequentemente usamos templates para criar essas páginas HTML.</p><p>Vamos criar uma nova view. Crie <code class="inline">lib/hello_web/controllers/hello_html.ex</code> e faça-o parecer com isso:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloHTML</span><span class="w"> </span><span class="k" data-group-id="2357764694-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="w">
+</span><span class="k" data-group-id="2357764694-1">end</span></code></pre><p>Para adicionar templates a esta view, podemos defini-los como componentes de função no módulo ou em arquivos separados.</p><p>Vamos começar definindo um componente de função:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloHTML</span><span class="w"> </span><span class="k" data-group-id="7900884370-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="7900884370-2">(</span><span class="n">assigns</span><span class="p" data-group-id="7900884370-2">)</span><span class="w"> </span><span class="k" data-group-id="7900884370-3">do</span><span class="w">
+    </span><span class="sx">~H&quot;&quot;&quot;</span><span class="w">
+</span><span class="n">    Hello!
+</span><span class="w">    </span><span class="sx">&quot;&quot;&quot;</span><span class="w">
+  </span><span class="k" data-group-id="7900884370-3">end</span><span class="w">
+</span><span class="k" data-group-id="7900884370-1">end</span></code></pre><p>Definimos uma função que recebe <code class="inline">assigns</code> como argumentos e usamos <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#sigil_H/2">o sigil <code class="inline">~H</code></a> para colocar o conteúdo que queremos renderizar. Dentro do sigil <code class="inline">~H</code>, usamos uma linguagem de template chamada HEEx, que significa &quot;HTML+EEx&quot;. <a href="https://hexdocs.pm/eex/EEx.html"><code class="inline">EEx</code></a> é uma biblioteca para incorporar Elixir que vem como parte do próprio Elixir. &quot;HTML+EEx&quot; é uma extensão Phoenix do EEx que é consciente do HTML, com suporte para validação HTML, componentes e escape automático de valores. Este último protege você contra vulnerabilidades de segurança como Cross-Site-Scripting sem trabalho extra da sua parte.</p><p>Um arquivo de template funciona da mesma maneira. Componentes de função são ótimos para templates menores e arquivos separados são uma boa escolha quando você tem muita marcação ou suas funções começam a ficar incontroláveis.</p><p>Vamos experimentar definindo um template em seu próprio arquivo. Primeiro, exclua nossa função <code class="inline">def index(assigns)</code> de cima e substitua-a por uma declaração <code class="inline">embed_templates</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloHTML</span><span class="w"> </span><span class="k" data-group-id="9184607172-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="w">
+
+  </span><span class="n">embed_templates</span><span class="w"> </span><span class="s">&quot;hello_html/*&quot;</span><span class="w">
+</span><span class="k" data-group-id="9184607172-1">end</span></code></pre><p>Aqui estamos dizendo a <code class="inline">Phoenix.Component</code> para incorporar todos os templates <code class="inline">.heex</code> encontrados no diretório irmão <code class="inline">hello_html</code> em nosso módulo como definições de funções.</p><p>Em seguida, precisamos adicionar arquivos ao diretório <code class="inline">lib/hello_web/controllers/hello_html</code>.</p><p>Observe que o nome do controlador (<code class="inline">HelloController</code>), o nome da view (<code class="inline">HelloHTML</code>) e o diretório do template (<code class="inline">hello_html</code>) seguem a mesma convenção de nomenclatura e são nomeados um após o outro. Eles também estão colocados juntos na árvore de diretórios:</p><blockquote><p><strong>Nota</strong>: Podemos renomear o diretório <code class="inline">hello_html</code> para o que quisermos e colocá-lo em um subdiretório de <code class="inline">lib/hello_web/controllers</code>, desde que atualizemos a configuração <code class="inline">embed_templates</code> adequadamente. No entanto, é melhor manter a mesma convenção de nomenclatura para evitar qualquer confusão.</p></blockquote><pre><code class="makeup elixir" translate="no"><span class="n">lib</span><span class="o">/</span><span class="n">hello_web</span><span class="w">
+</span><span class="err">├</span><span class="err">─</span><span class="err">─</span><span class="w"> </span><span class="n">controllers</span><span class="w">
+</span><span class="err">│</span><span class="w">   </span><span class="err">├</span><span class="err">─</span><span class="err">─</span><span class="w"> </span><span class="n">hello_controller</span><span class="o">.</span><span class="n">ex</span><span class="w">
+</span><span class="err">│</span><span class="w">   </span><span class="err">├</span><span class="err">─</span><span class="err">─</span><span class="w"> </span><span class="n">hello_html</span><span class="o">.</span><span class="n">ex</span><span class="w">
+</span><span class="err">│</span><span class="w">   </span><span class="err">├</span><span class="err">─</span><span class="err">─</span><span class="w"> </span><span class="n">hello_html</span><span class="w">
+</span><span class="o">|</span><span class="w">       </span><span class="err">├</span><span class="err">─</span><span class="err">─</span><span class="w"> </span><span class="n">index</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">heex</span></code></pre><p>Um arquivo de template tem a seguinte estrutura: <code class="inline">NOME.FORMATO.LINGUAGEM_DE_TEMPLATE</code>. No nosso caso, vamos criar um arquivo <code class="inline">index.html.heex</code> em <code class="inline">lib/hello_web/controllers/hello_html/index.html.heex</code>:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">section</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span><span class="n">Hello World, from Phoenix!</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span></code></pre><p>Os arquivos de template são compilados no módulo como componentes de função, não há diferença de runtime ou desempenho entre os dois estilos.</p><p>Agora que temos a rota, o controlador, a view e o template, devemos ser capazes de apontar nossos navegadores para <a href="http://localhost:4000/hello">http://localhost:4000/hello</a> e ver nossa saudação do Phoenix! (Caso você tenha parado o servidor ao longo do caminho, a tarefa para reiniciá-lo é <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Server.html"><code class="inline">mix phx.server</code></a>.)</p><p><img src="assets/images/hello-from-phoenix.png" alt="Phoenix Greets Us"/></p><p>Há algumas coisas interessantes para notar sobre o que acabamos de fazer. Não precisamos parar e reiniciar o servidor enquanto fazíamos essas mudanças. Sim, o Phoenix tem recarregamento automático de código! Além disso, mesmo que nosso arquivo <code class="inline">index.html.heex</code> consista apenas de uma única tag <code class="inline">section</code>, a página que obtemos é um documento HTML completo. Nosso template de índice é realmente renderizado em layouts: primeiro ele renderiza <code class="inline">lib/hello_web/components/layouts/root.html.heex</code> que renderiza <code class="inline">lib/hello_web/components/layouts/app.html.heex</code> que finalmente inclui nosso conteúdo. Se você abrir esses arquivos, verá uma linha que se parece com isso na parte inferior:</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="3503991769-1">{</span><span class="na">@inner_content</span><span class="p" data-group-id="3503991769-1">}</span></code></pre><p>Que injeta nosso template no layout antes que o HTML seja enviado para o navegador. Falaremos mais sobre layouts no guia de Controladores.</p><blockquote><p>Uma nota sobre recarregamento automático de código: Alguns editores com seus linters automáticos podem impedir que o recarregamento automático de código funcione. Se não estiver funcionando para você, por favor veja a discussão neste <a href="https://github.com/phoenixframework/phoenix/issues/1165">issue</a>.</p></blockquote><h2 id="do-endpoint-às-views" class="section-heading">
+  <a href="#do-endpoint-às-views" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Do endpoint às views</span>
+</h2>
+<p>Conforme construímos nossa primeira página, pudemos começar a entender como o ciclo de vida da requisição é montado. Agora vamos dar uma olhada mais holística nisso.</p><p>Todas as requisições HTTP começam em nosso endpoint da aplicação. Você pode encontrá-lo como um módulo chamado <code class="inline">HelloWeb.Endpoint</code> em <code class="inline">lib/hello_web/endpoint.ex</code>. Quando você abrir o arquivo do endpoint, verá que, semelhante ao roteador, o endpoint tem muitas chamadas para <code class="inline">plug</code>. <a href="https://hexdocs.pm/plug/1.16.1/Plug.html"><code class="inline">Plug</code></a> é uma biblioteca e uma especificação para unir aplicações web. É uma parte essencial de como o Phoenix lida com requisições e discutiremos isso em detalhes no <a href="plug.html">guia do Plug</a> a seguir.</p><p>Por enquanto, é suficiente dizer que cada plug define uma fatia do processamento da requisição. No endpoint você encontrará um esqueleto aproximadamente assim:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="w"> </span><span class="k" data-group-id="1153853892-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Endpoint</span><span class="p">,</span><span class="w"> </span><span class="ss">otp_app</span><span class="p">:</span><span class="w"> </span><span class="ss">:hello</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Static</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.RequestId</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Telemetry</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Parsers</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.MethodOverride</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Head</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Session</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w">
+</span><span class="k" data-group-id="1153853892-1">end</span></code></pre><p>Cada um desses plugs tem uma responsabilidade específica que aprenderemos mais tarde. O último plug é precisamente o módulo <code class="inline">HelloWeb.Router</code>. Isso permite que o endpoint delegue todo o processamento adicional da requisição ao roteador. Como agora sabemos, sua principal responsabilidade é mapear pares verbo/caminho para controladores. O controlador então diz a uma view para renderizar um template.</p><p>Neste momento, você pode estar pensando que podem ser muitas etapas apenas para renderizar uma página. No entanto, à medida que nossa aplicação cresce em complexidade, veremos que cada camada serve a um propósito distinto:</p><ul><li><p>endpoint (<a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Endpoint.html"><code class="inline">Phoenix.Endpoint</code></a>) - o endpoint contém o caminho comum e inicial pelo qual todas as requisições passam. Se você quiser que algo aconteça em todas as requisições, isso vai para o endpoint.</p></li><li><p>roteador (<a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html"><code class="inline">Phoenix.Router</code></a>) - o roteador é responsável por despachar verbo/caminho para controladores. O roteador também nos permite escopar funcionalidades. Por exemplo, algumas páginas em sua aplicação podem exigir autenticação do usuário, outras podem não exigir.</p></li><li><p>controlador (<a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Controller.html"><code class="inline">Phoenix.Controller</code></a>) - o trabalho do controlador é recuperar informações da requisição, falar com seu domínio de negócios e preparar dados para a camada de apresentação.</p></li><li><p>view - a view lida com os dados estruturados do controlador e os converte em uma apresentação para ser mostrada aos usuários. As views são frequentemente nomeadas após o formato de conteúdo que estão renderizando.</p></li></ul><p>Vamos fazer uma rápida recapitulação de como os últimos três componentes funcionam juntos, adicionando outra página.</p><h2 id="outra-nova-página" class="section-heading">
+  <a href="#outra-nova-página" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Outra nova página</span>
+</h2>
+<p>Vamos adicionar um pouco de complexidade à nossa aplicação. Vamos adicionar uma nova página que reconhecerá uma parte da URL, rotulá-la como um &quot;mensageiro&quot; e passá-la pelo controlador para o template para que nosso mensageiro possa dizer olá.</p><p>Como fizemos na última vez, a primeira coisa que faremos é criar uma nova rota.</p><h3 id="outra-nova-rota" class="section-heading">
+  <a href="#outra-nova-rota" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Outra nova rota</span>
+</h3>
+<p>Para este exercício, vamos reutilizar o <code class="inline">HelloController</code> criado na <a href="request_lifecycle.html#a-new-controller">etapa anterior</a> e adicionar uma nova ação <code class="inline">show</code>. Vamos adicionar uma linha logo abaixo da nossa última rota, assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="1181690003-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloController</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="w">
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/hello/:messenger&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloController</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="w">
+</span><span class="k" data-group-id="1181690003-1">end</span></code></pre><p>Observe que usamos a sintaxe <code class="inline">:messenger</code> no caminho. O Phoenix pegará qualquer valor que apareça nessa posição na URL e o converterá em um parâmetro. Por exemplo, se apontarmos o navegador para: <code class="inline">http://localhost:4000/hello/Frank</code>, o valor de <code class="inline">&quot;messenger&quot;</code> será <code class="inline">&quot;Frank&quot;</code>.</p><h3 id="outra-nova-ação" class="section-heading">
+  <a href="#outra-nova-ação" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Outra nova ação</span>
+</h3>
+<p>Requisições para nossa nova rota serão tratadas pela ação <code class="inline">show</code> do <code class="inline">HelloWeb.HelloController</code>. Já temos o controlador em <code class="inline">lib/hello_web/controllers/hello_controller.ex</code>, então tudo o que precisamos fazer é editar esse controlador e adicionar uma ação <code class="inline">show</code> a ele. Desta vez, precisaremos extrair o mensageiro dos parâmetros para que possamos passá-lo (o mensageiro) para o template. Para fazer isso, adicionamos esta função show ao controlador:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="6365275269-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6365275269-2">%{</span><span class="s">&quot;messenger&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">messenger</span><span class="p" data-group-id="6365275269-2">}</span><span class="p" data-group-id="6365275269-1">)</span><span class="w"> </span><span class="k" data-group-id="6365275269-3">do</span><span class="w">
+  </span><span class="n">render</span><span class="p" data-group-id="6365275269-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">messenger</span><span class="p">:</span><span class="w"> </span><span class="n">messenger</span><span class="p" data-group-id="6365275269-4">)</span><span class="w">
+</span><span class="k" data-group-id="6365275269-3">end</span></code></pre><p>Dentro do corpo da ação <code class="inline">show</code>, também passamos um terceiro argumento para a função render, um par chave-valor onde <code class="inline">:messenger</code> é a chave, e a variável <code class="inline">messenger</code> é passada como o valor.</p><p>Se o corpo da ação precisar acessar o mapa completo de parâmetros vinculados à variável <code class="inline">params</code>, além da variável mensageiro vinculada, poderíamos definir <code class="inline">show/2</code> assim:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="9361066984-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9361066984-2">%{</span><span class="s">&quot;messenger&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">messenger</span><span class="p" data-group-id="9361066984-2">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="9361066984-1">)</span><span class="w"> </span><span class="k" data-group-id="9361066984-3">do</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="9361066984-3">end</span></code></pre><p>É bom lembrar que as chaves do mapa <code class="inline">params</code> sempre serão strings, e que o sinal de igual não representa atribuição, mas é uma asserção de <a href="https://hexdocs.pm/elixir/pattern-matching.html">correspondência de padrão</a>.</p><h3 id="outro-novo-template" class="section-heading">
+  <a href="#outro-novo-template" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Outro novo template</span>
+</h3>
+<p>Para a última peça deste quebra-cabeça, precisaremos de um novo template. Como é para a ação <code class="inline">show</code> de <code class="inline">HelloController</code>, ele irá para o diretório <code class="inline">lib/hello_web/controllers/hello_html</code> e será chamado <code class="inline">show.html.heex</code>. Ele se parecerá surpreendentemente com nosso template <code class="inline">index.html.heex</code>, exceto que precisaremos exibir o nome do nosso mensageiro.</p><p>Para fazer isso, usaremos as tags especiais HEEx para executar expressões Elixir: <code class="inline">{...}</code> e <code class="inline">&lt;%= %&gt;</code>. Observe que a tag EEx tem um sinal de igual assim: <code class="inline">&lt;%=</code> . Isso significa que qualquer código Elixir que estiver entre essas tags será executado, e o valor resultante substituirá a tag na saída HTML. Se o sinal de igual estivesse ausente, o código ainda seria executado, mas o valor não apareceria na página.</p><p>Lembre-se de que nossos templates são escritos em HEEx (HTML+EEx). HEEx é um superconjunto de EEx e, portanto, suporta a sintaxe de interpolação <code class="inline">&lt;%= %&gt;</code> do EEx para interpolação de blocos arbitrários de código. Em geral, a sintaxe de interpolação <code class="inline">{...}</code> do HEEx é preferida sempre que houver interpolação consciente do HTML a ser feita – como dentro de atributos ou valores inline com um corpo.</p><p>As únicas vezes em que a interpolação <code class="inline">&lt;%= %&gt;</code> do <a href="https://hexdocs.pm/eex/EEx.html"><code class="inline">EEx</code></a> é necessária é para interpolação de blocos arbitrários de marcação, como lógica de ramificação que injeta árvores de marcação separadas, ou para interpolação de valores dentro de tags <code class="inline">&lt;script&gt;</code> ou <code class="inline">&lt;style&gt;</code>.</p><p>É assim que o template <code class="inline">hello_html/show.html.heex</code> deve parecer:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">section</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span><span class="n">Hello World, from </span><span class="p" data-group-id="2925897260-1">{</span><span class="na">@messenger</span><span class="p" data-group-id="2925897260-1">}</span><span class="n">!</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span></code></pre><p>Nosso mensageiro aparece como <code class="inline">@messenger</code>.</p><p>Os valores que passamos para a view a partir do controlador são coletivamente chamados de nossos &quot;assigns&quot;. Poderíamos acessar nosso valor de mensageiro via <code class="inline">assigns.messenger</code>, mas através de alguma metaprogramação, o Phoenix nos dá a sintaxe muito mais limpa <code class="inline">@</code> para uso em templates.</p><p>Terminamos. Se você apontar seu navegador para <a href="http://localhost:4000/hello/Frank">http://localhost:4000/hello/Frank</a>, deverá ver uma página que se parece com esta:</p><p><img src="assets/images/hello-world-from-frank.png" alt="Frank Greets Us from Phoenix"/></p><p>Brinque um pouco. O que quer que você coloque após <code class="inline">/hello/</code> aparecerá na página como seu mensageiro.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="directory_structure.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Estrutura de diretórios
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="plug.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Plug
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

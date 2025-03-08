@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Testando Contextos — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Testando Contextos</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido os <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido o <a href="testing.html">Guia de Introdução a Testes</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido o <a href="contexts.html">Guia de Contextos</a>.</p></blockquote><p>No final do guia de Introdução a Testes, geramos um recurso HTML para posts usando o seguinte comando:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Post posts title body:text
+</span></code></pre><p>Isso nos deu vários módulos gratuitamente, incluindo um contexto Blog e um esquema Post, junto com seus respectivos arquivos de teste. Como aprendemos no guia de Contexto, o contexto Blog é simplesmente um módulo com funções para uma área específica do nosso domínio de negócios, enquanto o esquema Post mapeia para uma tabela específica em nosso banco de dados.</p><p>Neste guia, vamos explorar os testes gerados para nossos contextos e esquemas. Antes de fazer qualquer outra coisa, vamos executar <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a> para garantir que nossa suíte de testes esteja funcionando sem problemas.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span><span class="">................
+</span><span class="">
+</span><span class="">Finished in 0.6 seconds
+</span><span class="">21 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 638414
+</span></code></pre><p>Ótimo. Temos vinte e um testes e todos estão passando!</p><h2 id="testando-posts" class="section-heading">
+  <a href="#testando-posts" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando posts</span>
+</h2>
+<p>Se você abrir <code class="inline">test/hello/blog_test.exs</code>, verá um arquivo com o seguinte conteúdo:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Hello.BlogTest</span><span class="w"> </span><span class="k" data-group-id="3999338924-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Hello.DataCase</span><span class="w">
+
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Hello.Blog</span><span class="w">
+
+  </span><span class="n">describe</span><span class="w"> </span><span class="s">&quot;posts&quot;</span><span class="w"> </span><span class="k" data-group-id="3999338924-2">do</span><span class="w">
+    </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Hello.Blog.Post</span><span class="w">
+
+    </span><span class="kn">import</span><span class="w"> </span><span class="nc">Hello.BlogFixtures</span><span class="w">
+
+    </span><span class="na">@invalid_attrs</span><span class="w"> </span><span class="p" data-group-id="3999338924-3">%{</span><span class="ss">body</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="ss">title</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="3999338924-3">}</span><span class="w">
+
+    </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;list_posts/0 returns all posts&quot;</span><span class="w"> </span><span class="k" data-group-id="3999338924-4">do</span><span class="w">
+      </span><span class="n">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post_fixture</span><span class="p" data-group-id="3999338924-5">(</span><span class="p" data-group-id="3999338924-5">)</span><span class="w">
+      </span><span class="n">assert</span><span class="w"> </span><span class="nc">Blog</span><span class="o">.</span><span class="n">list_posts</span><span class="p" data-group-id="3999338924-6">(</span><span class="p" data-group-id="3999338924-6">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="3999338924-7">[</span><span class="n">post</span><span class="p" data-group-id="3999338924-7">]</span><span class="w">
+    </span><span class="k" data-group-id="3999338924-4">end</span><span class="w">
+
+    </span><span class="n">...</span></code></pre><p>No topo do arquivo, importamos <code class="inline">Hello.DataCase</code>, que, como veremos em breve, é semelhante ao <code class="inline">HelloWeb.ConnCase</code>. Enquanto <code class="inline">HelloWeb.ConnCase</code> configura auxiliares para trabalhar com conexões, o que é útil ao testar controladores e visualizações, <code class="inline">Hello.DataCase</code> fornece funcionalidade para trabalhar com contextos e esquemas.</p><p>Em seguida, definimos um alias, para que possamos nos referir a <code class="inline">Hello.Blog</code> simplesmente como <code class="inline">Blog</code>.</p><p>Então começamos um bloco <code class="inline">describe &quot;posts&quot;</code>. Um bloco <code class="inline">describe</code> é um recurso no ExUnit que nos permite agrupar testes semelhantes. A razão pela qual agrupamos todos os testes relacionados a posts é porque os contextos no Phoenix são capazes de agrupar múltiplos esquemas. Por exemplo, se executarmos este comando:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Comment comments post_id:references:posts body:text
+</span></code></pre><p>Obteremos um monte de novas funções no contexto <code class="inline">Hello.Blog</code>, além de um novo bloco <code class="inline">describe &quot;comments&quot;</code> em nosso arquivo de teste.</p><p>Os testes definidos para nosso contexto são muito diretos. Eles chamam as funções em nosso contexto e afirmam sobre seus resultados. Como você pode ver, alguns desses testes até criam entradas no banco de dados:</p><pre><code class="makeup elixir" translate="no"><span class="n">test</span><span class="w"> </span><span class="s">&quot;create_post/1 with valid data creates a post&quot;</span><span class="w"> </span><span class="k" data-group-id="2434844501-1">do</span><span class="w">
+  </span><span class="n">valid_attrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2434844501-2">%{</span><span class="ss">body</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;some body&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;some title&quot;</span><span class="p" data-group-id="2434844501-2">}</span><span class="w">
+
+  </span><span class="n">assert</span><span class="w"> </span><span class="p" data-group-id="2434844501-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2434844501-4">%</span><span class="nc" data-group-id="2434844501-4">Post</span><span class="p" data-group-id="2434844501-4">{</span><span class="p" data-group-id="2434844501-4">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="2434844501-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Blog</span><span class="o">.</span><span class="n">create_post</span><span class="p" data-group-id="2434844501-5">(</span><span class="n">valid_attrs</span><span class="p" data-group-id="2434844501-5">)</span><span class="w">
+  </span><span class="n">assert</span><span class="w"> </span><span class="n">post</span><span class="o">.</span><span class="n">body</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;some body&quot;</span><span class="w">
+  </span><span class="n">assert</span><span class="w"> </span><span class="n">post</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;some title&quot;</span><span class="w">
+</span><span class="k" data-group-id="2434844501-1">end</span></code></pre><p>Neste ponto, você pode se perguntar: como o Phoenix pode garantir que os dados criados em um dos testes não afetem outros testes? Ficamos felizes que você tenha perguntado. Para responder a esta pergunta, vamos falar sobre o <code class="inline">DataCase</code>.</p><h2 id="o-datacase" class="section-heading">
+  <a href="#o-datacase" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O DataCase</span>
+</h2>
+<p>Se você abrir <code class="inline">test/support/data_case.ex</code>, encontrará o seguinte:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Hello.DataCase</span><span class="w"> </span><span class="k" data-group-id="1520701507-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">ExUnit.CaseTemplate</span><span class="w">
+
+  </span><span class="n">using</span><span class="w"> </span><span class="k" data-group-id="1520701507-2">do</span><span class="w">
+    </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="1520701507-3">do</span><span class="w">
+      </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Hello.Repo</span><span class="w">
+
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Ecto</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Ecto.Changeset</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Hello.DataCase</span><span class="w">
+    </span><span class="k" data-group-id="1520701507-3">end</span><span class="w">
+  </span><span class="k" data-group-id="1520701507-2">end</span><span class="w">
+
+  </span><span class="n">setup</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="k" data-group-id="1520701507-4">do</span><span class="w">
+    </span><span class="nc">Hello.DataCase</span><span class="o">.</span><span class="n">setup_sandbox</span><span class="p" data-group-id="1520701507-5">(</span><span class="n">tags</span><span class="p" data-group-id="1520701507-5">)</span><span class="w">
+    </span><span class="ss">:ok</span><span class="w">
+  </span><span class="k" data-group-id="1520701507-4">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">setup_sandbox</span><span class="p" data-group-id="1520701507-6">(</span><span class="n">tags</span><span class="p" data-group-id="1520701507-6">)</span><span class="w"> </span><span class="k" data-group-id="1520701507-7">do</span><span class="w">
+    </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Ecto.Adapters.SQL.Sandbox</span><span class="o">.</span><span class="n">start_owner!</span><span class="p" data-group-id="1520701507-8">(</span><span class="nc">Hello.Repo</span><span class="p">,</span><span class="w"> </span><span class="ss">shared</span><span class="p">:</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">tags</span><span class="p" data-group-id="1520701507-9">[</span><span class="ss">:async</span><span class="p" data-group-id="1520701507-9">]</span><span class="p" data-group-id="1520701507-8">)</span><span class="w">
+    </span><span class="n">on_exit</span><span class="p" data-group-id="1520701507-10">(</span><span class="k" data-group-id="1520701507-11">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">Ecto.Adapters.SQL.Sandbox</span><span class="o">.</span><span class="n">stop_owner</span><span class="p" data-group-id="1520701507-12">(</span><span class="n">pid</span><span class="p" data-group-id="1520701507-12">)</span><span class="w"> </span><span class="k" data-group-id="1520701507-11">end</span><span class="p" data-group-id="1520701507-10">)</span><span class="w">
+  </span><span class="k" data-group-id="1520701507-7">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">errors_on</span><span class="p" data-group-id="1520701507-13">(</span><span class="n">changeset</span><span class="p" data-group-id="1520701507-13">)</span><span class="w"> </span><span class="k" data-group-id="1520701507-14">do</span><span class="w">
+    </span><span class="n">...</span><span class="w">
+  </span><span class="k" data-group-id="1520701507-14">end</span><span class="w">
+</span><span class="k" data-group-id="1520701507-1">end</span></code></pre><p><code class="inline">Hello.DataCase</code> é outro <a href="https://hexdocs.pm/ex_unit/ExUnit.CaseTemplate.html"><code class="inline">ExUnit.CaseTemplate</code></a>. No bloco <code class="inline">using</code>, podemos ver todos os aliases e importações que o <code class="inline">DataCase</code> traz para nossos testes. O trecho <code class="inline">setup</code> para <code class="inline">DataCase</code> é muito semelhante ao de <code class="inline">ConnCase</code>. Como podemos ver, a maior parte do bloco <code class="inline">setup</code> gira em torno da configuração de um SQL Sandbox.</p><p>O SQL Sandbox é precisamente o que permite que nossos testes escrevam no banco de dados sem afetar nenhum dos outros testes. Em resumo, no início de cada teste, iniciamos uma transação no banco de dados. Quando o teste termina, revertemos automaticamente a transação, efetivamente apagando todos os dados criados no teste.</p><p>Além disso, o SQL Sandbox permite que vários testes sejam executados simultaneamente, mesmo que se comuniquem com o banco de dados. Esse recurso é fornecido para bancos de dados PostgreSQL e pode ser usado para acelerar ainda mais seus testes de contextos e controladores, adicionando uma flag <code class="inline">async: true</code> ao usá-los:</p><pre><code class="makeup elixir" translate="no"><span class="kn">use</span><span class="w"> </span><span class="nc">Hello.DataCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span></code></pre><p>Existem algumas considerações que você precisa ter em mente ao executar testes assíncronos com o sandbox, então consulte <a href="https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.Sandbox.html"><code class="inline">Ecto.Adapters.SQL.Sandbox</code></a> para mais informações.</p><p>Finalmente, no final do módulo <code class="inline">DataCase</code>, podemos encontrar uma função chamada <code class="inline">errors_on</code> com alguns exemplos de como usá-la. Esta função é usada para testar qualquer validação que possamos querer adicionar aos nossos esquemas. Vamos experimentá-la adicionando nossas próprias validações e depois testando-as.</p><h2 id="testando-esquemas" class="section-heading">
+  <a href="#testando-esquemas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando esquemas</span>
+</h2>
+<p>Quando geramos nosso recurso HTML Post, o Phoenix gerou um contexto Blog e um esquema Post. Ele gerou um arquivo de teste para o contexto, mas nenhum arquivo de teste para o esquema. No entanto, isso não significa que não precisamos testar o esquema, apenas significa que não tivemos que testar o esquema até agora.</p><p>Você pode estar se perguntando: quando testamos o contexto diretamente e quando testamos o esquema diretamente? A resposta a esta pergunta é a mesma resposta à pergunta de quando adicionamos código a um contexto e quando o adicionamos ao esquema?</p><p>A diretriz geral é manter todo o código livre de efeitos colaterais no esquema. Em outras palavras, se você está simplesmente trabalhando com estruturas de dados, esquemas e changesets, coloque-o no esquema. O contexto normalmente terá o código que cria e atualiza esquemas e depois os escreve em um banco de dados ou uma API.</p><p>Vamos adicionar validações adicionais ao módulo de esquema, o que é uma ótima oportunidade para escrever alguns testes específicos de esquema. Abra <code class="inline">lib/hello/blog/post.ex</code> e adicione a seguinte validação ao <code class="inline">def changeset</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">changeset</span><span class="p" data-group-id="1552686368-1">(</span><span class="n">post</span><span class="p">,</span><span class="w"> </span><span class="n">attrs</span><span class="p" data-group-id="1552686368-1">)</span><span class="w"> </span><span class="k" data-group-id="1552686368-2">do</span><span class="w">
+  </span><span class="n">post</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">cast</span><span class="p" data-group-id="1552686368-3">(</span><span class="n">attrs</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1552686368-4">[</span><span class="ss">:title</span><span class="p">,</span><span class="w"> </span><span class="ss">:body</span><span class="p" data-group-id="1552686368-4">]</span><span class="p" data-group-id="1552686368-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">validate_required</span><span class="p" data-group-id="1552686368-5">(</span><span class="p" data-group-id="1552686368-6">[</span><span class="ss">:title</span><span class="p">,</span><span class="w"> </span><span class="ss">:body</span><span class="p" data-group-id="1552686368-6">]</span><span class="p" data-group-id="1552686368-5">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">validate_length</span><span class="p" data-group-id="1552686368-7">(</span><span class="ss">:title</span><span class="p">,</span><span class="w"> </span><span class="ss">min</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="1552686368-7">)</span><span class="w">
+</span><span class="k" data-group-id="1552686368-2">end</span></code></pre><p>A nova validação diz que o título precisa ter pelo menos 2 caracteres. Vamos escrever um teste para isso. Crie um novo arquivo em <code class="inline">test/hello/blog/post_test.exs</code> com isto:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Hello.Blog.PostTest</span><span class="w"> </span><span class="k" data-group-id="1911526739-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Hello.DataCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Hello.Blog.Post</span><span class="w">
+
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;title must be at least two characters long&quot;</span><span class="w"> </span><span class="k" data-group-id="1911526739-2">do</span><span class="w">
+    </span><span class="n">changeset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Post</span><span class="o">.</span><span class="n">changeset</span><span class="p" data-group-id="1911526739-3">(</span><span class="p" data-group-id="1911526739-4">%</span><span class="nc" data-group-id="1911526739-4">Post</span><span class="p" data-group-id="1911526739-4">{</span><span class="p" data-group-id="1911526739-4">}</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1911526739-5">%{</span><span class="ss">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I&quot;</span><span class="p" data-group-id="1911526739-5">}</span><span class="p" data-group-id="1911526739-3">)</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="p" data-group-id="1911526739-6">%{</span><span class="ss">title</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1911526739-7">[</span><span class="s">&quot;should be at least 2 character(s)&quot;</span><span class="p" data-group-id="1911526739-7">]</span><span class="p" data-group-id="1911526739-6">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">errors_on</span><span class="p" data-group-id="1911526739-8">(</span><span class="n">changeset</span><span class="p" data-group-id="1911526739-8">)</span><span class="w">
+  </span><span class="k" data-group-id="1911526739-2">end</span><span class="w">
+</span><span class="k" data-group-id="1911526739-1">end</span></code></pre><p>E é isso. À medida que nosso domínio de negócios cresce, temos lugares bem definidos para testar nossos contextos e esquemas.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="testing.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Introdução aos Testes
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="testing_controllers.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Testando Controllers
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

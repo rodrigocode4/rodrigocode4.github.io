@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Roteamento — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Roteamento</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelo <a href="request_lifecycle.html">guia do ciclo de vida de requisições</a>.</p></blockquote><p>Roteadores são os principais pontos centrais de aplicações Phoenix. Eles correspondem requisições HTTP a ações de controladores, conectam manipuladores de canais em tempo real e definem uma série de transformações de pipeline com escopo para um conjunto de rotas.</p><p>O arquivo de roteador que o Phoenix gera, <code class="inline">lib/hello_web/router.ex</code>, será algo parecido com este:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="1133858597-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="1133858597-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1133858597-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="1133858597-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_live_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_root_layout</span><span class="p">,</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1133858597-4">{</span><span class="nc">HelloWeb.Layouts</span><span class="p">,</span><span class="w"> </span><span class="ss">:root</span><span class="p" data-group-id="1133858597-4">}</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+  </span><span class="k" data-group-id="1133858597-2">end</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:api</span><span class="w"> </span><span class="k" data-group-id="1133858597-5">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1133858597-6">[</span><span class="s">&quot;json&quot;</span><span class="p" data-group-id="1133858597-6">]</span><span class="w">
+  </span><span class="k" data-group-id="1133858597-5">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="1133858597-7">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="k" data-group-id="1133858597-7">end</span><span class="w">
+
+  </span><span class="c1"># Outros escopos podem usar pilhas personalizadas.</span><span class="w">
+  </span><span class="c1"># scope &quot;/api&quot;, HelloWeb do</span><span class="w">
+  </span><span class="c1">#   pipe_through :api</span><span class="w">
+  </span><span class="c1"># end</span><span class="w">
+  </span><span class="c1"># ...</span><span class="w">
+</span><span class="k" data-group-id="1133858597-1">end</span></code></pre><p>Tanto os nomes do módulo do roteador quanto do controlador terão como prefixo o nome que você deu à sua aplicação seguido de <code class="inline">Web</code>.</p><p>A primeira linha deste módulo, <code class="inline">use HelloWeb, :router</code>, simplesmente disponibiliza as funções do roteador do Phoenix em nosso roteador específico.</p><p>Os escopos têm sua própria seção neste guia, então não vamos gastar tempo no bloco <code class="inline">scope &quot;/&quot;, HelloWeb do</code> aqui. A linha <code class="inline">pipe_through :browser</code> terá um tratamento completo na seção &quot;Pipelines&quot; deste guia. Por enquanto, você só precisa saber que os pipelines permitem que um conjunto de plugs seja aplicado a diferentes conjuntos de rotas.</p><p>Dentro do bloco de escopo, no entanto, temos nossa primeira rota real:</p><pre><code class="makeup elixir" translate="no"><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span></code></pre><p><code class="inline">get</code> é uma macro do Phoenix que corresponde ao verbo HTTP GET. Macros similares existem para outros verbos HTTP, incluindo POST, PUT, PATCH, DELETE, OPTIONS, CONNECT, TRACE e HEAD.</p><section role="note" class="admonition info"><h4 class="admonition-title info">Por que as macros?</h4><p>O Phoenix faz o possível para manter o uso de macros baixo. Você pode ter notado, no entanto, que o <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html"><code class="inline">Phoenix.Router</code></a> depende muito de macros. Por quê?</p><p>Usamos <code class="inline">get</code>, <code class="inline">post</code>, <code class="inline">put</code> e <code class="inline">delete</code> para definir suas rotas. Usamos macros para dois propósitos:</p><ul><li><p>Elas definem o motor de roteamento, usado em cada requisição, para escolher qual controlador irá processar a requisição. Graças às macros, o Phoenix compila todas as suas rotas em uma grande instrução case com regras de correspondência de padrões, que é altamente otimizada pela VM do Erlang</p></li><li><p>Para cada rota que você define, também definimos metadados para implementar <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.VerifiedRoutes.html"><code class="inline">Phoenix.VerifiedRoutes</code></a>. Como aprenderemos em breve, rotas verificadas nos permitem referenciar qualquer rota como se fosse uma string comum, exceto que é verificada pelo compilador para ser válida (tornando muito mais difícil enviar links, formulários, e-mails etc. quebrados para produção)</p></li></ul><p>Em outras palavras, o roteador depende de macros para construir aplicações que são mais rápidas e seguras. Lembre-se também que macros em Elixir são apenas em tempo de compilação, o que dá muita estabilidade após o código ser compilado. Como aprenderemos a seguir, o Phoenix também fornece introspecção para todas as rotas definidas via <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a>.</p></section><h2 id="examinando-rotas" class="section-heading">
+  <a href="#examinando-rotas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examinando rotas</span>
+</h2>
+<p>O Phoenix fornece uma excelente ferramenta para investigar rotas em uma aplicação: <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a>.</p><p>Vamos ver como isso funciona. Vá para a raiz de uma aplicação Phoenix recém-gerada e execute <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a>. Você deve ver algo como o seguinte, gerado com todas as rotas que você tem atualmente:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.routes
+</span><span class="">GET  /  HelloWeb.PageController :home
+</span><span class="">...
+</span></code></pre><p>A rota acima nos diz que qualquer requisição HTTP GET para a raiz da aplicação será tratada pela ação <code class="inline">home</code> do <code class="inline">HelloWeb.PageController</code>.</p><h2 id="recursos" class="section-heading">
+  <a href="#recursos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Recursos</span>
+</h2>
+<p>O roteador suporta outras macros além daquelas para verbos HTTP como <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#get/3"><code class="inline">get</code></a>, <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#post/3"><code class="inline">post</code></a> e <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#put/3"><code class="inline">put</code></a>. A mais importante entre elas é <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#resources/4"><code class="inline">resources</code></a>. Vamos adicionar um recurso ao nosso arquivo <code class="inline">lib/hello_web/router.ex</code> assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="5731932450-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">UserController</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="5731932450-1">end</span></code></pre><p>Por enquanto, não importa que não tenhamos realmente um <code class="inline">HelloWeb.UserController</code>.</p><p>Execute <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> mais uma vez na raiz do seu projeto. Você deve ver algo como o seguinte:</p><pre><code class="makeup console" translate="no"><span class="">...
+</span><span class="">GET     /users           HelloWeb.UserController :index
+</span><span class="">GET     /users/:id/edit  HelloWeb.UserController :edit
+</span><span class="">GET     /users/new       HelloWeb.UserController :new
+</span><span class="">GET     /users/:id       HelloWeb.UserController :show
+</span><span class="">POST    /users           HelloWeb.UserController :create
+</span><span class="">PATCH   /users/:id       HelloWeb.UserController :update
+</span><span class="">PUT     /users/:id       HelloWeb.UserController :update
+</span><span class="">DELETE  /users/:id       HelloWeb.UserController :delete
+</span><span class="">...
+</span></code></pre><p>Esta é a matriz padrão de verbos HTTP, caminhos e ações do controlador. Por um tempo, isso foi conhecido como rotas RESTful, mas a maioria considera isso um termo errado hoje em dia. Vamos olhar para elas individualmente.</p><ul><li>Uma requisição GET para <code class="inline">/users</code> invocará a ação <code class="inline">index</code> para mostrar todos os usuários.</li><li>Uma requisição GET para <code class="inline">/users/:id/edit</code> invocará a ação <code class="inline">edit</code> com um ID para recuperar um usuário individual do armazenamento de dados e apresentar as informações em um formulário para edição.</li><li>Uma requisição GET para <code class="inline">/users/new</code> invocará a ação <code class="inline">new</code> para apresentar um formulário para criar um novo usuário.</li><li>Uma requisição GET para <code class="inline">/users/:id</code> invocará a ação <code class="inline">show</code> com um ID para mostrar um usuário individual identificado por esse ID.</li><li>Uma requisição POST para <code class="inline">/users</code> invocará a ação <code class="inline">create</code> para salvar um novo usuário no armazenamento de dados.</li><li>Uma requisição PATCH para <code class="inline">/users/:id</code> invocará a ação <code class="inline">update</code> com um ID para salvar o usuário atualizado no armazenamento de dados.</li><li>Uma requisição PUT para <code class="inline">/users/:id</code> também invocará a ação <code class="inline">update</code> com um ID para salvar o usuário atualizado no armazenamento de dados.</li><li>Uma requisição DELETE para <code class="inline">/users/:id</code> invocará a ação <code class="inline">delete</code> com um ID para remover o usuário individual do armazenamento de dados.</li></ul><p>Se não precisarmos de todas essas rotas, podemos ser seletivos usando as opções <code class="inline">:only</code> e <code class="inline">:except</code> para filtrar ações específicas.</p><p>Digamos que temos um recurso de posts somente leitura. Poderíamos defini-lo assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/posts&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="p">,</span><span class="w"> </span><span class="ss">only</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2981134210-1">[</span><span class="ss">:index</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p" data-group-id="2981134210-1">]</span></code></pre><p>Executando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> mostra que agora temos apenas as rotas para as ações index e show definidas.</p><pre><code class="makeup console" translate="no"><span class="">GET     /posts      HelloWeb.PostController :index
+</span><span class="">GET     /posts/:id  HelloWeb.PostController :show
+</span></code></pre><p>Da mesma forma, se temos um recurso de comentários e não queremos fornecer uma rota para excluir um, poderíamos definir uma rota assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/comments&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">CommentController</span><span class="p">,</span><span class="w"> </span><span class="ss">except</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6103926988-1">[</span><span class="ss">:delete</span><span class="p" data-group-id="6103926988-1">]</span></code></pre><p>Executando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> agora mostra que temos todas as rotas, exceto a requisição DELETE para a ação delete.</p><pre><code class="makeup console" translate="no"><span class="">GET    /comments           HelloWeb.CommentController :index
+</span><span class="">GET    /comments/:id/edit  HelloWeb.CommentController :edit
+</span><span class="">GET    /comments/new       HelloWeb.CommentController :new
+</span><span class="">GET    /comments/:id       HelloWeb.CommentController :show
+</span><span class="">POST   /comments           HelloWeb.CommentController :create
+</span><span class="">PATCH  /comments/:id       HelloWeb.CommentController :update
+</span><span class="">PUT    /comments/:id       HelloWeb.CommentController :update
+</span></code></pre><p>A macro <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#resources/4"><code class="inline">Phoenix.Router.resources/4</code></a> descreve opções adicionais para personalizar rotas de recursos.</p><h2 id="rotas-verificadas" class="section-heading">
+  <a href="#rotas-verificadas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Rotas Verificadas</span>
+</h2>
+<p>O Phoenix inclui o módulo <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.VerifiedRoutes.html"><code class="inline">Phoenix.VerifiedRoutes</code></a> que fornece verificações em tempo de compilação de caminhos de roteador contra seu roteador usando o sigil <code class="inline">~p</code>. Por exemplo, você pode escrever caminhos em controladores, testes e templates, e o compilador garantirá que esses realmente correspondam às rotas definidas em seu roteador.</p><p>Vamos ver isso em ação. Execute <code class="inline">iex -S mix</code> na raiz do projeto. Vamos definir um módulo de exemplo descartável que constrói alguns caminhos de rota <code class="inline">~p</code>.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">RouteExample</span><span class="w"> </span><span class="k" data-group-id="4921848785-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:verified_routes</span><span class="w">
+</span><span class="gp unselectable">...&gt;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">example</span><span class="w"> </span><span class="k" data-group-id="4921848785-2">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="sx">~p&quot;/comments&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">    </span><span class="sx">~p&quot;/unknown/123&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="k" data-group-id="4921848785-2">end</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="4921848785-1">end</span><span class="w">
+</span><span class="ss">warning</span><span class="p">:</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="s">&quot;/unknown/123&quot;</span><span class="w">
+  </span><span class="n">iex</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span><span class="w"> </span><span class="nc">RouteExample</span><span class="o">.</span><span class="n">example</span><span class="o">/</span><span class="mi">0</span><span class="w">
+
+</span><span class="p" data-group-id="4921848785-3">{</span><span class="ss">:module</span><span class="p">,</span><span class="w"> </span><span class="nc">RouteExample</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="4921848785-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt;</span></code></pre><p>Observe como a primeira chamada para uma rota existente, <code class="inline">~p&quot;/comments&quot;</code> não deu nenhum aviso, mas um caminho de rota ruim <code class="inline">~p&quot;/unknown/123&quot;</code> produziu um aviso do compilador, como deveria. Isso é significativo porque nos permite escrever caminhos codificados em nossa aplicação e o compilador nos informará sempre que escrevermos uma rota incorreta ou alterarmos nossa estrutura de roteamento.</p><p>Os projetos Phoenix são configurados prontos para permitir o uso de rotas verificadas em toda a sua camada web, incluindo testes. Por exemplo, em seus templates, você pode renderizar links <code class="inline">~p</code>:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nf">.link</span><span class="w"> </span><span class="na">href</span><span class="p">=</span><span class="p" data-group-id="9024355815-1">{</span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="9024355815-1">}</span><span class="p">&gt;</span><span class="n">Página de Boas-vindas!</span><span class="p">&lt;/</span><span class="nf">.link</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;</span><span class="nf">.link</span><span class="w"> </span><span class="na">href</span><span class="p">=</span><span class="p" data-group-id="9024355815-2">{</span><span class="sx">~p&quot;/comments&quot;</span><span class="p" data-group-id="9024355815-2">}</span><span class="p">&gt;</span><span class="n">Ver Comentários</span><span class="p">&lt;/</span><span class="nf">.link</span><span class="p">&gt;</span></code></pre><p>Ou em um controlador, emitir um redirecionamento:</p><pre><code class="makeup elixir" translate="no"><span class="n">redirect</span><span class="p" data-group-id="9474229533-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/comments/</span><span class="si" data-group-id="9474229533-2">#{</span><span class="n">comment</span><span class="si" data-group-id="9474229533-2">}</span><span class="sx">&quot;</span><span class="p" data-group-id="9474229533-1">)</span></code></pre><p>Usar <code class="inline">~p</code> para caminhos de rota garante que os caminhos e URLs de nossa aplicação permaneçam atualizados com as definições do roteador. O compilador capturará bugs para nós e nos informará quando alterarmos rotas que são referenciadas em outros lugares de nossa aplicação.</p><h3 id="mais-sobre-rotas-verificadas" class="section-heading">
+  <a href="#mais-sobre-rotas-verificadas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Mais sobre rotas verificadas</span>
+</h3>
+<p>E quanto a caminhos com strings de consulta? Você pode adicionar pares de chave-valor de string de consulta diretamente ou fornecer um dicionário de pares de chave-valor, por exemplo:</p><pre><code class="makeup elixir" translate="no"><span class="sx">~p&quot;/users/17?admin=true&amp;active=false&quot;</span><span class="w">
+</span><span class="s">&quot;/users/17?admin=true&amp;active=false&quot;</span><span class="w">
+
+</span><span class="sx">~p&quot;/users/17?</span><span class="si" data-group-id="6673231737-1">#{</span><span class="p" data-group-id="6673231737-2">[</span><span class="ss">admin</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="6673231737-2">]</span><span class="si" data-group-id="6673231737-1">}</span><span class="sx">&quot;</span><span class="w">
+</span><span class="s">&quot;/users/17?admin=true&quot;</span></code></pre><p>E se precisarmos de uma URL completa em vez de um caminho? Basta envolver seu caminho com uma chamada para <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.VerifiedRoutes.html#url/1"><code class="inline">Phoenix.VerifiedRoutes.url/1</code></a>, que é importado em todos os lugares onde <code class="inline">~p</code> está disponível:</p><pre><code class="makeup elixir" translate="no"><span class="n">url</span><span class="p" data-group-id="1909757812-1">(</span><span class="sx">~p&quot;/users&quot;</span><span class="p" data-group-id="1909757812-1">)</span><span class="w">
+</span><span class="s">&quot;http://localhost:4000/users&quot;</span></code></pre><p>As chamadas <code class="inline">url</code> obterão o host, porta, porta de proxy e informações SSL necessárias para construir a URL completa a partir dos parâmetros de configuração definidos para cada ambiente. Falaremos sobre configuração em mais detalhes em seu próprio guia. Por enquanto, você pode dar uma olhada no arquivo <code class="inline">config/dev.exs</code> em seu próprio projeto para ver esses valores.</p><h2 id="recursos-aninhados" class="section-heading">
+  <a href="#recursos-aninhados" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Recursos aninhados</span>
+</h2>
+<p>Também é possível aninhar recursos em um roteador Phoenix. Digamos que também temos um recurso <code class="inline">posts</code> que tem um relacionamento muitos-para-um com <code class="inline">users</code>. Ou seja, um usuário pode criar muitos posts, e um post individual pertence a apenas um usuário. Podemos representar isso adicionando uma rota aninhada em <code class="inline">lib/hello_web/router.ex</code> assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">UserController</span><span class="w"> </span><span class="k" data-group-id="6210345146-1">do</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/posts&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="w">
+</span><span class="k" data-group-id="6210345146-1">end</span></code></pre><p>Quando executamos <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> agora, além das rotas que vimos para <code class="inline">users</code> acima, obtemos o seguinte conjunto de rotas:</p><pre><code class="makeup elixir" translate="no"><span class="n">...</span><span class="w">
+</span><span class="nc">GET</span><span class="w">     </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="w">           </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:index</span><span class="w">
+</span><span class="nc">GET</span><span class="w">     </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="ss">:id</span><span class="o">/</span><span class="n">edit</span><span class="w">  </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:edit</span><span class="w">
+</span><span class="nc">GET</span><span class="w">     </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="n">new</span><span class="w">       </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:new</span><span class="w">
+</span><span class="nc">GET</span><span class="w">     </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="ss">:id</span><span class="w">       </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:show</span><span class="w">
+</span><span class="nc">POST</span><span class="w">    </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="w">           </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:create</span><span class="w">
+</span><span class="nc">PATCH</span><span class="w">   </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="ss">:id</span><span class="w">       </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:update</span><span class="w">
+</span><span class="nc">PUT</span><span class="w">     </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="ss">:id</span><span class="w">       </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:update</span><span class="w">
+</span><span class="nc">DELETE</span><span class="w">  </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="ss">:user_id</span><span class="o">/</span><span class="n">posts</span><span class="o">/</span><span class="ss">:id</span><span class="w">       </span><span class="nc">HelloWeb.PostController</span><span class="w"> </span><span class="ss">:delete</span><span class="w">
+</span><span class="n">...</span></code></pre><p>Vemos que cada uma dessas rotas limita os posts a um ID de usuário. Para a primeira, invocaremos a ação <code class="inline">index</code> do <code class="inline">PostController</code>, mas passaremos um <code class="inline">user_id</code>. Isso implica que exibiríamos todos os posts apenas para esse usuário individual. O mesmo escopo se aplica a todas essas rotas.</p><p>Ao construir caminhos para rotas aninhadas, precisaremos interpolar os IDs onde eles pertencem na definição da rota. Para a seguinte rota <code class="inline">show</code>, <code class="inline">42</code> é o <code class="inline">user_id</code> e <code class="inline">17</code> é o <code class="inline">post_id</code>.</p><pre><code class="makeup elixir" translate="no"><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="n">post_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="w">
+</span><span class="sx">~p&quot;/users/</span><span class="si" data-group-id="8718234457-1">#{</span><span class="n">user_id</span><span class="si" data-group-id="8718234457-1">}</span><span class="sx">/posts/</span><span class="si" data-group-id="8718234457-2">#{</span><span class="n">post_id</span><span class="si" data-group-id="8718234457-2">}</span><span class="sx">&quot;</span><span class="w">
+</span><span class="s">&quot;/users/42/posts/17&quot;</span></code></pre><p>Rotas verificadas também suportam o protocolo <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Param.html"><code class="inline">Phoenix.Param</code></a>, mas não precisamos nos preocupar com protocolos Elixir por enquanto. Saiba apenas que, uma vez que começamos a construir nossa aplicação com structs como <code class="inline">%User{}</code> e <code class="inline">%Post{}</code>, poderemos interpolar essas estruturas de dados diretamente em nossos caminhos <code class="inline">~p</code> e o Phoenix extrairá os campos corretos para usar na rota.</p><pre><code class="makeup elixir" translate="no"><span class="sx">~p&quot;/users/</span><span class="si" data-group-id="6392733744-1">#{</span><span class="n">user</span><span class="si" data-group-id="6392733744-1">}</span><span class="sx">/posts/</span><span class="si" data-group-id="6392733744-2">#{</span><span class="n">post</span><span class="si" data-group-id="6392733744-2">}</span><span class="sx">&quot;</span><span class="w">
+</span><span class="s">&quot;/users/42/posts/17&quot;</span></code></pre><p>Perceba como não precisamos interpolar <code class="inline">user.id</code> ou <code class="inline">post.id</code>? Isso é particularmente útil se decidirmos mais tarde que queremos tornar nossas URLs um pouco mais agradáveis e começar a usar slugs. Não precisamos alterar nenhum de nossos <code class="inline">~p</code>!</p><h2 id="rotas-com-escopo" class="section-heading">
+  <a href="#rotas-com-escopo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Rotas com escopo</span>
+</h2>
+<p>Escopos são uma maneira de agrupar rotas sob um prefixo de caminho comum e um conjunto de plugs com escopo. Podemos querer fazer isso para funcionalidades de administração, APIs e especialmente para APIs versionadas. Digamos que temos reviews geradas pelo usuário em um site, e que essas reviews primeiro precisam ser aprovadas por um administrador. A semântica desses recursos é bastante diferente, e eles podem não compartilhar o mesmo controlador. Escopos nos permitem segregar essas rotas.</p><p>Os caminhos para as reviews voltadas para o usuário seriam como um recurso padrão.</p><pre><code class="makeup console" translate="no"><span class="">/reviews
+</span><span class="">/reviews/1234
+</span><span class="">/reviews/1234/edit
+</span><span class="">...
+</span></code></pre><p>Os caminhos de administração de reviews podem ter o prefixo <code class="inline">/admin</code>.</p><pre><code class="makeup console" translate="no"><span class="">/admin/reviews
+</span><span class="">/admin/reviews/1234
+</span><span class="">/admin/reviews/1234/edit
+</span><span class="">...
+</span></code></pre><p>Conseguimos isso com uma rota com escopo que define uma opção de caminho para <code class="inline">/admin</code> como esta. Podemos aninhar este escopo dentro de outro escopo, mas, em vez disso, vamos defini-lo sozinho na raiz, adicionando ao <code class="inline">lib/hello_web/router.ex</code> o seguinte:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Admin</span><span class="w"> </span><span class="k" data-group-id="4386386836-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+</span><span class="k" data-group-id="4386386836-1">end</span></code></pre><p>Definimos um novo escopo onde todas as rotas têm o prefixo <code class="inline">/admin</code> e todos os controladores estão sob o namespace <code class="inline">HelloWeb.Admin</code>.</p><p>Executando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> novamente, além do conjunto anterior de rotas, obtemos o seguinte:</p><pre><code class="makeup console" translate="no"><span class="">...
+</span><span class="">GET     /admin/reviews           HelloWeb.Admin.ReviewController :index
+</span><span class="">GET     /admin/reviews/:id/edit  HelloWeb.Admin.ReviewController :edit
+</span><span class="">GET     /admin/reviews/new       HelloWeb.Admin.ReviewController :new
+</span><span class="">GET     /admin/reviews/:id       HelloWeb.Admin.ReviewController :show
+</span><span class="">POST    /admin/reviews           HelloWeb.Admin.ReviewController :create
+</span><span class="">PATCH   /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">PUT     /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">DELETE  /admin/reviews/:id       HelloWeb.Admin.ReviewController :delete
+</span><span class="">...
+</span></code></pre><p>Isso parece bom, mas há um problema aqui. Lembre-se de que queríamos tanto as rotas de reviews voltadas para o usuário <code class="inline">/reviews</code> quanto as de administração <code class="inline">/admin/reviews</code>. Se agora incluirmos as reviews voltadas para o usuário em nosso roteador sob o escopo raiz assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="6290503230-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">...</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+</span><span class="k" data-group-id="6290503230-1">end</span><span class="w">
+
+</span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Admin</span><span class="w"> </span><span class="k" data-group-id="6290503230-2">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+</span><span class="k" data-group-id="6290503230-2">end</span></code></pre><p>e executarmos <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a>, obteremos saída para cada rota com escopo:</p><pre><code class="makeup console" translate="no"><span class="">...
+</span><span class="">GET     /reviews                 HelloWeb.ReviewController :index
+</span><span class="">GET     /reviews/:id/edit        HelloWeb.ReviewController :edit
+</span><span class="">GET     /reviews/new             HelloWeb.ReviewController :new
+</span><span class="">GET     /reviews/:id             HelloWeb.ReviewController :show
+</span><span class="">POST    /reviews                 HelloWeb.ReviewController :create
+</span><span class="">PATCH   /reviews/:id             HelloWeb.ReviewController :update
+</span><span class="">PUT     /reviews/:id             HelloWeb.ReviewController :update
+</span><span class="">DELETE  /reviews/:id             HelloWeb.ReviewController :delete
+</span><span class="">...
+</span><span class="">GET     /admin/reviews           HelloWeb.Admin.ReviewController :index
+</span><span class="">GET     /admin/reviews/:id/edit  HelloWeb.Admin.ReviewController :edit
+</span><span class="">GET     /admin/reviews/new       HelloWeb.Admin.ReviewController :new
+</span><span class="">GET     /admin/reviews/:id       HelloWeb.Admin.ReviewController :show
+</span><span class="">POST    /admin/reviews           HelloWeb.Admin.ReviewController :create
+</span><span class="">PATCH   /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">PUT     /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">DELETE  /admin/reviews/:id       HelloWeb.Admin.ReviewController :delete
+</span></code></pre><p>E se tivéssemos vários recursos que fossem todos tratados por administradores? Poderíamos colocar todos eles dentro do mesmo escopo assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Admin</span><span class="w"> </span><span class="k" data-group-id="0507640182-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/images&quot;</span><span class="p">,</span><span class="w">  </span><span class="nc">ImageController</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">UserController</span><span class="w">
+</span><span class="k" data-group-id="0507640182-1">end</span></code></pre><p>Veja o que <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> nos diz:</p><pre><code class="makeup console" translate="no"><span class="">...
+</span><span class="">GET     /admin/images            HelloWeb.Admin.ImageController :index
+</span><span class="">GET     /admin/images/:id/edit   HelloWeb.Admin.ImageController :edit
+</span><span class="">GET     /admin/images/new        HelloWeb.Admin.ImageController :new
+</span><span class="">GET     /admin/images/:id        HelloWeb.Admin.ImageController :show
+</span><span class="">POST    /admin/images            HelloWeb.Admin.ImageController :create
+</span><span class="">PATCH   /admin/images/:id        HelloWeb.Admin.ImageController :update
+</span><span class="">PUT     /admin/images/:id        HelloWeb.Admin.ImageController :update
+</span><span class="">DELETE  /admin/images/:id        HelloWeb.Admin.ImageController :delete
+</span><span class="">GET     /admin/reviews           HelloWeb.Admin.ReviewController :index
+</span><span class="">GET     /admin/reviews/:id/edit  HelloWeb.Admin.ReviewController :edit
+</span><span class="">GET     /admin/reviews/new       HelloWeb.Admin.ReviewController :new
+</span><span class="">GET     /admin/reviews/:id       HelloWeb.Admin.ReviewController :show
+</span><span class="">POST    /admin/reviews           HelloWeb.Admin.ReviewController :create
+</span><span class="">PATCH   /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">PUT     /admin/reviews/:id       HelloWeb.Admin.ReviewController :update
+</span><span class="">DELETE  /admin/reviews/:id       HelloWeb.Admin.ReviewController :delete
+</span><span class="">GET     /admin/users             HelloWeb.Admin.UserController :index
+</span><span class="">GET     /admin/users/:id/edit    HelloWeb.Admin.UserController :edit
+</span><span class="">GET     /admin/users/new         HelloWeb.Admin.UserController :new
+</span><span class="">GET     /admin/users/:id         HelloWeb.Admin.UserController :show
+</span><span class="">POST    /admin/users             HelloWeb.Admin.UserController :create
+</span><span class="">PATCH   /admin/users/:id         HelloWeb.Admin.UserController :update
+</span><span class="">PUT     /admin/users/:id         HelloWeb.Admin.UserController :update
+</span><span class="">DELETE  /admin/users/:id         HelloWeb.Admin.UserController :delete
+</span></code></pre><p>Isso é ótimo, exatamente o que queremos. Observe como cada rota e controlador está adequadamente com namespace.</p><p>Escopos também podem ser aninhados arbitrariamente, mas você deve fazer isso com cuidado, pois o aninhamento às vezes pode tornar nosso código confuso e menos claro. Com isso dito, suponha que tivéssemos uma API versionada com recursos definidos para imagens, reviews e usuários. Então, tecnicamente, poderíamos configurar rotas para a API versionada assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/api&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Api</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="ss">:api</span><span class="w"> </span><span class="k" data-group-id="3040174972-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:api</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/v1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">V1</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="ss">:v1</span><span class="w"> </span><span class="k" data-group-id="3040174972-2">do</span><span class="w">
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/images&quot;</span><span class="p">,</span><span class="w">  </span><span class="nc">ImageController</span><span class="w">
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w">   </span><span class="nc">UserController</span><span class="w">
+  </span><span class="k" data-group-id="3040174972-2">end</span><span class="w">
+</span><span class="k" data-group-id="3040174972-1">end</span></code></pre><p>Você pode executar <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a> para ver como essas definições serão.</p><p>Curiosamente, podemos usar vários escopos com o mesmo caminho, desde que sejamos cuidadosos para não duplicar rotas. O seguinte roteador está perfeitamente correto com dois escopos definidos para o mesmo caminho:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="2012187650-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Router</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="2012187650-2">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">UserController</span><span class="w">
+  </span><span class="k" data-group-id="2012187650-2">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">AnotherAppWeb</span><span class="w"> </span><span class="k" data-group-id="2012187650-3">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/posts&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="w">
+  </span><span class="k" data-group-id="2012187650-3">end</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="2012187650-1">end</span></code></pre><p>Se duplicarmos uma rota — o que significa duas rotas tendo o mesmo caminho — receberemos este aviso familiar:</p><pre><code class="makeup console" translate="no"><span class="">warning: this clause cannot match because a previous clause at line 16 always matches
+</span></code></pre><h2 id="pipelines" class="section-heading">
+  <a href="#pipelines" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Pipelines</span>
+</h2>
+<p>Chegamos bastante longe neste guia sem falar sobre uma das primeiras linhas que vimos no roteador: <code class="inline">pipe_through :browser</code>. É hora de corrigir isso.</p><p>Pipelines são uma série de plugs que podem ser anexados a escopos específicos. Se você não está familiarizado com plugs, temos um <a href="plug.html">guia detalhado sobre eles</a>.</p><p>Rotas são definidas dentro de escopos e escopos podem passar por vários pipelines. Uma vez que uma rota corresponde, o Phoenix invoca todos os plugs definidos em todos os pipelines associados a essa rota. Por exemplo, acessar <code class="inline">/</code> passará pelo pipeline <code class="inline">:browser</code>, consequentemente invocando todos os seus plugs.</p><p>O Phoenix define dois pipelines por padrão, <code class="inline">:browser</code> e <code class="inline">:api</code>, que podem ser usados para uma série de tarefas comuns. Por sua vez, podemos personalizá-los, bem como criar novos pipelines para atender às nossas necessidades.</p><h3 id="os-pipelines-browser-e-api" class="section-heading">
+  <a href="#os-pipelines-browser-e-api" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Os pipelines <code class="inline">:browser</code> e <code class="inline">:api</code></span>
+</h3>
+<p>Como seus nomes sugerem, o pipeline <code class="inline">:browser</code> prepara para rotas que renderizam requisições para um navegador, e o pipeline <code class="inline">:api</code> prepara para rotas que produzem dados para uma API.</p><p>O pipeline <code class="inline">:browser</code> tem seis plugs: O <code class="inline">plug :accepts, [&quot;html&quot;]</code> define o formato ou formatos de requisição aceitos. <code class="inline">:fetch_session</code>, que, naturalmente, busca os dados da sessão e os disponibiliza na conexão. <code class="inline">:fetch_live_flash</code>, que busca quaisquer mensagens flash do LiveView e as mescla com as mensagens flash do controlador. Em seguida, o plug <code class="inline">:put_root_layout</code> armazenará o layout raiz para fins de renderização. Mais tarde, <code class="inline">:protect_from_forgery</code> e <code class="inline">:put_secure_browser_headers</code> protegem os envios de formulários de falsificação entre sites.</p><p>Atualmente, o pipeline <code class="inline">:api</code> define apenas <code class="inline">plug :accepts, [&quot;json&quot;]</code>.</p><p>O roteador invoca um pipeline em uma rota definida dentro de um escopo. Rotas fora de um escopo não têm pipelines. Embora o uso de escopos aninhados seja desencorajado (veja acima o exemplo de API versionada), se chamarmos <code class="inline">pipe_through</code> dentro de um escopo aninhado, o roteador invocará todos os <code class="inline">pipe_through</code> dos escopos pai, seguidos pelo aninhado.</p><p>Essas são muitas palavras agrupadas. Vamos dar uma olhada em alguns exemplos para desvendar seu significado.</p><p>Aqui está outra olhada no roteador de uma aplicação Phoenix recém-gerada, desta vez com o escopo <code class="inline">/api</code> descomentado de volta e uma rota adicionada.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="4127876862-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="4127876862-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4127876862-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="4127876862-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_live_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_root_layout</span><span class="p">,</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4127876862-4">{</span><span class="nc">HelloWeb.Layouts</span><span class="p">,</span><span class="w"> </span><span class="ss">:root</span><span class="p" data-group-id="4127876862-4">}</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+  </span><span class="k" data-group-id="4127876862-2">end</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:api</span><span class="w"> </span><span class="k" data-group-id="4127876862-5">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4127876862-6">[</span><span class="s">&quot;json&quot;</span><span class="p" data-group-id="4127876862-6">]</span><span class="w">
+  </span><span class="k" data-group-id="4127876862-5">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="4127876862-7">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:home</span><span class="w">
+  </span><span class="k" data-group-id="4127876862-7">end</span><span class="w">
+
+  </span><span class="c1"># Outros escopos podem usar pilhas personalizadas.</span><span class="w">
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/api&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="4127876862-8">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:api</span><span class="w">
+
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+  </span><span class="k" data-group-id="4127876862-8">end</span><span class="w">
+  </span><span class="c1"># ...</span><span class="w">
+</span><span class="k" data-group-id="4127876862-1">end</span></code></pre><p>Quando o servidor aceita uma requisição, a requisição sempre passará primeiro pelos plugs em nosso endpoint, após o qual tentará corresponder ao caminho e verbo HTTP.</p><p>Digamos que a requisição corresponda à nossa primeira rota: um GET para <code class="inline">/</code>. O roteador primeiro passará essa requisição pelo pipeline <code class="inline">:browser</code> - que buscará os dados da sessão, buscará o flash e executará a proteção contra falsificação - antes de despachar a requisição para a ação <code class="inline">home</code> do <code class="inline">PageController</code>.</p><p>Por outro lado, suponha que a requisição corresponda a qualquer uma das rotas definidas pela macro <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#resources/2"><code class="inline">resources/2</code></a>. Nesse caso, o roteador a passará pelo pipeline <code class="inline">:api</code> — que atualmente só realiza negociação de conteúdo — antes de despachá-la para a ação correta do <code class="inline">HelloWeb.ReviewController</code>.</p><p>Se nenhuma rota corresponder, nenhum pipeline é invocado e um erro 404 é levantado.</p><h3 id="criando-novos-pipelines" class="section-heading">
+  <a href="#criando-novos-pipelines" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Criando novos pipelines</span>
+</h3>
+<p>O Phoenix nos permite criar nossos próprios pipelines personalizados em qualquer lugar do roteador. Para fazer isso, chamamos a macro <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#pipeline/2"><code class="inline">pipeline/2</code></a> com estes argumentos: um átomo para o nome do nosso novo pipeline e um bloco com todos os plugs que queremos nele.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="9286175867-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="9286175867-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9286175867-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="9286175867-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_live_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_root_layout</span><span class="p">,</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9286175867-4">{</span><span class="nc">HelloWeb.Layouts</span><span class="p">,</span><span class="w"> </span><span class="ss">:root</span><span class="p" data-group-id="9286175867-4">}</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+  </span><span class="k" data-group-id="9286175867-2">end</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:auth</span><span class="w"> </span><span class="k" data-group-id="9286175867-5">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Authentication</span><span class="w">
+  </span><span class="k" data-group-id="9286175867-5">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="9286175867-6">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="p" data-group-id="9286175867-7">[</span><span class="ss">:browser</span><span class="p">,</span><span class="w"> </span><span class="ss">:auth</span><span class="p" data-group-id="9286175867-7">]</span><span class="w">
+
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+  </span><span class="k" data-group-id="9286175867-6">end</span><span class="w">
+</span><span class="k" data-group-id="9286175867-1">end</span></code></pre><p>O exemplo acima assume que existe um plug chamado <code class="inline">HelloWeb.Authentication</code> que realiza autenticação e agora faz parte do pipeline <code class="inline">:auth</code>.</p><p>Observe que os próprios pipelines são plugs, então podemos conectar um pipeline dentro de outro pipeline. Por exemplo, poderíamos reescrever o pipeline <code class="inline">auth</code> acima para invocar automaticamente <code class="inline">browser</code>, simplificando a chamada de pipeline downstream:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:auth</span><span class="w"> </span><span class="k" data-group-id="3434296305-1">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:ensure_authenticated_user</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:ensure_user_owns_review</span><span class="w">
+  </span><span class="k" data-group-id="3434296305-1">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="3434296305-2">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:auth</span><span class="w">
+
+    </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ReviewController</span><span class="w">
+  </span><span class="k" data-group-id="3434296305-2">end</span></code></pre><h2 id="como-organizar-minhas-rotas" class="section-heading">
+  <a href="#como-organizar-minhas-rotas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Como organizar minhas rotas?</span>
+</h2>
+<p>No Phoenix, tendemos a definir vários pipelines que fornecem funcionalidades específicas. Por exemplo, os pipelines <code class="inline">:browser</code> e <code class="inline">:api</code> são destinados a serem acessados por clientes específicos, navegadores e clientes http, respectivamente.</p><p>Talvez mais importante, também é muito comum definir pipelines específicos para autenticação e autorização. Por exemplo, você pode ter um pipeline que exige que todos os usuários estejam autenticados. Outro pipeline pode impor que apenas usuários administradores possam acessar certas rotas.</p><p>Uma vez que seus pipelines estão definidos, você reutiliza os pipelines nos escopos desejados, agrupando suas rotas em torno de seus pipelines. Por exemplo, voltando ao nosso exemplo de reviews. Digamos que qualquer pessoa possa ler uma review, mas apenas usuários autenticados podem criá-las. Suas rotas poderiam ser assim:</p><pre><code class="makeup elixir" translate="no"><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="1737067042-1">do</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="1737067042-1">end</span><span class="w">
+
+</span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:auth</span><span class="w"> </span><span class="k" data-group-id="1737067042-2">do</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Authentication</span><span class="w">
+</span><span class="k" data-group-id="1737067042-2">end</span><span class="w">
+
+</span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="k" data-group-id="1737067042-3">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="p" data-group-id="1737067042-4">[</span><span class="ss">:browser</span><span class="p" data-group-id="1737067042-4">]</span><span class="w">
+
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="w">
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/reviews/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="w">
+</span><span class="k" data-group-id="1737067042-3">end</span><span class="w">
+
+</span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="k" data-group-id="1737067042-5">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="p" data-group-id="1737067042-6">[</span><span class="ss">:browser</span><span class="p">,</span><span class="w"> </span><span class="ss">:auth</span><span class="p" data-group-id="1737067042-6">]</span><span class="w">
+
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/reviews/new&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="p">,</span><span class="w"> </span><span class="ss">:new</span><span class="w">
+  </span><span class="n">post</span><span class="w"> </span><span class="s">&quot;/reviews&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PostController</span><span class="p">,</span><span class="w"> </span><span class="ss">:create</span><span class="w">
+</span><span class="k" data-group-id="1737067042-5">end</span></code></pre><p>Observe no exemplo acima como as rotas são divididas em diferentes escopos. Embora a separação possa ser confusa no início, ela tem uma grande vantagem: é muito fácil inspecionar suas rotas e ver todas as rotas que, por exemplo, exigem autenticação e quais não exigem. Isso ajuda na auditoria e na certificação de que suas rotas têm o escopo adequado.</p><p>Você pode criar tantos ou tão poucos escopos quanto desejar. Como os pipelines são reutilizáveis entre escopos, eles ajudam a encapsular funcionalidades comuns e você pode compô-los conforme necessário em cada escopo que definir.</p><h2 id="forward" class="section-heading">
+  <a href="#forward" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Forward</span>
+</h2>
+<p>A macro <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#forward/4"><code class="inline">Phoenix.Router.forward/4</code></a> pode ser usada para enviar todas as requisições que começam com um caminho específico para um determinado plug. Digamos que temos uma parte do nosso sistema que é responsável (pode até ser uma aplicação ou biblioteca separada) por executar tarefas em segundo plano, ela poderia ter sua própria interface web para verificar o status das tarefas. Podemos encaminhar para esta interface de administração usando:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="1884200549-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">...</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="1884200549-2">do</span><span class="w">
+    </span><span class="n">...</span><span class="w">
+  </span><span class="k" data-group-id="1884200549-2">end</span><span class="w">
+
+  </span><span class="n">forward</span><span class="w"> </span><span class="s">&quot;/jobs&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">BackgroundJob.Plug</span><span class="w">
+</span><span class="k" data-group-id="1884200549-1">end</span></code></pre><p>Isso significa que todas as rotas que começam com <code class="inline">/jobs</code> serão enviadas para o módulo <code class="inline">HelloWeb.BackgroundJob.Plug</code>. Dentro do plug, você pode corresponder a sub-rotas, como <code class="inline">/pending</code> e <code class="inline">/active</code> que mostram o status de determinadas tarefas.</p><p>Podemos até mesmo misturar a macro <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#forward/4"><code class="inline">forward/4</code></a> com pipelines. Se quiséssemos garantir que o usuário estivesse autenticado e fosse um administrador para ver a página de tarefas, poderíamos usar o seguinte em nosso roteador.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="5436582107-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">...</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="k" data-group-id="5436582107-2">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="p" data-group-id="5436582107-3">[</span><span class="ss">:authenticate_user</span><span class="p">,</span><span class="w"> </span><span class="ss">:ensure_admin</span><span class="p" data-group-id="5436582107-3">]</span><span class="w">
+    </span><span class="n">forward</span><span class="w"> </span><span class="s">&quot;/jobs&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">BackgroundJob.Plug</span><span class="w">
+  </span><span class="k" data-group-id="5436582107-2">end</span><span class="w">
+</span><span class="k" data-group-id="5436582107-1">end</span></code></pre><p>Isso significa que os plugs nos pipelines <code class="inline">authenticate_user</code> e <code class="inline">ensure_admin</code> serão chamados antes do <code class="inline">BackgroundJob.Plug</code>, permitindo que eles enviem uma resposta apropriada e interrompam a requisição de acordo.</p><p>As <code class="inline">opts</code> que são recebidas no callback <code class="inline">init/1</code> do Módulo Plug podem ser passadas como um terceiro argumento. Por exemplo, talvez o trabalho em segundo plano permita que você defina o nome da sua aplicação para ser exibido na página. Isso poderia ser passado com:</p><pre><code class="makeup elixir" translate="no"><span class="n">forward</span><span class="w"> </span><span class="s">&quot;/jobs&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">BackgroundJob.Plug</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello Phoenix&quot;</span></code></pre><p>Existe um quarto argumento <code class="inline">router_opts</code> que pode ser passado. Essas opções são descritas na documentação <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html#scope/2"><code class="inline">Phoenix.Router.scope/2</code></a>.</p><p><code class="inline">BackgroundJob.Plug</code> pode ser implementado como qualquer Módulo Plug discutido no <a href="plug.html">guia do Plug</a>. Observe, no entanto, que não é recomendável encaminhar para outro endpoint Phoenix. Isso ocorre porque os plugs definidos pelo seu aplicativo e pelo endpoint encaminhado seriam invocados duas vezes, o que pode levar a erros.</p><h2 id="resumo" class="section-heading">
+  <a href="#resumo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Resumo</span>
+</h2>
+<p>Roteamento é um grande tópico, e cobrimos muito terreno aqui. Os pontos importantes a serem tirados deste guia são:</p><ul><li>Rotas que começam com um nome de verbo HTTP expandem para uma única cláusula da função match.</li><li>Rotas declaradas com <code class="inline">resources</code> expandem para 8 cláusulas da função match.</li><li>Recursos podem restringir o número de cláusulas da função match usando as opções <code class="inline">only:</code> ou <code class="inline">except:</code>.</li><li>Qualquer dessas rotas pode ser aninhada.</li><li>Qualquer dessas rotas pode ter escopo para um determinado caminho.</li><li>Usar rotas verificadas com <code class="inline">~p</code> para verificações de rota em tempo de compilação</li></ul>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="plug.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Plug
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="controllers.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Controladores
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

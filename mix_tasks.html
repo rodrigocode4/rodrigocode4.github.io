@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Tarefas Mix — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Tarefas Mix</h1>
+
+
+  </div>
+
+<p>Existem atualmente várias tarefas <a href="https://hexdocs.pm/mix/Mix.Task.html">Mix tasks</a> específicas do Phoenix e do Ecto disponíveis para nós em uma aplicação recém-gerada. Também podemos criar nossas próprias tarefas específicas para a aplicação.</p><blockquote><p>Nota: para saber mais sobre o <code class="inline">mix</code>, você pode ler a <a href="https://hexdocs.pm/elixir/introduction-to-mix.html">Introdução ao Mix</a> oficial do Elixir.</p></blockquote><h2 id="tarefas-do-phoenix" class="section-heading">
+  <a href="#tarefas-do-phoenix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Tarefas do Phoenix</span>
+</h2>
+<pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix help --search &quot;phx&quot;
+</span><span class="">mix local.phx          # Atualiza o gerador de projetos Phoenix localmente
+</span><span class="">mix phx                # Imprime informações de ajuda do Phoenix
+</span><span class="">mix phx.digest         # Gera digest e comprime arquivos estáticos
+</span><span class="">mix phx.digest.clean   # Remove versões antigas de assets estáticos
+</span><span class="">mix phx.gen.auth       # Gera lógica de autenticação para um recurso
+</span><span class="">mix phx.gen.cert       # Gera um certificado autoassinado para testes HTTPS
+</span><span class="">mix phx.gen.channel    # Gera um canal Phoenix
+</span><span class="">mix phx.gen.context    # Gera um contexto com funções em torno de um esquema Ecto
+</span><span class="">mix phx.gen.embedded   # Gera um arquivo de esquema Ecto embutido
+</span><span class="">mix phx.gen.html       # Gera controlador, views e contexto para um recurso HTML
+</span><span class="">mix phx.gen.json       # Gera controlador, views e contexto para um recurso JSON
+</span><span class="">mix phx.gen.live       # Gera LiveView, templates e contexto para um recurso
+</span><span class="">mix phx.gen.notifier   # Gera um notificador que entrega emails por padrão
+</span><span class="">mix phx.gen.presence   # Gera um rastreador de Presença
+</span><span class="">mix phx.gen.schema     # Gera um esquema Ecto e arquivo de migração
+</span><span class="">mix phx.gen.secret     # Gera um segredo
+</span><span class="">mix phx.gen.socket     # Gera um manipulador de socket Phoenix
+</span><span class="">mix phx.new            # Cria uma nova aplicação Phoenix
+</span><span class="">mix phx.new.ecto       # Cria um novo projeto Ecto dentro de um projeto guarda-chuva
+</span><span class="">mix phx.new.web        # Cria um novo projeto web Phoenix dentro de um projeto guarda-chuva
+</span><span class="">mix phx.routes         # Imprime todas as rotas
+</span><span class="">mix phx.server         # Inicia aplicações e seus servidores
+</span></code></pre><p>Vimos todas essas em algum momento nos guias, mas ter todas as informações sobre elas em um único lugar parece uma boa ideia.</p><p>Vamos cobrir todas as tarefas Mix do Phoenix, exceto <code class="inline">phx.new</code>, <code class="inline">phx.new.ecto</code> e <code class="inline">phx.new.web</code>, que fazem parte do instalador do Phoenix. Você pode aprender mais sobre elas ou qualquer outra tarefa chamando <code class="inline">mix help TAREFA</code>.</p><h3 id="mix-phx-gen-html" class="section-heading">
+  <a href="#mix-phx-gen-html" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Html.html"><code class="inline">mix phx.gen.html</code></a></span>
+</h3>
+<p>O Phoenix oferece a capacidade de gerar todo o código para criar um recurso HTML completo — migração Ecto, contexto Ecto, controlador com todas as ações necessárias, view e templates. Isso pode ser uma tremenda economia de tempo. Vamos dar uma olhada em como fazer isso acontecer.</p><p>A tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Html.html"><code class="inline">mix phx.gen.html</code></a> recebe os seguintes argumentos: o nome do módulo do contexto, o nome do módulo do esquema, o nome do recurso e uma lista de atributos column_name:type. O nome do módulo que passamos deve estar em conformidade com as regras de nomenclatura de módulos do Elixir, seguindo a capitalização adequada.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Post posts body:string word_count:integer
+</span><span class="">* creating lib/hello_web/controllers/post_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/post_html/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/post_form.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/index.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/show.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html.ex
+</span><span class="">* creating test/hello_web/controllers/post_controller_test.exs
+</span><span class="">* creating lib/hello/blog/post.ex
+</span><span class="">* creating priv/repo/migrations/20211001233016_create_posts.exs
+</span><span class="">* creating lib/hello/blog.ex
+</span><span class="">* injecting lib/hello/blog.ex
+</span><span class="">* creating test/hello/blog_test.exs
+</span><span class="">* injecting test/hello/blog_test.exs
+</span><span class="">* creating test/support/fixtures/blog_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/blog_fixtures.ex
+</span></code></pre><p>Quando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Html.html"><code class="inline">mix phx.gen.html</code></a> termina de criar arquivos, ele nos informa que precisamos adicionar uma linha ao nosso arquivo de roteador, além de executar nossas migrações Ecto.</p><pre><code class="makeup console" translate="no"><span class="">Adicione o recurso ao seu escopo de navegador em lib/hello_web/router.ex:
+</span><span class="">
+</span><span class="">    resources &quot;/posts&quot;, PostController
+</span><span class="">
+</span><span class="">Lembre-se de atualizar seu repositório executando migrações:
+</span><span class="">
+</span><span class="">    $ mix ecto.migrate
+</span></code></pre><p>Importante: Se não fizermos isso, veremos os seguintes avisos em nossos logs, e nossa aplicação gerará um erro ao compilar.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.server
+</span><span class="">Compiling 17 files (.ex)
+</span><span class="">
+</span><span class="">warning: no route path for HelloWeb.Router matches \&quot;/posts\&quot;
+</span><span class="">  lib/hello_web/controllers/post_controller.ex:22: HelloWeb.PostController.index/2
+</span></code></pre><p>Se não quisermos criar um contexto ou esquema para nosso recurso, podemos usar a flag <code class="inline">--no-context</code>. Observe que isso ainda requer um nome de módulo de contexto como parâmetro.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Post posts body:string word_count:integer --no-context
+</span><span class="">* creating lib/hello_web/controllers/post_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/post_html/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/post_form.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/index.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/show.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html.ex
+</span><span class="">* creating test/hello_web/controllers/post_controller_test.exs
+</span></code></pre><p>Ele nos dirá que precisamos adicionar uma linha ao nosso arquivo de roteador, mas como pulamos o contexto, não mencionará nada sobre <code class="inline">ecto.migrate</code>.</p><pre><code class="makeup console" translate="no"><span class="">Adicione o recurso ao seu escopo de navegador em lib/hello_web/router.ex:
+</span><span class="">
+</span><span class="">    resources &quot;/posts&quot;, PostController
+</span></code></pre><p>Da mesma forma, se queremos um contexto criado sem um esquema para nosso recurso, podemos usar a flag <code class="inline">--no-schema</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Post posts body:string word_count:integer --no-schema
+</span><span class="">* creating lib/hello_web/controllers/post_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/post_html/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/post_form.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/index.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/show.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html.ex
+</span><span class="">* creating test/hello_web/controllers/post_controller_test.exs
+</span><span class="">* creating lib/hello/blog.ex
+</span><span class="">* injecting lib/hello/blog.ex
+</span><span class="">* creating test/hello/blog_test.exs
+</span><span class="">* injecting test/hello/blog_test.exs
+</span><span class="">* creating test/support/fixtures/blog_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/blog_fixtures.ex
+</span></code></pre><p>Ele nos dirá que precisamos adicionar uma linha ao nosso arquivo de roteador, mas como pulamos o esquema, não mencionará nada sobre <code class="inline">ecto.migrate</code>.</p><h3 id="mix-phx-gen-json" class="section-heading">
+  <a href="#mix-phx-gen-json" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Json.html"><code class="inline">mix phx.gen.json</code></a></span>
+</h3>
+<p>O Phoenix também oferece a capacidade de gerar todo o código para criar um recurso JSON completo — migração Ecto, esquema Ecto, controlador com todas as ações necessárias e view. Este comando não criará nenhum template para o aplicativo.</p><p>A tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Json.html"><code class="inline">mix phx.gen.json</code></a> recebe os seguintes argumentos: o nome do módulo do contexto, o nome do módulo do esquema, o nome do recurso e uma lista de atributos column_name:type. O nome do módulo que passamos deve estar em conformidade com as regras de nomenclatura de módulos do Elixir, seguindo a capitalização adequada.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.json Blog Post posts title:string content:string
+</span><span class="">* creating lib/hello_web/controllers/post_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/post_json.ex
+</span><span class="">* creating test/hello_web/controllers/post_controller_test.exs
+</span><span class="">* creating lib/hello_web/controllers/changeset_json.ex
+</span><span class="">* creating lib/hello_web/controllers/fallback_controller.ex
+</span><span class="">* creating lib/hello/blog/post.ex
+</span><span class="">* creating priv/repo/migrations/20170906153323_create_posts.exs
+</span><span class="">* creating lib/hello/blog.ex
+</span><span class="">* injecting lib/hello/blog.ex
+</span><span class="">* creating test/hello/blog/blog_test.exs
+</span><span class="">* injecting test/hello/blog/blog_test.exs
+</span><span class="">* creating test/support/fixtures/blog_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/blog_fixtures.ex
+</span></code></pre><p>Quando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Json.html"><code class="inline">mix phx.gen.json</code></a> termina de criar arquivos, ele nos informa que precisamos adicionar uma linha ao nosso arquivo de roteador, além de executar nossas migrações Ecto.</p><pre><code class="makeup console" translate="no"><span class="">Adicione o recurso ao escopo &quot;/api&quot; em lib/hello_web/router.ex:
+</span><span class="">
+</span><span class="">    resources &quot;/posts&quot;, PostController, except: [:new, :edit]
+</span><span class="">
+</span><span class="">Lembre-se de atualizar seu repositório executando migrações:
+</span><span class="">
+</span><span class="">    $ mix ecto.migrate
+</span></code></pre><p>Importante: Se não fizermos isso, receberemos o seguinte aviso em nossos logs e a aplicação gerará um erro ao tentar compilar:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.server
+</span><span class="">Compiling 19 files (.ex)
+</span><span class="">
+</span><span class="">warning: no route path for HelloWeb.Router matches \&quot;/posts\&quot;
+</span><span class="">  lib/hello_web/controllers/post_controller.ex:22: HelloWeb.PostController.index/2
+</span></code></pre><p><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Json.html"><code class="inline">mix phx.gen.json</code></a> também suporta <code class="inline">--no-context</code>, <code class="inline">--no-schema</code> e outros, como em <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Html.html"><code class="inline">mix phx.gen.html</code></a>.</p><h3 id="mix-phx-gen-context" class="section-heading">
+  <a href="#mix-phx-gen-context" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Context.html"><code class="inline">mix phx.gen.context</code></a></span>
+</h3>
+<p>Se não precisarmos de um recurso HTML/JSON completo e só precisarmos de um contexto, podemos usar a tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Context.html"><code class="inline">mix phx.gen.context</code></a>. Ela gerará um contexto, um esquema, uma migração e um caso de teste.</p><p>A tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Context.html"><code class="inline">mix phx.gen.context</code></a> recebe os seguintes argumentos: o nome do módulo do contexto, o nome do módulo do esquema, o nome do recurso e uma lista de atributos column_name:type.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.context Accounts User users name:string age:integer
+</span><span class="">* creating lib/hello/accounts/user.ex
+</span><span class="">* creating priv/repo/migrations/20170906161158_create_users.exs
+</span><span class="">* creating lib/hello/accounts.ex
+</span><span class="">* injecting lib/hello/accounts.ex
+</span><span class="">* creating test/hello/accounts/accounts_test.exs
+</span><span class="">* injecting test/hello/accounts/accounts_test.exs
+</span><span class="">* creating test/support/fixtures/accounts_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/accounts_fixtures.ex
+</span></code></pre><blockquote><p>Nota: Se precisarmos estabelecer um namespace para nosso recurso, podemos simplesmente colocar o primeiro argumento do gerador em um namespace.</p></blockquote><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.context Admin.Accounts User users name:string age:integer
+</span><span class="">* creating lib/hello/admin/accounts/user.ex
+</span><span class="">* creating priv/repo/migrations/20170906161246_create_users.exs
+</span><span class="">* creating lib/hello/admin/accounts.ex
+</span><span class="">* injecting lib/hello/admin/accounts.ex
+</span><span class="">* creating test/hello/admin/accounts_test.exs
+</span><span class="">* injecting test/hello/admin/accounts_test.exs
+</span><span class="">* creating test/support/fixtures/admin/accounts_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/admin/accounts_fixtures.ex
+</span></code></pre><h3 id="mix-phx-gen-schema" class="section-heading">
+  <a href="#mix-phx-gen-schema" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Schema.html"><code class="inline">mix phx.gen.schema</code></a></span>
+</h3>
+<p>Se não precisarmos de um recurso HTML/JSON completo e não estivermos interessados em gerar ou alterar um contexto, podemos usar a tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Schema.html"><code class="inline">mix phx.gen.schema</code></a>. Ela gerará um esquema e uma migração.</p><p>A tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Schema.html"><code class="inline">mix phx.gen.schema</code></a> recebe os seguintes argumentos: o nome do módulo do esquema (que pode estar em um namespace), o nome do recurso e uma lista de atributos column_name:type.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.schema Accounts.Credential credentials email:string:unique user_id:references:users
+</span><span class="">* creating lib/hello/accounts/credential.ex
+</span><span class="">* creating priv/repo/migrations/20170906162013_create_credentials.exs
+</span></code></pre><h3 id="mix-phx-gen-auth" class="section-heading">
+  <a href="#mix-phx-gen-auth" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a></span>
+</h3>
+<p>O Phoenix também oferece a capacidade de gerar todo o código para configurar um sistema de autenticação completo — migração Ecto, contexto phoenix, controladores, templates, etc. Isso pode ser uma enorme economia de tempo, permitindo que você rapidamente adicione autenticação ao seu sistema e volte seu foco para os problemas primários que sua aplicação está tentando resolver.</p><p>A tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> recebe os seguintes argumentos: o nome do módulo do contexto, o nome do módulo do esquema e uma versão plural do nome do esquema usado para gerar tabelas de banco de dados e caminhos de rota.</p><p>Aqui está um exemplo da versão do comando:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.auth Accounts User users
+</span><span class="">* creating priv/repo/migrations/20201205184926_create_users_auth_tables.exs
+</span><span class="">* creating lib/hello/accounts/user_notifier.ex
+</span><span class="">* creating lib/hello/accounts/user.ex
+</span><span class="">* creating lib/hello/accounts/user_token.ex
+</span><span class="">* creating lib/hello_web/controllers/user_auth.ex
+</span><span class="">* creating test/hello_web/controllers/user_auth_test.exs
+</span><span class="">* creating lib/hello_web/controllers/user_confirmation_html.ex
+</span><span class="">* creating lib/hello_web/templates/user_confirmation/new.html.heex
+</span><span class="">* creating lib/hello_web/templates/user_confirmation/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/user_confirmation_controller.ex
+</span><span class="">* creating test/hello_web/controllers/user_confirmation_controller_test.exs
+</span><span class="">* creating lib/hello_web/templates/user_registration/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/user_registration_controller.ex
+</span><span class="">* creating test/hello_web/controllers/user_registration_controller_test.exs
+</span><span class="">* creating lib/hello_web/controllers/user_registration_html.ex
+</span><span class="">* creating lib/hello_web/controllers/user_reset_password_html.ex
+</span><span class="">* creating lib/hello_web/controllers/user_reset_password_controller.ex
+</span><span class="">* creating test/hello_web/controllers/user_reset_password_controller_test.exs
+</span><span class="">* creating lib/hello_web/templates/user_reset_password/edit.html.heex
+</span><span class="">* creating lib/hello_web/templates/user_reset_password/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/user_session_html.ex
+</span><span class="">* creating lib/hello_web/controllers/user_session_controller.ex
+</span><span class="">* creating test/hello_web/controllers/user_session_controller_test.exs
+</span><span class="">* creating lib/hello_web/templates/user_session/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/user_settings_html.ex
+</span><span class="">* creating lib/hello_web/templates/user_settings/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/user_settings_controller.ex
+</span><span class="">* creating test/hello_web/controllers/user_settings_controller_test.exs
+</span><span class="">* creating lib/hello/accounts.ex
+</span><span class="">* injecting lib/hello/accounts.ex
+</span><span class="">* creating test/hello/accounts_test.exs
+</span><span class="">* injecting test/hello/accounts_test.exs
+</span><span class="">* creating test/support/fixtures/accounts_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/accounts_fixtures.ex
+</span><span class="">* injecting test/support/conn_case.ex
+</span><span class="">* injecting config/test.exs
+</span><span class="">* injecting mix.exs
+</span><span class="">* injecting lib/hello_web/router.ex
+</span><span class="">* injecting lib/hello_web/router.ex - imports
+</span><span class="">* injecting lib/hello_web/router.ex - plug
+</span><span class="">* injecting lib/hello_web/templates/layout/root.html.heex
+</span></code></pre><p>Quando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> termina de criar arquivos, ele nos informa que precisamos buscar novamente nossas dependências, além de executar nossas migrações Ecto.</p><pre><code class="makeup console" translate="no"><span class="">Por favor, busque suas dependências novamente com o seguinte comando:
+</span><span class="">
+</span><span class="">    mix deps.get
+</span><span class="">
+</span><span class="">Lembre-se de atualizar seu repositório executando migrações:
+</span><span class="">
+</span><span class="">  $ mix ecto.migrate
+</span><span class="">
+</span><span class="">Quando estiver pronto, visite &quot;/users/register&quot;
+</span><span class="">para criar sua conta e depois acesse &quot;/dev/mailbox&quot; para
+</span><span class="">ver o email de confirmação da conta.
+</span></code></pre><p>Um passo a passo mais completo de como começar com este gerador está disponível no <a href="mix_phx_gen_auth.html">guia de autenticação <code class="inline">mix phx.gen.auth</code></a>.</p><h3 id="mix-phx-gen-channel-e-mix-phx-gen-socket" class="section-heading">
+  <a href="#mix-phx-gen-channel-e-mix-phx-gen-socket" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Channel.html"><code class="inline">mix phx.gen.channel</code></a> e <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Socket.html"><code class="inline">mix phx.gen.socket</code></a></span>
+</h3>
+<p>Esta tarefa gerará um canal Phoenix básico, o socket para alimentar o canal (se você ainda não tiver criado um), além de um caso de teste para ele. Ela recebe o nome do módulo para o canal como único argumento:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.channel Room
+</span><span class="">* creating lib/hello_web/channels/room_channel.ex
+</span><span class="">* creating test/hello_web/channels/room_channel_test.exs
+</span></code></pre><p>Se sua aplicação ainda não tiver um <code class="inline">UserSocket</code>, ele perguntará se você deseja criar um:</p><pre><code class="makeup console" translate="no"><span class="">O manipulador de socket padrão - HelloWeb.UserSocket - não foi encontrado
+</span><span class="">em sua localização padrão.
+</span><span class="">
+</span><span class="">Você quer criá-lo? [Y/n]
+</span></code></pre><p>Ao confirmar, um canal será criado, então você precisa conectar o socket em seu endpoint:</p><pre><code class="makeup console" translate="no"><span class="">Adicione o manipulador de socket ao seu `lib/hello_web/endpoint.ex`, por exemplo:
+</span><span class="">
+</span><span class="">    socket &quot;/socket&quot;, HelloWeb.UserSocket,
+</span><span class="">      websocket: true,
+</span><span class="">      longpoll: false
+</span><span class="">
+</span><span class="">Para a integração front-end, você precisa importar o `user_socket.js`
+</span><span class="">em seu arquivo `assets/js/app.js`:
+</span><span class="">
+</span><span class="">    import &quot;./user_socket.js&quot;
+</span></code></pre><p>Caso um <code class="inline">UserSocket</code> já exista ou você decida não criar um, o gerador de <code class="inline">channel</code> informará que você deve adicioná-lo ao Socket manualmente:</p><pre><code class="makeup console" translate="no"><span class="">Adicione o canal ao seu manipulador `lib/hello_web/channels/user_socket.ex`, por exemplo:
+</span><span class="">
+</span><span class="">    channel &quot;rooms:lobby&quot;, HelloWeb.RoomChannel
+</span></code></pre><p>Você também pode criar um socket a qualquer momento invocando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Socket.html"><code class="inline">mix phx.gen.socket</code></a>.</p><h3 id="mix-phx-gen-presence" class="section-heading">
+  <a href="#mix-phx-gen-presence" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Presence.html"><code class="inline">mix phx.gen.presence</code></a></span>
+</h3>
+<p>Esta tarefa gerará um rastreador de presença. O nome do módulo pode ser passado como um argumento,
+<code class="inline">Presence</code> é usado se nenhum nome de módulo for passado.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.presence Presence
+</span><span class="">* lib/hello_web/channels/presence.ex
+</span><span class="">
+</span><span class="">Adicione seu novo módulo à sua árvore de supervisão,
+</span><span class="">em lib/hello/application.ex:
+</span><span class="">
+</span><span class="">    children = [
+</span><span class="">      ...
+</span><span class="">      HelloWeb.Presence
+</span><span class="">    ]
+</span></code></pre><h3 id="mix-phx-routes" class="section-heading">
+  <a href="#mix-phx-routes" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Routes.html"><code class="inline">mix phx.routes</code></a></span>
+</h3>
+<p>Esta tarefa tem um único propósito, mostrar-nos todas as rotas definidas para um determinado roteador. Nós a vimos sendo usada extensivamente no <a href="routing.html">guia de roteamento</a>.</p><p>Se não especificarmos um roteador para esta tarefa, ela usará por padrão o roteador que o Phoenix gerou para nós.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.routes
+</span><span class="">GET  /  TaskTester.PageController.index/2
+</span></code></pre><p>Também podemos especificar um roteador individual se tivermos mais de um para nossa aplicação.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.routes TaskTesterWeb.Router
+</span><span class="">GET  /  TaskTesterWeb.PageController.index/2
+</span></code></pre><h3 id="mix-phx-server" class="section-heading">
+  <a href="#mix-phx-server" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Server.html"><code class="inline">mix phx.server</code></a></span>
+</h3>
+<p>Esta é a tarefa que usamos para fazer nossa aplicação funcionar. Ela não recebe nenhum argumento. Se passarmos algum, ele será silenciosamente ignorado.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.server
+</span><span class="">[info] Running TaskTesterWeb.Endpoint with Cowboy na porta 4000 (http)
+</span></code></pre><p>Ela ignorará silenciosamente nosso argumento <code class="inline">DoesNotExist</code>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.server DoesNotExist
+</span><span class="">[info] Running TaskTesterWeb.Endpoint with Cowboy na porta 4000 (http)
+</span></code></pre><p>Se quisermos iniciar nossa aplicação e também ter uma sessão <a href="https://hexdocs.pm/iex/IEx.html"><code class="inline">IEx</code></a> aberta para ela, podemos executar a tarefa Mix dentro do <code class="inline">iex</code> assim, <code class="inline">iex -S mix phx.server</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">iex -S mix phx.server
+</span><span class="">Erlang/OTP 17 [erts-6.4] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+</span><span class="">
+</span><span class="">[info] Running TaskTesterWeb.Endpoint with Cowboy na porta 4000 (http)
+</span><span class="">Interactive Elixir (1.0.4) - pressione Ctrl+C para sair (digite h() ENTER para ajuda)
+</span><span class="">iex(1)&gt;
+</span></code></pre><h3 id="mix-phx-digest" class="section-heading">
+  <a href="#mix-phx-digest" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Digest.html"><code class="inline">mix phx.digest</code></a></span>
+</h3>
+<p>Esta tarefa faz duas coisas, cria um digest para nossos ativos estáticos e depois os comprime.</p><p>&quot;Digest&quot; aqui se refere a um digest MD5 do conteúdo de um ativo que é adicionado ao nome do arquivo desse ativo. Isso cria uma espécie de impressão digital para ele. Se o digest não mudar, navegadores e CDNs usarão uma versão em cache. Se mudar, eles buscarão a nova versão.</p><p>Antes de executarmos esta tarefa, vamos inspecionar o conteúdo de dois diretórios em nossa aplicação hello.</p><p>Primeiro <code class="inline">priv/static/</code> que deve se parecer com isto:</p><pre><code class="makeup console" translate="no"><span class="">├── assets
+</span><span class="">│   ├── app.css
+</span><span class="">│   └── app.js
+</span><span class="">├── favicon.ico
+</span><span class="">└── robots.txt
+</span></code></pre><p>E depois <code class="inline">assets/</code> que deve se parecer com isto:</p><pre><code class="makeup console" translate="no"><span class="">├── css
+</span><span class="">│   └── app.css
+</span><span class="">├── js
+</span><span class="">│   └── app.js
+</span><span class="">├── tailwind.config.js
+</span><span class="">└── vendor
+</span><span class="">    └── topbar.js
+</span></code></pre><p>Todos esses arquivos são nossos ativos estáticos. Agora vamos executar a tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Digest.html"><code class="inline">mix phx.digest</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.digest
+</span><span class="">Verifique seus arquivos digeridos em &#39;priv/static&#39;.
+</span></code></pre><p>Agora podemos fazer como a tarefa sugere e inspecionar o conteúdo do diretório <code class="inline">priv/static/</code>. Veremos que todos os arquivos de <code class="inline">assets/</code> foram copiados para <code class="inline">priv/static/</code> e também cada arquivo agora tem algumas versões. Essas versões são:</p><ul><li>o arquivo original</li><li>um arquivo comprimido com gzip</li><li>um arquivo contendo o nome do arquivo original e seu digest</li><li>um arquivo comprimido contendo o nome do arquivo e seu digest</li></ul><p>Podemos determinar opcionalmente quais arquivos devem ser comprimidos em gzip usando a opção <code class="inline">:gzippable_exts</code> no arquivo de configuração:</p><pre><code class="makeup elixir" translate="no"><span class="n">config</span><span class="w"> </span><span class="ss">:phoenix</span><span class="p">,</span><span class="w"> </span><span class="ss">:gzippable_exts</span><span class="p">,</span><span class="w"> </span><span class="sx">~w(.js .css)</span></code></pre><blockquote><p>Nota: Podemos especificar uma pasta de saída diferente onde <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Digest.html"><code class="inline">mix phx.digest</code></a> colocará os arquivos processados. O primeiro argumento é o caminho onde os arquivos estáticos estão localizados.</p></blockquote><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.digest priv/static/ -o www/public/
+</span><span class="">Verifique seus arquivos digeridos em &#39;www/public/&#39;
+</span></code></pre><blockquote><p>Nota: Você pode usar <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Digest.Clean.html"><code class="inline">mix phx.digest.clean</code></a> para remover versões obsoletas dos ativos. Se quiser remover todos os arquivos produzidos, execute <code class="inline">mix phx.digest.clean --all</code>.</p></blockquote><h2 id="tarefas-ecto" class="section-heading">
+  <a href="#tarefas-ecto" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Tarefas Ecto</span>
+</h2>
+<p>Aplicações Phoenix recém-geradas agora incluem Ecto e Postgrex como dependências por padrão (ou seja, a menos que usemos <code class="inline">mix phx.new</code> com a flag <code class="inline">--no-ecto</code>). Com essas dependências vêm tarefas Mix para cuidar de operações comuns do Ecto. Vamos ver quais tarefas obtemos prontas.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix help --search &quot;ecto&quot;
+</span><span class="">mix ecto               # Imprime informações de ajuda do Ecto
+</span><span class="">mix ecto.create        # Cria o armazenamento do repositório
+</span><span class="">mix ecto.drop          # Descarta o armazenamento do repositório
+</span><span class="">mix ecto.dump          # Despeja a estrutura do banco de dados do repositório
+</span><span class="">mix ecto.gen.migration # Gera uma nova migração para o repositório
+</span><span class="">mix ecto.gen.repo      # Gera um novo repositório
+</span><span class="">mix ecto.load          # Carrega a estrutura do banco de dados despejada anteriormente
+</span><span class="">mix ecto.migrate       # Executa as migrações do repositório
+</span><span class="">mix ecto.migrations    # Exibe o status da migração do repositório
+</span><span class="">mix ecto.reset         # Alias definido em mix.exs
+</span><span class="">mix ecto.rollback      # Reverte as migrações do repositório
+</span><span class="">mix ecto.setup         # Alias definido em mix.exs
+</span></code></pre><p>Nota: Podemos executar qualquer uma das tarefas acima com a flag <code class="inline">--no-start</code> para executar a tarefa sem iniciar a aplicação.</p><h3 id="mix-ecto-create" class="section-heading">
+  <a href="#mix-ecto-create" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto/3.12.5/Mix.Tasks.Ecto.Create.html"><code class="inline">mix ecto.create</code></a></span>
+</h3>
+<p>Esta tarefa criará o banco de dados especificado em nosso repositório. Por padrão, ela procurará o repositório com o nome da nossa aplicação (o que foi gerado com nosso aplicativo, a menos que tenhamos optado por não usar o Ecto), mas podemos passar outro repositório se quisermos.</p><p>Veja como é na prática.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create
+</span><span class="">O banco de dados para Hello.Repo foi criado.
+</span></code></pre><p>Há algumas coisas que podem dar errado com <code class="inline">ecto.create</code>. Se nosso banco de dados Postgres não tiver uma função (usuário) &quot;postgres&quot;, receberemos um erro como este.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create
+</span><span class="">** (Mix) O banco de dados para Hello.Repo não pôde ser criado, motivo dado: psql: FATAL: função &quot;postgres&quot; não existe
+</span></code></pre><p>Podemos corrigir isso criando a função &quot;postgres&quot; no console <code class="inline">psql</code> com as permissões necessárias para fazer login e criar um banco de dados.</p><pre><code class="makeup console" translate="no"><span class="">=# CREATE ROLE postgres LOGIN CREATEDB;
+</span><span class="">CREATE ROLE
+</span></code></pre><p>Se a função &quot;postgres&quot; não tiver permissão para fazer login na aplicação, receberemos este erro.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create
+</span><span class="">** (Mix) O banco de dados para Hello.Repo não pôde ser criado, motivo dado: psql: FATAL: função &quot;postgres&quot; não tem permissão para fazer login
+</span></code></pre><p>Para corrigir isso, precisamos alterar as permissões do nosso usuário &quot;postgres&quot; para permitir o login.</p><pre><code class="makeup console" translate="no"><span class="">=# ALTER ROLE postgres LOGIN;
+</span><span class="">ALTER ROLE
+</span></code></pre><p>Se a função &quot;postgres&quot; não tiver permissão para criar um banco de dados, receberemos este erro.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create
+</span><span class="">** (Mix) O banco de dados para Hello.Repo não pôde ser criado, motivo dado: ERROR: permissão negada para criar banco de dados
+</span></code></pre><p>Para corrigir isso, precisamos alterar as permissões do nosso usuário &quot;postgres&quot; no console <code class="inline">psql</code> para permitir a criação de banco de dados.</p><pre><code class="makeup console" translate="no"><span class="">=# ALTER ROLE postgres CREATEDB;
+</span><span class="">ALTER ROLE
+</span></code></pre><p>Se a função &quot;postgres&quot; estiver usando uma senha diferente do padrão &quot;postgres&quot;, receberemos este erro.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create
+</span><span class="">** (Mix) O banco de dados para Hello.Repo não pôde ser criado, motivo dado: psql: FATAL: autenticação por senha falhou para o usuário &quot;postgres&quot;
+</span></code></pre><p>Para corrigir isso, podemos alterar a senha no arquivo de configuração específico do ambiente. Para o ambiente de desenvolvimento, a senha usada pode ser encontrada no final do arquivo <code class="inline">config/dev.exs</code>.</p><p>Finalmente, se por acaso tivermos outro repositório chamado <code class="inline">OurCustom.Repo</code> para o qual queremos criar o banco de dados, podemos executar isto.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.create -r OurCustom.Repo
+</span><span class="">O banco de dados para OurCustom.Repo foi criado.
+</span></code></pre><h3 id="mix-ecto-drop" class="section-heading">
+  <a href="#mix-ecto-drop" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto/3.12.5/Mix.Tasks.Ecto.Drop.html"><code class="inline">mix ecto.drop</code></a></span>
+</h3>
+<p>Esta tarefa descartará o banco de dados especificado em nosso repositório. Por padrão, ela procurará o repositório com o nome da nossa aplicação (o que foi gerado com nosso aplicativo, a menos que tenhamos optado por não usar o Ecto). Ela não nos pedirá para verificar se temos certeza de que queremos descartar o banco de dados, então tenha cuidado.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.drop
+</span><span class="">O banco de dados para Hello.Repo foi descartado.
+</span></code></pre><p>Se por acaso tivermos outro repositório para o qual queremos descartar o banco de dados, podemos especificá-lo com a flag <code class="inline">-r</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.drop -r OurCustom.Repo
+</span><span class="">O banco de dados para OurCustom.Repo foi descartado.
+</span></code></pre><h3 id="mix-ecto-gen-repo" class="section-heading">
+  <a href="#mix-ecto-gen-repo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto/3.12.5/Mix.Tasks.Ecto.Gen.Repo.html"><code class="inline">mix ecto.gen.repo</code></a></span>
+</h3>
+<p>Muitas aplicações exigem mais de um armazenamento de dados. Para cada armazenamento de dados, precisaremos de um novo repositório, e podemos gerá-los automaticamente com <code class="inline">ecto.gen.repo</code>.</p><p>Se nomearmos nosso repositório <code class="inline">OurCustom.Repo</code>, esta tarefa o criará aqui <code class="inline">lib/our_custom/repo.ex</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.gen.repo -r OurCustom.Repo
+</span><span class="">* creating lib/our_custom
+</span><span class="">* creating lib/our_custom/repo.ex
+</span><span class="">* updating config/config.exs
+</span><span class="">Não se esqueça de adicionar seu novo repositório à sua árvore de supervisão
+</span><span class="">(normalmente em lib/hello/application.ex):
+</span><span class="">
+</span><span class="">    {OurCustom.Repo, []}
+</span></code></pre><p>Observe que esta tarefa atualizou <code class="inline">config/config.exs</code>. Se dermos uma olhada, veremos este bloco de configuração adicional para nosso novo repositório.</p><pre><code class="makeup elixir" translate="no"><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w">
+</span><span class="n">config</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="nc">OurCustom.Repo</span><span class="p">,</span><span class="w">
+  </span><span class="ss">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pass&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello_repo&quot;</span><span class="p">,</span><span class="w">
+</span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span></code></pre><p>Claro, precisaremos mudar as credenciais de login para corresponder ao que nosso banco de dados espera. Também precisaremos mudar a configuração para outros ambientes.</p><p>Certamente devemos seguir as instruções e adicionar nosso novo repositório à nossa árvore de supervisão. Em nossa aplicação <code class="inline">Hello</code>, abriríamos <code class="inline">lib/hello/application.ex</code> e adicionaríamos nosso repositório como um worker à lista <code class="inline">children</code>.</p><pre><code class="makeup elixir" translate="no"><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w">
+</span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4359337747-1">[</span><span class="w">
+  </span><span class="nc">Hello.Repo</span><span class="p">,</span><span class="w">
+  </span><span class="c1"># Nosso repositório personalizado</span><span class="w">
+  </span><span class="nc">OurCustom.Repo</span><span class="p">,</span><span class="w">
+  </span><span class="c1"># Inicia o endpoint quando a aplicação inicia</span><span class="w">
+  </span><span class="nc">HelloWeb.Endpoint</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="4359337747-1">]</span><span class="w">
+</span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span></code></pre><h3 id="mix-ecto-gen-migration" class="section-heading">
+  <a href="#mix-ecto-gen-migration" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Gen.Migration.html"><code class="inline">mix ecto.gen.migration</code></a></span>
+</h3>
+<p>Migrações são uma forma programática e repetível de efetuar mudanças em um esquema de banco de dados. Migrações são apenas módulos, e podemos criá-los com a tarefa <a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Gen.Migration.html"><code class="inline">ecto.gen.migration</code></a>. Vamos percorrer as etapas para criar uma migração para uma nova tabela de comentários.</p><p>Simplesmente precisamos invocar a tarefa com uma versão em <code class="inline">snake_case</code> do nome do módulo que queremos. Preferencialmente, o nome descreverá o que queremos que a migração faça.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.gen.migration add_comments_table
+</span><span class="">* creating priv/repo/migrations
+</span><span class="">* creating priv/repo/migrations/20150318001628_add_comments_table.exs
+</span></code></pre><p>Observe que o nome do arquivo da migração começa com uma representação de string da data e hora em que o arquivo foi criado.</p><p>Vamos dar uma olhada no arquivo que <code class="inline">ecto.gen.migration</code> gerou para nós em <code class="inline">priv/repo/migrations/20150318001628_add_comments_table.exs</code>.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Hello.Repo.Migrations.AddCommentsTable</span><span class="w"> </span><span class="k" data-group-id="1967027821-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Ecto.Migration</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">change</span><span class="w"> </span><span class="k" data-group-id="1967027821-2">do</span><span class="w">
+  </span><span class="k" data-group-id="1967027821-2">end</span><span class="w">
+</span><span class="k" data-group-id="1967027821-1">end</span></code></pre><p>Observe que há uma única função <code class="inline">change/0</code> que lidará com migrações para frente e reversões. Definiremos as alterações de esquema que queremos usando o DSL prático do Ecto, e o Ecto descobrirá o que fazer dependendo se estamos avançando ou revertendo. Muito bom, de fato.</p><p>O que queremos fazer é criar uma tabela <code class="inline">comments</code> com uma coluna <code class="inline">body</code>, uma coluna <code class="inline">word_count</code> e colunas de timestamp para <code class="inline">inserted_at</code> e <code class="inline">updated_at</code>.</p><pre><code class="makeup elixir" translate="no"><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">change</span><span class="w"> </span><span class="k" data-group-id="2687261420-1">do</span><span class="w">
+  </span><span class="n">create</span><span class="w"> </span><span class="n">table</span><span class="p" data-group-id="2687261420-2">(</span><span class="ss">:comments</span><span class="p" data-group-id="2687261420-2">)</span><span class="w"> </span><span class="k" data-group-id="2687261420-3">do</span><span class="w">
+    </span><span class="n">add</span><span class="w"> </span><span class="ss">:body</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
+    </span><span class="n">add</span><span class="w"> </span><span class="ss">:word_count</span><span class="p">,</span><span class="w"> </span><span class="ss">:integer</span><span class="w">
+    </span><span class="n">timestamps</span><span class="p" data-group-id="2687261420-4">(</span><span class="p" data-group-id="2687261420-4">)</span><span class="w">
+  </span><span class="k" data-group-id="2687261420-3">end</span><span class="w">
+</span><span class="k" data-group-id="2687261420-1">end</span><span class="w">
+</span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span></code></pre><p>Novamente, podemos executar esta tarefa com a flag <code class="inline">-r</code> e outro repositório se precisarmos.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.gen.migration -r OurCustom.Repo add_users
+</span><span class="">* creating priv/repo/migrations
+</span><span class="">* creating priv/repo/migrations/20150318172927_add_users.exs
+</span></code></pre><p>Para mais informações sobre como modificar seu esquema de banco de dados, consulte a <a href="https://hexdocs.pm/ecto_sql/Ecto.Migration.html">documentação do DSL de migração do Ecto</a>.
+Por exemplo, para alterar um esquema existente, veja a documentação sobre a função <a href="https://hexdocs.pm/ecto_sql/3.12.1/Ecto.Migration.html#alter/2"><code class="inline">alter/2</code></a> do Ecto.</p><p>É isso! Estamos prontos para executar nossa migração.</p><h3 id="mix-ecto-migrate" class="section-heading">
+  <a href="#mix-ecto-migrate" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Migrate.html"><code class="inline">mix ecto.migrate</code></a></span>
+</h3>
+<p>Depois que tivermos nosso módulo de migração pronto, podemos simplesmente executar <a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Migrate.html"><code class="inline">mix ecto.migrate</code></a> para ter nossas alterações aplicadas ao banco de dados.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.migrate
+</span><span class="">[info] == Executando Hello.Repo.Migrations.AddCommentsTable.change/0 para frente
+</span><span class="">[info] criar tabela comments
+</span><span class="">[info] == Migrado em 0.1s
+</span></code></pre><p>Quando executamos <code class="inline">ecto.migrate</code> pela primeira vez, ele criará uma tabela para nós chamada <code class="inline">schema_migrations</code>. Isso acompanhará todas as migrações que executamos armazenando a parte do timestamp do nome do arquivo da migração.</p><p>Veja como é a tabela <code class="inline">schema_migrations</code>.</p><pre><code class="makeup console" translate="no"><span class="">hello_dev=# select * from schema_migrations;
+</span><span class="">version        |     inserted_at
+</span><span class="">---------------+---------------------
+</span><span class="">20150317170448 | 2015-03-17 21:07:26
+</span><span class="">20150318001628 | 2015-03-18 01:45:00
+</span><span class="">(2 rows)
+</span></code></pre><p>Quando revertemos uma migração, <a href="#mix-ecto-rollback"><code class="inline">ecto.rollback</code></a> removerá o registro que representa esta migração de <code class="inline">schema_migrations</code>.</p><p>Por padrão, <code class="inline">ecto.migrate</code> executará todas as migrações pendentes. Podemos exercer mais controle sobre quais migrações executamos especificando algumas opções quando executamos a tarefa.</p><p>Podemos especificar o número de migrações pendentes que gostaríamos de executar com as opções <code class="inline">-n</code> ou <code class="inline">--step</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.migrate -n 2
+</span><span class="">[info] == Executando Hello.Repo.Migrations.CreatePost.change/0 para frente
+</span><span class="">[info] criar tabela posts
+</span><span class="">[info] == Migrado em 0.0s
+</span><span class="">[info] == Executando Hello.Repo.Migrations.AddCommentsTable.change/0 para frente
+</span><span class="">[info] criar tabela comments
+</span><span class="">[info] == Migrado em 0.0s
+</span></code></pre><p>A opção <code class="inline">--step</code> se comportará da mesma maneira.</p><pre><code class="makeup console" translate="no"><span class="">mix ecto.migrate --step 2
+</span></code></pre><p>A opção <code class="inline">--to</code> executará todas as migrações até, e incluindo, a versão fornecida.</p><pre><code class="makeup console" translate="no"><span class="">mix ecto.migrate --to 20150317170448
+</span></code></pre><h3 id="mix-ecto-rollback" class="section-heading">
+  <a href="#mix-ecto-rollback" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Rollback.html"><code class="inline">mix ecto.rollback</code></a></span>
+</h3>
+<p>A tarefa <a href="https://hexdocs.pm/ecto_sql/3.12.1/Mix.Tasks.Ecto.Rollback.html"><code class="inline">ecto.rollback</code></a> reverterá a última migração que executamos, desfazendo as alterações no esquema. <a href="#mix-ecto-migrate"><code class="inline">ecto.migrate</code></a> e <code class="inline">ecto.rollback</code> são imagens espelhadas uma da outra.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.rollback
+</span><span class="">[info] == Executando Hello.Repo.Migrations.AddCommentsTable.change/0 para trás
+</span><span class="">[info] descartar tabela comments
+</span><span class="">[info] == Migrado em 0.0s
+</span></code></pre><p><code class="inline">ecto.rollback</code> lidará com as mesmas opções que <code class="inline">ecto.migrate</code>, de modo que <code class="inline">-n</code>, <code class="inline">--step</code>, <code class="inline">-v</code> e <code class="inline">--to</code> se comportarão como fazem para <code class="inline">ecto.migrate</code>.</p><h2 id="criando-nossa-própria-tarefa-mix" class="section-heading">
+  <a href="#criando-nossa-própria-tarefa-mix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Criando nossa própria tarefa Mix</span>
+</h2>
+<p>Como vimos ao longo deste guia, tanto o Mix quanto as dependências que trazemos para nossa aplicação fornecem várias tarefas realmente úteis de graça. Como nenhuma delas poderia prever todas as necessidades individuais da nossa aplicação, o Mix nos permite criar nossas próprias tarefas personalizadas. É exatamente isso que vamos fazer agora.</p><p>A primeira coisa que precisamos fazer é criar um diretório <code class="inline">mix/tasks/</code> dentro de <code class="inline">lib/</code>. É aqui que ficarão quaisquer tarefas Mix específicas da nossa aplicação.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mkdir -p lib/mix/tasks/
+</span></code></pre><p>Dentro desse diretório, vamos criar um novo arquivo, <code class="inline">hello.greeting.ex</code>, que se parece com isso.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Mix.Tasks.Hello.Greeting</span><span class="w"> </span><span class="k" data-group-id="1741922447-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Mix.Task</span><span class="w">
+
+  </span><span class="na">@shortdoc</span><span class="w"> </span><span class="s">&quot;Envia uma saudação para nós da Aplicação Hello Phoenix&quot;</span><span class="w">
+
+  </span><span class="na">@moduledoc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  É aqui que colocaríamos qualquer documentação de forma longa e doctests.
+  &quot;&quot;&quot;</span><span class="w">
+
+  </span><span class="na">@impl</span><span class="w"> </span><span class="nc">Mix.Task</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">run</span><span class="p" data-group-id="1741922447-2">(</span><span class="c">_args</span><span class="p" data-group-id="1741922447-2">)</span><span class="w"> </span><span class="k" data-group-id="1741922447-3">do</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="1741922447-4">(</span><span class="p" data-group-id="1741922447-4">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="1741922447-5">(</span><span class="s">&quot;Saudações da Aplicação Hello Phoenix!&quot;</span><span class="p" data-group-id="1741922447-5">)</span><span class="w">
+  </span><span class="k" data-group-id="1741922447-3">end</span><span class="w">
+
+  </span><span class="c1"># Podemos definir outras funções conforme necessário aqui.</span><span class="w">
+</span><span class="k" data-group-id="1741922447-1">end</span></code></pre><p>Vamos dar uma olhada rápida nas partes envolvidas em uma tarefa Mix que funciona.</p><p>A primeira coisa que precisamos fazer é nomear nosso módulo. Todas as tarefas devem ser definidas no namespace <code class="inline">Mix.Tasks</code>. Gostaríamos de invocar isso como <code class="inline">mix hello.greeting</code>, então completamos o nome do módulo com
+<code class="inline">Hello.Greeting</code>.</p><p>A linha <code class="inline">use Mix.Task</code> traz funcionalidade do Mix que faz com que este módulo <a href="https://hexdocs.pm/mix/Mix.Task.html">se comporte como uma tarefa Mix</a>.</p><p>O atributo de módulo <code class="inline">@shortdoc</code> contém uma string que descreverá nossa tarefa quando os usuários invocarem <a href="https://hexdocs.pm/mix/Mix.Tasks.Help.html"><code class="inline">mix help</code></a>.</p><p><code class="inline">@moduledoc</code> serve a mesma função que em qualquer módulo. É onde podemos colocar documentação de forma longa e doctests, se tivermos algum.</p><p>A função <a href="https://hexdocs.pm/mix/Mix.Task.html#c:run/1"><code class="inline">run/1</code></a> é o coração crítico de qualquer tarefa Mix. É a função que faz todo o trabalho quando os usuários invocam nossa tarefa. Na nossa, tudo o que fazemos é enviar uma saudação do nosso app, mas podemos implementar nossa função <code class="inline">run/1</code> para fazer o que precisamos. Observe que <a href="https://hexdocs.pm/mix/Mix.html#shell/0"><code class="inline">Mix.shell().info/1</code></a> é a maneira preferida de imprimir texto de volta para o usuário.</p><p>Claro, nossa tarefa é apenas um módulo, então podemos definir outras funções privadas conforme necessário para apoiar nossa função <code class="inline">run/1</code>.</p><p>Agora que temos nosso módulo de tarefa definido, nosso próximo passo é compilar a aplicação.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix compile
+</span><span class="">Compiled lib/tasks/hello.greeting.ex
+</span><span class="">Generated hello.app
+</span></code></pre><p>Agora nossa nova tarefa deve estar visível para <a href="https://hexdocs.pm/mix/Mix.Tasks.Help.html"><code class="inline">mix help</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix help --search hello
+</span><span class="">mix hello.greeting # Envia uma saudação para nós da Aplicação Hello Phoenix
+</span></code></pre><p>Observe que <a href="https://hexdocs.pm/mix/Mix.Tasks.Help.html"><code class="inline">mix help</code></a> exibe o texto que colocamos no <code class="inline">@shortdoc</code> junto com o nome da nossa tarefa.</p><p>Até agora, tudo bem, mas será que funciona?</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix hello.greeting
+</span><span class="">Saudações da Aplicação Hello Phoenix!
+</span></code></pre><p>De fato, funciona.</p><p>Se você quiser que sua nova tarefa Mix use a infraestrutura da sua aplicação, você precisa garantir que a aplicação seja iniciada e configurada quando a tarefa Mix estiver sendo executada. Isso é particularmente útil se você precisar acessar seu banco de dados a partir da tarefa Mix. Felizmente, o Mix facilita isso para nós através do atributo de módulo <code class="inline">@requirements</code>:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="na">@requirements</span><span class="w"> </span><span class="p" data-group-id="5698308932-1">[</span><span class="s">&quot;app.start&quot;</span><span class="p" data-group-id="5698308932-1">]</span><span class="w">
+
+  </span><span class="na">@impl</span><span class="w"> </span><span class="nc">Mix.Task</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">run</span><span class="p" data-group-id="5698308932-2">(</span><span class="c">_args</span><span class="p" data-group-id="5698308932-2">)</span><span class="w"> </span><span class="k" data-group-id="5698308932-3">do</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="5698308932-4">(</span><span class="p" data-group-id="5698308932-4">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="5698308932-5">(</span><span class="s">&quot;Agora tenho acesso ao Repo e outras coisas boas!&quot;</span><span class="p" data-group-id="5698308932-5">)</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="5698308932-6">(</span><span class="p" data-group-id="5698308932-6">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="5698308932-7">(</span><span class="s">&quot;Saudações da Aplicação Hello Phoenix!&quot;</span><span class="p" data-group-id="5698308932-7">)</span><span class="w">
+  </span><span class="k" data-group-id="5698308932-3">end</span></code></pre>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="json_and_apis.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+JSON e APIs
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="telemetry.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Telemetria
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

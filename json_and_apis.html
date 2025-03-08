@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>JSON e APIs — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>JSON e APIs</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelo <a href="controllers.html">guia de Controladores</a>.</p></blockquote><p>Você também pode usar o Framework Phoenix para construir <a href="https://en.wikipedia.org/wiki/Web_API">APIs Web</a>. Por padrão, o Phoenix suporta JSON, mas você pode trazer qualquer outro formato de renderização que desejar.</p><h2 id="a-api-json" class="section-heading">
+  <a href="#a-api-json" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">A API JSON</span>
+</h2>
+<p>Para este guia, vamos criar uma API JSON simples para armazenar nossos links favoritos, que suportará todas as operações CRUD (Criar, Ler, Atualizar, Excluir) prontas para uso.</p><p>Para este guia, usaremos os geradores do Phoenix para estruturar nossa infraestrutura de API:</p><pre><code class="makeup console" translate="no"><span class="">mix phx.gen.json Urls Url urls link:string title:string
+</span><span class="">* creating lib/hello_web/controllers/url_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/url_json.ex
+</span><span class="">* creating lib/hello_web/controllers/changeset_json.ex
+</span><span class="">* creating test/hello_web/controllers/url_controller_test.exs
+</span><span class="">* creating lib/hello_web/controllers/fallback_controller.ex
+</span><span class="">* creating lib/hello/urls/url.ex
+</span><span class="">* creating priv/repo/migrations/20221129120234_create_urls.exs
+</span><span class="">* creating lib/hello/urls.ex
+</span><span class="">* injecting lib/hello/urls.ex
+</span><span class="">* creating test/hello/urls_test.exs
+</span><span class="">* injecting test/hello/urls_test.exs
+</span><span class="">* creating test/support/fixtures/urls_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/urls_fixtures.ex
+</span></code></pre><p>Vamos dividir esses arquivos em quatro categorias:</p><ul><li>Arquivos em <code class="inline">lib/hello_web</code> responsáveis por renderizar JSON efetivamente</li><li>Arquivos em <code class="inline">lib/hello</code> responsáveis por definir nosso contexto e lógica para persistir links no banco de dados</li><li>Arquivos em <code class="inline">priv/repo/migrations</code> responsáveis por atualizar nosso banco de dados</li><li>Arquivos em <code class="inline">test</code> para testar nossos controladores e contextos</li></ul><p>Neste guia, exploraremos apenas a primeira categoria de arquivos. Para saber mais sobre como o Phoenix armazena e gerencia dados, confira <a href="ecto.html">o guia do Ecto</a> e <a href="contexts.html">o guia de Contextos</a> para mais informações. Também temos uma seção inteira dedicada a testes.</p><p>No final, o gerador nos pede para adicionar o recurso <code class="inline">/url</code> ao nosso escopo <code class="inline">:api</code> em <code class="inline">lib/hello_web/router.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/api&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="1055504470-1">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:api</span><span class="w">
+  </span><span class="n">resources</span><span class="w"> </span><span class="s">&quot;/urls&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">UrlController</span><span class="p">,</span><span class="w"> </span><span class="ss">except</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1055504470-2">[</span><span class="ss">:new</span><span class="p">,</span><span class="w"> </span><span class="ss">:edit</span><span class="p" data-group-id="1055504470-2">]</span><span class="w">
+</span><span class="k" data-group-id="1055504470-1">end</span></code></pre><p>O escopo da API usa o pipeline <code class="inline">:api</code>, que executará etapas específicas, como garantir que o cliente possa lidar com respostas JSON.</p><p>Em seguida, precisamos atualizar nosso repositório executando migrações:</p><pre><code class="makeup console" translate="no"><span class="">mix ecto.migrate
+</span></code></pre><h3 id="testando-a-api-json" class="section-heading">
+  <a href="#testando-a-api-json" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando a API JSON</span>
+</h3>
+<p>Antes de prosseguirmos e alterarmos esses arquivos, vamos dar uma olhada em como nossa API se comporta a partir da linha de comando.</p><p>Primeiro, precisamos iniciar o servidor:</p><pre><code class="makeup console" translate="no"><span class="">mix phx.server
+</span></code></pre><p>Em seguida, vamos fazer um teste rápido para verificar se nossa API está funcionando:</p><pre><code class="makeup console" translate="no"><span class="">curl -i http://localhost:4000/api/urls
+</span></code></pre><p>Se tudo correu conforme o planejado, devemos obter uma resposta <code class="inline">200</code>:</p><pre><code class="makeup console" translate="no"><span class="">HTTP/1.1 200 OK
+</span><span class="">cache-control: max-age=0, private, must-revalidate
+</span><span class="">content-length: 11
+</span><span class="">content-type: application/json; charset=utf-8
+</span><span class="">date: Fri, 06 May 2022 21:22:42 GMT
+</span><span class="">server: Cowboy
+</span><span class="">x-request-id: Fuyg-wMl4S-hAfsAAAUk
+</span><span class="">
+</span><span class="">{&quot;data&quot;:[]}
+</span></code></pre><p>Não recebemos nenhum dado porque ainda não populamos o banco de dados. Então, vamos adicionar alguns links:</p><pre><code class="makeup console" translate="no"><span class="">curl -iX POST http://localhost:4000/api/urls \
+</span><span class="">   -H &#39;Content-Type: application/json&#39; \
+</span><span class="">   -d &#39;{&quot;url&quot;: {&quot;link&quot;:&quot;https://phoenixframework.org&quot;, &quot;title&quot;:&quot;Phoenix Framework&quot;}}&#39;
+</span><span class="">
+</span><span class="">curl -iX POST http://localhost:4000/api/urls \
+</span><span class="">   -H &#39;Content-Type: application/json&#39; \
+</span><span class="">   -d &#39;{&quot;url&quot;: {&quot;link&quot;:&quot;https://elixir-lang.org&quot;, &quot;title&quot;:&quot;Elixir&quot;}}&#39;
+</span></code></pre><p>Agora podemos recuperar todos os links:</p><pre><code class="makeup console" translate="no"><span class="">curl -i http://localhost:4000/api/urls
+</span></code></pre><p>Ou podemos apenas recuperar um link por seu <code class="inline">id</code>:</p><pre><code class="makeup console" translate="no"><span class="">curl -i http://localhost:4000/api/urls/1
+</span></code></pre><p>Em seguida, podemos atualizar um link com:</p><pre><code class="makeup console" translate="no"><span class="">curl -iX PUT http://localhost:4000/api/urls/2 \
+</span><span class="">   -H &#39;Content-Type: application/json&#39; \
+</span><span class="">   -d &#39;{&quot;url&quot;: {&quot;title&quot;:&quot;Elixir Programming Language&quot;}}&#39;
+</span></code></pre><p>A resposta deve ser um <code class="inline">200</code> com o link atualizado no corpo.</p><p>Por fim, precisamos testar a remoção de um link:</p><pre><code class="makeup console" translate="no"><span class="">curl -iX DELETE http://localhost:4000/api/urls/2 \
+</span><span class="">   -H &#39;Content-Type: application/json&#39;
+</span></code></pre><p>Uma resposta <code class="inline">204</code> deve ser retornada para indicar a remoção bem-sucedida do link.</p><h2 id="renderizando-json" class="section-heading">
+  <a href="#renderizando-json" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Renderizando JSON</span>
+</h2>
+<p>Para entender como renderizar JSON, vamos começar com a ação <code class="inline">index</code> do <code class="inline">UrlController</code> definida em <code class="inline">lib/hello_web/controllers/url_controller.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="5395863709-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_params</span><span class="p" data-group-id="5395863709-1">)</span><span class="w"> </span><span class="k" data-group-id="5395863709-2">do</span><span class="w">
+    </span><span class="n">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Urls</span><span class="o">.</span><span class="n">list_urls</span><span class="p" data-group-id="5395863709-3">(</span><span class="p" data-group-id="5395863709-3">)</span><span class="w">
+    </span><span class="n">render</span><span class="p" data-group-id="5395863709-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="p">,</span><span class="w"> </span><span class="ss">urls</span><span class="p">:</span><span class="w"> </span><span class="n">urls</span><span class="p" data-group-id="5395863709-4">)</span><span class="w">
+  </span><span class="k" data-group-id="5395863709-2">end</span></code></pre><p>Como podemos ver, isso não é diferente de como o Phoenix renderiza templates HTML. Chamamos <code class="inline">render/3</code>, passando a conexão, o template que queremos que nossas views renderizem (<code class="inline">:index</code>) e os dados que queremos disponibilizar para nossas views.</p><p>O Phoenix normalmente usa uma view por formato de renderização. Ao renderizar HTML, usaríamos <code class="inline">UrlHTML</code>. Agora que estamos renderizando JSON, encontraremos uma view <code class="inline">UrlJSON</code> colocada junto com o template em <code class="inline">lib/hello_web/controllers/url_json.ex</code>. Vamos abri-la:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.UrlJSON</span><span class="w"> </span><span class="k" data-group-id="6865639978-1">do</span><span class="w">
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Hello.Urls.Url</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Renders a list of urls.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="6865639978-2">(</span><span class="p" data-group-id="6865639978-3">%{</span><span class="ss">urls</span><span class="p">:</span><span class="w"> </span><span class="n">urls</span><span class="p" data-group-id="6865639978-3">}</span><span class="p" data-group-id="6865639978-2">)</span><span class="w"> </span><span class="k" data-group-id="6865639978-4">do</span><span class="w">
+    </span><span class="p" data-group-id="6865639978-5">%{</span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="k">for</span><span class="p" data-group-id="6865639978-6">(</span><span class="n">url</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">urls</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">data</span><span class="p" data-group-id="6865639978-7">(</span><span class="n">url</span><span class="p" data-group-id="6865639978-7">)</span><span class="p" data-group-id="6865639978-6">)</span><span class="p" data-group-id="6865639978-5">}</span><span class="w">
+  </span><span class="k" data-group-id="6865639978-4">end</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Renders a single url.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="6865639978-8">(</span><span class="p" data-group-id="6865639978-9">%{</span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="n">url</span><span class="p" data-group-id="6865639978-9">}</span><span class="p" data-group-id="6865639978-8">)</span><span class="w"> </span><span class="k" data-group-id="6865639978-10">do</span><span class="w">
+    </span><span class="p" data-group-id="6865639978-11">%{</span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="n">data</span><span class="p" data-group-id="6865639978-12">(</span><span class="n">url</span><span class="p" data-group-id="6865639978-12">)</span><span class="p" data-group-id="6865639978-11">}</span><span class="w">
+  </span><span class="k" data-group-id="6865639978-10">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">data</span><span class="p" data-group-id="6865639978-13">(</span><span class="p" data-group-id="6865639978-14">%</span><span class="nc" data-group-id="6865639978-14">Url</span><span class="p" data-group-id="6865639978-14">{</span><span class="p" data-group-id="6865639978-14">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p" data-group-id="6865639978-13">)</span><span class="w"> </span><span class="k" data-group-id="6865639978-15">do</span><span class="w">
+    </span><span class="p" data-group-id="6865639978-16">%{</span><span class="w">
+      </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">url</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w">
+      </span><span class="ss">link</span><span class="p">:</span><span class="w"> </span><span class="n">url</span><span class="o">.</span><span class="n">link</span><span class="p">,</span><span class="w">
+      </span><span class="ss">title</span><span class="p">:</span><span class="w"> </span><span class="n">url</span><span class="o">.</span><span class="n">title</span><span class="w">
+    </span><span class="p" data-group-id="6865639978-16">}</span><span class="w">
+  </span><span class="k" data-group-id="6865639978-15">end</span><span class="w">
+</span><span class="k" data-group-id="6865639978-1">end</span></code></pre><p>Esta view é muito simples. A função <code class="inline">index</code> recebe todos os URLs e os converte em uma lista de mapas. Esses mapas são colocados dentro da chave data na raiz, exatamente como vimos ao interagir com nossa aplicação a partir do <code class="inline">cURL</code>. Em outras palavras, nossa view JSON converte nossos dados complexos em estruturas de dados Elixir simples. Uma vez que nossa camada de view retorna, o Phoenix usa a biblioteca <code class="inline">Jason</code> para codificar JSON e enviar a resposta ao cliente.</p><p>Se você explorar o restante do controlador, verá que a ação <code class="inline">show</code> é semelhante à <code class="inline">index</code>. Para as ações <code class="inline">create</code>, <code class="inline">update</code> e <code class="inline">delete</code>, o Phoenix usa outro recurso importante, chamado &quot;Action fallback&quot;.</p><h2 id="action-fallback" class="section-heading">
+  <a href="#action-fallback" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Action fallback</span>
+</h2>
+<p>O Action fallback nos permite centralizar o código de tratamento de erros em plugs, que são chamados quando uma ação do controlador falha em retornar uma estrutura <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html#t:t/0"><code class="inline">%Plug.Conn{}</code></a>. Esses plugs recebem tanto a <code class="inline">conn</code> que foi originalmente passada para a ação do controlador quanto o valor de retorno da ação.</p><p>Digamos que temos uma ação <code class="inline">show</code> que usa <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1"><code class="inline">with</code></a> para buscar uma postagem de blog e, em seguida, autorizar o usuário atual a visualizar essa postagem. Neste exemplo, podemos esperar que <code class="inline">fetch_post/1</code> retorne <code class="inline">{:error, :not_found}</code> se a postagem não for encontrada e <code class="inline">authorize_user/3</code> pode retornar <code class="inline">{:error, :unauthorized}</code> se o usuário não estiver autorizado. Poderíamos usar nossas views <code class="inline">ErrorHTML</code> e <code class="inline">ErrorJSON</code>, que são geradas pelo Phoenix para cada nova aplicação, para lidar com esses caminhos de erro de acordo:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.MyController</span><span class="w"> </span><span class="k" data-group-id="5238615268-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="5238615268-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5238615268-3">%{</span><span class="s">&quot;id&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p" data-group-id="5238615268-3">}</span><span class="p">,</span><span class="w"> </span><span class="n">current_user</span><span class="p" data-group-id="5238615268-2">)</span><span class="w"> </span><span class="k" data-group-id="5238615268-4">do</span><span class="w">
+    </span><span class="k">with</span><span class="w"> </span><span class="p" data-group-id="5238615268-5">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="5238615268-5">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fetch_post</span><span class="p" data-group-id="5238615268-6">(</span><span class="n">id</span><span class="p" data-group-id="5238615268-6">)</span><span class="p">,</span><span class="w">
+         </span><span class="ss">:ok</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">authorize_user</span><span class="p" data-group-id="5238615268-7">(</span><span class="n">current_user</span><span class="p">,</span><span class="w"> </span><span class="ss">:view</span><span class="p">,</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="5238615268-7">)</span><span class="w"> </span><span class="k" data-group-id="5238615268-8">do</span><span class="w">
+      </span><span class="n">render</span><span class="p" data-group-id="5238615268-9">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">post</span><span class="p">:</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="5238615268-9">)</span><span class="w">
+    </span><span class="k" data-group-id="5238615268-8">else</span><span class="w">
+      </span><span class="p" data-group-id="5238615268-10">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_found</span><span class="p" data-group-id="5238615268-10">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">conn</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_status</span><span class="p" data-group-id="5238615268-11">(</span><span class="ss">:not_found</span><span class="p" data-group-id="5238615268-11">)</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_view</span><span class="p" data-group-id="5238615268-12">(</span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTML</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorJSON</span><span class="p" data-group-id="5238615268-12">)</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="5238615268-13">(</span><span class="ss">:&quot;404&quot;</span><span class="p" data-group-id="5238615268-13">)</span><span class="w">
+
+      </span><span class="p" data-group-id="5238615268-14">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:unauthorized</span><span class="p" data-group-id="5238615268-14">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">conn</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_status</span><span class="p" data-group-id="5238615268-15">(</span><span class="mi">403</span><span class="p" data-group-id="5238615268-15">)</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_view</span><span class="p" data-group-id="5238615268-16">(</span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTML</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorJSON</span><span class="p" data-group-id="5238615268-16">)</span><span class="w">
+        </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="5238615268-17">(</span><span class="ss">:&quot;403&quot;</span><span class="p" data-group-id="5238615268-17">)</span><span class="w">
+    </span><span class="k" data-group-id="5238615268-8">end</span><span class="w">
+  </span><span class="k" data-group-id="5238615268-4">end</span><span class="w">
+</span><span class="k" data-group-id="5238615268-1">end</span></code></pre><p>Agora imagine que você pode precisar implementar uma lógica semelhante para cada controlador e ação tratada pela sua API. Isso resultaria em muita repetição.</p><p>Em vez disso, podemos definir um plug de módulo que sabe como lidar com esses casos de erro especificamente. Como os controladores são plugs de módulo, vamos definir nosso plug como um controlador:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.MyFallbackController</span><span class="w"> </span><span class="k" data-group-id="5348021421-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call</span><span class="p" data-group-id="5348021421-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5348021421-3">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_found</span><span class="p" data-group-id="5348021421-3">}</span><span class="p" data-group-id="5348021421-2">)</span><span class="w"> </span><span class="k" data-group-id="5348021421-4">do</span><span class="w">
+    </span><span class="n">conn</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_status</span><span class="p" data-group-id="5348021421-5">(</span><span class="ss">:not_found</span><span class="p" data-group-id="5348021421-5">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_view</span><span class="p" data-group-id="5348021421-6">(</span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorJSON</span><span class="p" data-group-id="5348021421-6">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="5348021421-7">(</span><span class="ss">:&quot;404&quot;</span><span class="p" data-group-id="5348021421-7">)</span><span class="w">
+  </span><span class="k" data-group-id="5348021421-4">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call</span><span class="p" data-group-id="5348021421-8">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5348021421-9">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:unauthorized</span><span class="p" data-group-id="5348021421-9">}</span><span class="p" data-group-id="5348021421-8">)</span><span class="w"> </span><span class="k" data-group-id="5348021421-10">do</span><span class="w">
+    </span><span class="n">conn</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_status</span><span class="p" data-group-id="5348021421-11">(</span><span class="mi">403</span><span class="p" data-group-id="5348021421-11">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_view</span><span class="p" data-group-id="5348021421-12">(</span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ErrorJSON</span><span class="p" data-group-id="5348021421-12">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="5348021421-13">(</span><span class="ss">:&quot;403&quot;</span><span class="p" data-group-id="5348021421-13">)</span><span class="w">
+  </span><span class="k" data-group-id="5348021421-10">end</span><span class="w">
+</span><span class="k" data-group-id="5348021421-1">end</span></code></pre><p>Então podemos referenciar nosso novo controlador como o <code class="inline">action_fallback</code> e simplesmente remover o bloco <code class="inline">else</code> do nosso <code class="inline">with</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.MyController</span><span class="w"> </span><span class="k" data-group-id="1291792882-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Controller</span><span class="w">
+
+  </span><span class="n">action_fallback</span><span class="w"> </span><span class="nc">HelloWeb.MyFallbackController</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="1291792882-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1291792882-3">%{</span><span class="s">&quot;id&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">id</span><span class="p" data-group-id="1291792882-3">}</span><span class="p">,</span><span class="w"> </span><span class="n">current_user</span><span class="p" data-group-id="1291792882-2">)</span><span class="w"> </span><span class="k" data-group-id="1291792882-4">do</span><span class="w">
+    </span><span class="k">with</span><span class="w"> </span><span class="p" data-group-id="1291792882-5">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="1291792882-5">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fetch_post</span><span class="p" data-group-id="1291792882-6">(</span><span class="n">id</span><span class="p" data-group-id="1291792882-6">)</span><span class="p">,</span><span class="w">
+         </span><span class="ss">:ok</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">authorize_user</span><span class="p" data-group-id="1291792882-7">(</span><span class="n">current_user</span><span class="p">,</span><span class="w"> </span><span class="ss">:view</span><span class="p">,</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="1291792882-7">)</span><span class="w"> </span><span class="k" data-group-id="1291792882-8">do</span><span class="w">
+      </span><span class="n">render</span><span class="p" data-group-id="1291792882-9">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">post</span><span class="p">:</span><span class="w"> </span><span class="n">post</span><span class="p" data-group-id="1291792882-9">)</span><span class="w">
+    </span><span class="k" data-group-id="1291792882-8">end</span><span class="w">
+  </span><span class="k" data-group-id="1291792882-4">end</span><span class="w">
+</span><span class="k" data-group-id="1291792882-1">end</span></code></pre><p>Sempre que as condições do <code class="inline">with</code> não corresponderem, <code class="inline">HelloWeb.MyFallbackController</code> receberá o <code class="inline">conn</code> original, bem como o resultado da ação, e responderá de acordo.</p><h2 id="fallbackcontroller-e-changesetjson" class="section-heading">
+  <a href="#fallbackcontroller-e-changesetjson" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">FallbackController e ChangesetJSON</span>
+</h2>
+<p>Com esse conhecimento em mãos, podemos explorar o <code class="inline">FallbackController</code> (<code class="inline">lib/hello_web/controllers/fallback_controller.ex</code>) gerado por <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Json.html"><code class="inline">mix phx.gen.json</code></a>. Em particular, ele lida com uma cláusula (a outra é gerada como exemplo):</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call</span><span class="p" data-group-id="3437124610-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3437124610-2">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3437124610-3">%</span><span class="nc" data-group-id="3437124610-3">Ecto.Changeset</span><span class="p" data-group-id="3437124610-3">{</span><span class="p" data-group-id="3437124610-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="3437124610-2">}</span><span class="p" data-group-id="3437124610-1">)</span><span class="w"> </span><span class="k" data-group-id="3437124610-4">do</span><span class="w">
+    </span><span class="n">conn</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_status</span><span class="p" data-group-id="3437124610-5">(</span><span class="ss">:unprocessable_entity</span><span class="p" data-group-id="3437124610-5">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_view</span><span class="p" data-group-id="3437124610-6">(</span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="nc">HelloWeb.ChangesetJSON</span><span class="p" data-group-id="3437124610-6">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="3437124610-7">(</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">changeset</span><span class="p">:</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="3437124610-7">)</span><span class="w">
+  </span><span class="k" data-group-id="3437124610-4">end</span></code></pre><p>O objetivo dessa cláusula é lidar com os tipos de retorno <code class="inline">{:error, changeset}</code> do contexto <code class="inline">HelloWeb.Urls</code> e transformá-los em erros renderizados através da view <code class="inline">ChangesetJSON</code>. Vamos abrir <code class="inline">lib/hello_web/controllers/changeset_json.ex</code> para saber mais:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ChangesetJSON</span><span class="w"> </span><span class="k" data-group-id="3363723069-1">do</span><span class="w">
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Renders changeset errors.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">error</span><span class="p" data-group-id="3363723069-2">(</span><span class="p" data-group-id="3363723069-3">%{</span><span class="ss">changeset</span><span class="p">:</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="3363723069-3">}</span><span class="p" data-group-id="3363723069-2">)</span><span class="w"> </span><span class="k" data-group-id="3363723069-4">do</span><span class="w">
+    </span><span class="c1"># When encoded, the changeset returns its errors</span><span class="w">
+    </span><span class="c1"># as a JSON object. So we just pass it forward.</span><span class="w">
+    </span><span class="p" data-group-id="3363723069-5">%{</span><span class="ss">errors</span><span class="p">:</span><span class="w"> </span><span class="nc">Ecto.Changeset</span><span class="o">.</span><span class="n">traverse_errors</span><span class="p" data-group-id="3363723069-6">(</span><span class="n">changeset</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">translate_error</span><span class="o">/</span><span class="mi">1</span><span class="p" data-group-id="3363723069-6">)</span><span class="p" data-group-id="3363723069-5">}</span><span class="w">
+  </span><span class="k" data-group-id="3363723069-4">end</span><span class="w">
+</span><span class="k" data-group-id="3363723069-1">end</span></code></pre><p>Como podemos ver, ele converterá os erros em uma estrutura de dados, que será renderizada como JSON. O changeset é uma estrutura de dados responsável por converter e validar dados. Para nosso exemplo, ele é definido em <code class="inline">Hello.Urls.Url.changeset/1</code>. Vamos abrir <code class="inline">lib/hello/urls/url.ex</code> e ver sua definição:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="na">@doc</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">changeset</span><span class="p" data-group-id="5325551062-1">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">attrs</span><span class="p" data-group-id="5325551062-1">)</span><span class="w"> </span><span class="k" data-group-id="5325551062-2">do</span><span class="w">
+    </span><span class="n">url</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">cast</span><span class="p" data-group-id="5325551062-3">(</span><span class="n">attrs</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5325551062-4">[</span><span class="ss">:link</span><span class="p">,</span><span class="w"> </span><span class="ss">:title</span><span class="p" data-group-id="5325551062-4">]</span><span class="p" data-group-id="5325551062-3">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">validate_required</span><span class="p" data-group-id="5325551062-5">(</span><span class="p" data-group-id="5325551062-6">[</span><span class="ss">:link</span><span class="p">,</span><span class="w"> </span><span class="ss">:title</span><span class="p" data-group-id="5325551062-6">]</span><span class="p" data-group-id="5325551062-5">)</span><span class="w">
+  </span><span class="k" data-group-id="5325551062-2">end</span></code></pre><p>Como você pode ver, o changeset requer que tanto o link quanto o título sejam fornecidos. Isso significa que podemos tentar postar um url sem link e título e ver como nossa API responde:</p><pre><code class="makeup console" translate="no"><span class="">curl -iX POST http://localhost:4000/api/urls \
+</span><span class="">   -H &#39;Content-Type: application/json&#39; \
+</span><span class="">   -d &#39;{&quot;url&quot;: {}}&#39;
+</span><span class="">
+</span><span class="">{&quot;errors&quot;: {&quot;link&quot;: [&quot;can&#39;t be blank&quot;], &quot;title&quot;: [&quot;can&#39;t be blank&quot;]}}
+</span></code></pre><p>Sinta-se à vontade para modificar a função <code class="inline">changeset</code> e ver como sua API se comporta.</p><h2 id="aplicações-somente-api" class="section-heading">
+  <a href="#aplicações-somente-api" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Aplicações somente API</span>
+</h2>
+<p>Caso você queira gerar uma aplicação Phoenix exclusivamente para APIs, você pode passar
+várias opções ao invocar <code class="inline">mix phx.new</code>. Vamos verificar quais flags <code class="inline">--no-*</code> precisamos
+usar para não gerar o scaffolding que não é necessário em nossa aplicação Phoenix
+para a API REST.</p><p>Do seu terminal, execute:</p><pre><code class="makeup console" translate="no"><span class="">mix help phx.new
+</span></code></pre><p>A saída deve conter o seguinte:</p><pre><code class="text">  • --no-assets - equivalente a --no-esbuild e --no-tailwind
+  • --no-dashboard - não incluir Phoenix.LiveDashboard
+  • --no-ecto - não gerar arquivos Ecto
+  • --no-esbuild - não incluir dependências e ativos do esbuild.
+    Não recomendamos definir esta opção, exceto para aplicações
+    somente API, pois isso exige que você adicione e rastreie
+    manualmente as dependências JavaScript
+  • --no-gettext - não gerar arquivos gettext
+  • --no-html - não gerar views HTML
+  • --no-live - comentar a configuração do socket LiveView em seu
+    Endpoint e assets/js/app.js. Automaticamente desativado se
+    --no-html for fornecido
+  • --no-mailer - não gerar arquivos do mailer Swoosh
+  • --no-tailwind - não incluir dependências e ativos do tailwind.
+    O markup gerado ainda incluirá classes CSS do Tailwind, essas
+    são mantidas como referência para o estilo subsequente do seu
+    layout e componentes</code></pre><p>O <code class="inline">--no-html</code> é o óbvio que queremos usar ao criar qualquer aplicação Phoenix para uma API, a fim de deixar de fora todo o scaffolding HTML desnecessário. Você também pode passar <code class="inline">--no-assets</code>, se não quiser nenhuma parte do gerenciamento de ativos, <code class="inline">--no-gettext</code> se não suportar internacionalização, e assim por diante.</p><p>Tenha em mente também que nada o impede de ter um backend que suporte simultaneamente a API REST e um aplicativo Web (HTML, ativos, internacionalização e sockets).</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="contexts.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Contextos
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="mix_tasks.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Tarefas Mix
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

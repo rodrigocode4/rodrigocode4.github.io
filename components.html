@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Componentes e HEEx — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Componentes e HEEx</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha seguido os <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha seguido o <a href="request_lifecycle.html">guia do ciclo de vida da requisição</a>.</p></blockquote><p>Os controladores Phoenix atuam como módulos intermediários. Suas funções — chamadas ações — são invocadas pelo roteador em resposta a requisições HTTP. As ações, por sua vez, reúnem todos os dados necessários e realizam todas as etapas necessárias antes de invocar a camada de visualização para renderizar um template ou retornar uma resposta JSON.</p><p>Os componentes de função Phoenix são blocos de construção essenciais para qualquer tipo de renderização de templates baseada em marcação que você realizará no Phoenix. Eles servem como uma abstração compartilhada para aplicações MVC baseadas em controladores padrão, aplicações LiveView, layouts e definições de UI menores que você usará em outros templates.</p><p>Neste capítulo, revisaremos como os componentes foram usados em capítulos anteriores e encontraremos novos casos de uso para eles.</p><h2 id="componentes-de-função" class="section-heading">
+  <a href="#componentes-de-função" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Componentes de função</span>
+</h2>
+<p>No final do capítulo sobre o ciclo de vida da requisição, criamos um template em <code class="inline">lib/hello_web/controllers/hello_html/show.html.heex</code>. Vamos abri-lo:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">section</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span><span class="n">Hello World, from </span><span class="p" data-group-id="2503520866-1">{</span><span class="na">@messenger</span><span class="p" data-group-id="2503520866-1">}</span><span class="n">!</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span></code></pre><p>Este template está incorporado como parte do <code class="inline">HelloHTML</code>, em <code class="inline">lib/hello_web/controllers/hello_html.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloHTML</span><span class="w"> </span><span class="k" data-group-id="0604564556-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="w">
+
+  </span><span class="n">embed_templates</span><span class="w"> </span><span class="s">&quot;hello_html/*&quot;</span><span class="w">
+</span><span class="k" data-group-id="0604564556-1">end</span></code></pre><p>Isso é bastante simples. Há apenas duas linhas, <code class="inline">use HelloWeb, :html</code>. Esta linha chama a função <code class="inline">html/0</code> definida em <code class="inline">HelloWeb</code>, que configura as importações e configurações básicas para nossos componentes de função e templates.</p><p>Todas as importações e aliases que fazemos em nosso módulo também estarão disponíveis em nossos templates. Isso ocorre porque os templates são efetivamente compilados como funções dentro de seus respectivos módulos. Por exemplo, se você definir uma função em seu módulo, poderá invocá-la diretamente do template. Vamos ver isso na prática.</p><p>Imagine que queremos refatorar nosso <code class="inline">show.html.heex</code> para mover a renderização de <code class="inline">&lt;h2&gt;Hello World, from {@messenger}!&lt;/h2&gt;</code> para sua própria função. Podemos movê-la para um componente de função dentro de <code class="inline">HelloHTML</code>, assim:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.HelloHTML</span><span class="w"> </span><span class="k" data-group-id="8003854027-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="w">
+
+  </span><span class="n">embed_templates</span><span class="w"> </span><span class="s">&quot;hello_html/*&quot;</span><span class="w">
+
+  </span><span class="n">attr</span><span class="w"> </span><span class="ss">:messenger</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="p">,</span><span class="w"> </span><span class="ss">required</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">greet</span><span class="p" data-group-id="8003854027-2">(</span><span class="n">assigns</span><span class="p" data-group-id="8003854027-2">)</span><span class="w"> </span><span class="k" data-group-id="8003854027-3">do</span><span class="w">
+    </span><span class="sx">~H&quot;&quot;&quot;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span><span class="n">Hello World, from </span><span class="p" data-group-id="0487647006-1">{</span><span class="na">@messenger</span><span class="p" data-group-id="0487647006-1">}</span><span class="n">!</span><span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="sx">&quot;&quot;&quot;</span><span class="w">
+  </span><span class="k" data-group-id="8003854027-3">end</span><span class="w">
+</span><span class="k" data-group-id="8003854027-1">end</span></code></pre><p>Declaramos os atributos que aceitamos através da macro <code class="inline">attr/3</code> fornecida por <code class="inline">Phoenix.Component</code>, então definimos nossa função <code class="inline">greet/1</code> que retorna o template HEEx.</p><p>Em seguida, precisamos atualizar <code class="inline">show.html.heex</code>:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">section</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nf">.greet</span><span class="w"> </span><span class="na">messenger</span><span class="p">=</span><span class="p" data-group-id="1013033531-1">{</span><span class="na">@messenger</span><span class="p" data-group-id="1013033531-1">}</span><span class="w"> </span><span class="p">/&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span></code></pre><p>Quando recarregamos <code class="inline">http://localhost:4000/hello/Frank</code>, devemos ver o mesmo conteúdo de antes. Como o template <code class="inline">show.html.heex</code> está incorporado dentro do módulo <code class="inline">HelloHTML</code>, pudemos invocar o componente de função diretamente como <code class="inline">&lt;.greet messenger=&quot;...&quot; /&gt;</code>. Se o componente estivesse definido em outro lugar, precisaríamos dar seu nome completo: <code class="inline">&lt;HelloWeb.HelloHTML.greet messenger=&quot;...&quot; /&gt;</code>.</p><p>Ao declarar atributos como obrigatórios, o Phoenix avisará em tempo de compilação se chamarmos o componente <code class="inline">&lt;.greet /&gt;</code> sem passar os atributos. Se um atributo for opcional, você pode especificar a opção <code class="inline">:default</code> com um valor:</p><pre><code class="makeup elixir" translate="no"><span class="n">attr</span><span class="w"> </span><span class="ss">:messenger</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="p">,</span><span class="w"> </span><span class="ss">default</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span></code></pre><p>No geral, os componentes de função são os blocos de construção essenciais da pilha de renderização do Phoenix. Na maioria das vezes, eles são funções que recebem um único argumento chamado <code class="inline">assigns</code> e chamam o sigil <code class="inline">~H</code>, como fizemos em <code class="inline">greet/1</code>. Eles também podem ser invocados a partir de templates, com validação em tempo de compilação de seus atributos declarados via <code class="inline">attr</code>.</p><p>Na verdade, cada template incorporado em <code class="inline">HelloHTML</code> é um componente de função em si. <code class="inline">show.html.heex</code> simplesmente se torna um componente de função chamado <code class="inline">show</code>. Isso também significa que você pode renderizar componentes de função diretamente do controlador, ignorando o template <code class="inline">show.html.heex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nc">HelloWeb.HelloController</span><span class="w"> </span><span class="k" data-group-id="4683331976-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="4683331976-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4683331976-3">%{</span><span class="s">&quot;messenger&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">messenger</span><span class="p" data-group-id="4683331976-3">}</span><span class="p" data-group-id="4683331976-2">)</span><span class="w"> </span><span class="k" data-group-id="4683331976-4">do</span><span class="w">
+    </span><span class="c1"># Renderiza o componente HelloWeb.HelloHTML.greet/1</span><span class="w">
+    </span><span class="n">render</span><span class="p" data-group-id="4683331976-5">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:greet</span><span class="p">,</span><span class="w"> </span><span class="ss">messenger</span><span class="p">:</span><span class="w"> </span><span class="n">messenger</span><span class="p" data-group-id="4683331976-5">)</span><span class="w">
+  </span><span class="k" data-group-id="4683331976-4">end</span><span class="w">
+</span><span class="k" data-group-id="4683331976-1">end</span></code></pre><p>A seguir, vamos entender completamente o poder expressivo por trás da linguagem de template HEEx.</p><h2 id="heex" class="section-heading">
+  <a href="#heex" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">HEEx</span>
+</h2>
+<p>Os componentes de função e arquivos de templates são alimentados pela <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#sigil_H/2">linguagem de template HEEx</a>, que significa &quot;HTML+EEx&quot;. EEx é uma biblioteca Elixir que usa <code class="inline">&lt;%= expression %&gt;</code> para executar expressões Elixir e interpolar seus resultados em templates de texto arbitrários. HEEx estende EEx para escrever templates HTML misturados com interpolação Elixir. Podemos escrever código Elixir dentro de <code class="inline">{...}</code> para interpolação consciente de HTML dentro de atributos de tag e no corpo. Também podemos interpolar blocos HEEx arbitrários usando interpolação EEx (<code class="inline">&lt;%= ... %&gt;</code>). Usamos <code class="inline">@name</code> para acessar a chave <code class="inline">name</code> definida dentro de <code class="inline">assigns</code>.</p><p>Isso é frequentemente usado para exibir assigns que definimos por meio do atalho <code class="inline">@</code>. Em seu controlador, se você invocar:</p><pre><code class="makeup elixir" translate="no"><span class="n">render</span><span class="p" data-group-id="3999227582-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;joe&quot;</span><span class="p" data-group-id="3999227582-1">)</span></code></pre><p>Então você pode acessar o nome de usuário nos templates como <code class="inline">{@username}</code>. Além de exibir assigns e funções, podemos usar praticamente qualquer expressão Elixir. Por exemplo, para ter condicionais:</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="8284669515-1">&lt;%=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">some_condition?</span><span class="w"> </span><span class="k" data-group-id="8284669515-ex-1">do</span><span class="w"> </span><span class="p" data-group-id="8284669515-1">%&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="n">Some condition is true for user: </span><span class="p" data-group-id="8284669515-2">{</span><span class="na">@username</span><span class="p" data-group-id="8284669515-2">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span><span class="w">
+</span><span class="p" data-group-id="8284669515-3">&lt;%</span><span class="w"> </span><span class="k" data-group-id="8284669515-ex-1">else</span><span class="w"> </span><span class="p" data-group-id="8284669515-3">%&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="n">Some condition is false for user: </span><span class="p" data-group-id="8284669515-4">{</span><span class="na">@username</span><span class="p" data-group-id="8284669515-4">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span><span class="w">
+</span><span class="p" data-group-id="8284669515-5">&lt;%</span><span class="w"> </span><span class="k" data-group-id="8284669515-ex-1">end</span><span class="w"> </span><span class="p" data-group-id="8284669515-5">%&gt;</span></code></pre><p>ou até mesmo loops:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span><span class="n">Number</span><span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span><span class="n">Power</span><span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p" data-group-id="4363656907-1">&lt;%=</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="w"> </span><span class="k" data-group-id="4363656907-ex-1">do</span><span class="w"> </span><span class="p" data-group-id="4363656907-1">%&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">      </span><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span><span class="p" data-group-id="4363656907-2">{</span><span class="n">number</span><span class="p" data-group-id="4363656907-2">}</span><span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">      </span><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span><span class="p" data-group-id="4363656907-3">{</span><span class="n">number</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">number</span><span class="p" data-group-id="4363656907-3">}</span><span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p" data-group-id="4363656907-4">&lt;%</span><span class="w"> </span><span class="k" data-group-id="4363656907-ex-1">end</span><span class="w"> </span><span class="p" data-group-id="4363656907-4">%&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span></code></pre><p>Você notou o uso de <code class="inline">&lt;%= %&gt;</code> versus <code class="inline">&lt;% %&gt;</code>? Todas as expressões que produzem algo para o template <strong>devem</strong> usar o sinal de igual (<code class="inline">=</code>). Se isso não for incluído, o código ainda será executado, mas nada será inserido no template.</p><p>HEEx também vem com extensões HTML úteis que aprenderemos a seguir.</p><h3 id="extensões-html" class="section-heading">
+  <a href="#extensões-html" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Extensões HTML</span>
+</h3>
+<p>Além de permitir a interpolação de expressões Elixir via <code class="inline">&lt;%= %&gt;</code>, os templates <code class="inline">.heex</code> vêm com extensões conscientes de HTML. Por exemplo, vejamos o que acontece se você tentar interpolar um valor com &quot;&lt;&quot; ou &quot;&gt;&quot; nele, o que levaria à injeção HTML:</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="0773912395-1">{</span><span class="s">&quot;&lt;b&gt;Bold?&lt;/b&gt;&quot;</span><span class="p" data-group-id="0773912395-1">}</span></code></pre><p>Uma vez que você renderizar o template, verá o literal <code class="inline">&lt;b&gt;</code> na página. Isso significa que os usuários não podem injetar conteúdo HTML na página. Se você quiser permitir isso, pode chamar <code class="inline">raw</code>, mas faça isso com extremo cuidado:</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="7113494588-1">{</span><span class="n">raw</span><span class="p" data-group-id="7113494588-ex-1">(</span><span class="s">&quot;&lt;b&gt;Bold?&lt;/b&gt;&quot;</span><span class="p" data-group-id="7113494588-ex-1">)</span><span class="p" data-group-id="7113494588-1">}</span></code></pre><p>Outro super poder dos templates HEEx é a validação da sintaxe HTML e interpolação de atributos. Você pode escrever:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">title</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">My div</span><span class="p">&quot;</span><span class="w"> </span><span class="na">class</span><span class="p">=</span><span class="p" data-group-id="6481062171-1">{</span><span class="na">@class</span><span class="p" data-group-id="6481062171-1">}</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="n">Hello </span><span class="p" data-group-id="6481062171-2">{</span><span class="na">@username</span><span class="p" data-group-id="6481062171-2">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre><p>Observe como você pode simplesmente usar <code class="inline">key={value}</code>. HEEx lidará automaticamente com valores especiais como <code class="inline">false</code> para remover o atributo ou uma lista de classes.</p><p>Para interpolar um número dinâmico de atributos em uma lista de palavras-chave ou mapa, faça:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">title</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">My div</span><span class="p">&quot;</span><span class="w"> </span><span class="p" data-group-id="3764094669-1">{</span><span class="na">@many_attributes</span><span class="p" data-group-id="3764094669-1">}</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="n">Hello </span><span class="p" data-group-id="3764094669-2">{</span><span class="na">@username</span><span class="p" data-group-id="3764094669-2">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre><p>Além disso, tente remover o fechamento <code class="inline">&lt;/div&gt;</code> ou renomeá-lo para <code class="inline">&lt;/div-typo&gt;</code>. Os templates HEEx irão informá-lo sobre seu erro.</p><p>HEEx também suporta sintaxe abreviada para expressões <code class="inline">if</code> e <code class="inline">for</code> através dos atributos especiais <code class="inline">:if</code> e <code class="inline">:for</code>. Por exemplo, em vez de:</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="9148490178-1">&lt;%=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="na">@some_condition</span><span class="w"> </span><span class="k" data-group-id="9148490178-ex-1">do</span><span class="w"> </span><span class="p" data-group-id="9148490178-1">%&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="n">...</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span><span class="w">
+</span><span class="p" data-group-id="9148490178-2">&lt;%</span><span class="w"> </span><span class="k" data-group-id="9148490178-ex-1">end</span><span class="w"> </span><span class="p" data-group-id="9148490178-2">%&gt;</span></code></pre><p>Você pode escrever:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">:if</span><span class="p">=</span><span class="p" data-group-id="2365685377-1">{</span><span class="na">@some_condition</span><span class="p" data-group-id="2365685377-1">}</span><span class="p">&gt;</span><span class="n">...</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre><p>Da mesma forma, compreensões for podem ser escritas como:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">li</span><span class="w"> </span><span class="na">:for</span><span class="p">=</span><span class="p" data-group-id="8160618402-1">{</span><span class="n">item</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="na">@items</span><span class="p" data-group-id="8160618402-1">}</span><span class="p">&gt;</span><span class="p" data-group-id="8160618402-2">{</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p" data-group-id="8160618402-2">}</span><span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span></code></pre><h2 id="layouts" class="section-heading">
+  <a href="#layouts" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Layouts</span>
+</h2>
+<p>Layouts são apenas componentes de função. Eles são definidos em um módulo, assim como todos os outros templates de componentes de função. Em um aplicativo recém-gerado, isso é <code class="inline">lib/hello_web/components/layouts.ex</code>. Você também encontrará uma pasta <code class="inline">layouts</code> com dois layouts incorporados gerados pelo Phoenix. O <em>layout raiz</em> padrão é chamado <code class="inline">root.html.heex</code>, e é o layout no qual todos os templates serão renderizados por padrão. O segundo é o <em>layout do aplicativo</em>, chamado <code class="inline">app.html.heex</code>, que é renderizado dentro do layout raiz e inclui nossos conteúdos.</p><p>Você pode estar se perguntando como a string resultante de uma visualização renderizada acaba dentro de um layout. Essa é uma ótima pergunta! Se olharmos para <code class="inline">lib/hello_web/components/layouts/root.html.heex</code>, quase no final do <code class="inline">&lt;body&gt;</code>, veremos isso.</p><pre><code class="makeup heex" translate="no"><span class="p" data-group-id="6282886753-1">{</span><span class="na">@inner_content</span><span class="p" data-group-id="6282886753-1">}</span></code></pre><p>Em outras palavras, depois de renderizar sua página, o resultado é colocado no assign <code class="inline">@inner_content</code>.</p><p>Phoenix fornece todo tipo de conveniências para controlar qual layout deve ser renderizado. Por exemplo, o módulo <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Controller.html"><code class="inline">Phoenix.Controller</code></a> fornece a função <code class="inline">put_root_layout/2</code> para trocarmos <em>layouts raiz</em>. Isso recebe <code class="inline">conn</code> como seu primeiro argumento e uma lista de palavras-chave de formatos e seus layouts. Você pode defini-lo como <code class="inline">false</code> para desabilitar completamente o layout.</p><p>Você pode editar a ação <code class="inline">index</code> de <code class="inline">HelloController</code> em <code class="inline">lib/hello_web/controllers/hello_controller.ex</code> para parecer com isso.</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="7701857491-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_params</span><span class="p" data-group-id="7701857491-1">)</span><span class="w"> </span><span class="k" data-group-id="7701857491-2">do</span><span class="w">
+  </span><span class="n">conn</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_root_layout</span><span class="p" data-group-id="7701857491-3">(</span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="no">false</span><span class="p" data-group-id="7701857491-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="7701857491-4">(</span><span class="ss">:index</span><span class="p" data-group-id="7701857491-4">)</span><span class="w">
+</span><span class="k" data-group-id="7701857491-2">end</span></code></pre><p>Depois de recarregar <a href="http://localhost:4000/hello">http://localhost:4000/hello</a>, devemos ver uma página muito diferente, uma sem título ou estilo CSS.</p><p>Para personalizar o layout da aplicação, invocamos uma função similar chamada <code class="inline">put_layout/2</code>. Vamos realmente criar outro layout e renderizar o template de índice nele. Como exemplo, digamos que tínhamos um layout diferente para a seção de administração de nossa aplicação que não tinha a imagem do logotipo. Para fazer isso, copie o existente <code class="inline">app.html.heex</code> para um novo arquivo <code class="inline">admin.html.heex</code> no mesmo diretório <code class="inline">lib/hello_web/components/layouts</code>. Em seguida, remova tudo dentro das tags <code class="inline">&lt;header&gt;...&lt;/header&gt;</code> (ou altere-o para o que desejar) no novo arquivo.</p><p>Agora, na ação <code class="inline">index</code> do controlador de <code class="inline">lib/hello_web/controllers/hello_controller.ex</code>, adicione o seguinte:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">index</span><span class="p" data-group-id="6486258949-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_params</span><span class="p" data-group-id="6486258949-1">)</span><span class="w"> </span><span class="k" data-group-id="6486258949-2">do</span><span class="w">
+  </span><span class="n">conn</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_layout</span><span class="p" data-group-id="6486258949-3">(</span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="ss">:admin</span><span class="p" data-group-id="6486258949-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="6486258949-4">(</span><span class="ss">:index</span><span class="p" data-group-id="6486258949-4">)</span><span class="w">
+</span><span class="k" data-group-id="6486258949-2">end</span></code></pre><p>Quando carregamos a página, deveríamos estar renderizando o layout de administração sem o cabeçalho (ou com um personalizado que você escreveu).</p><p>Neste ponto, você pode estar se perguntando, por que o Phoenix tem dois layouts?</p><p>Primeiro, isso nos dá flexibilidade. Na prática, dificilmente teremos vários layouts raiz, pois eles geralmente contêm apenas cabeçalhos HTML. Isso nos permite focar em diferentes layouts de aplicação apenas com as partes que mudam entre eles. Em segundo lugar, o Phoenix vem com um recurso chamado LiveView, que nos permite construir experiências de usuário ricas e em tempo real com HTML renderizado pelo servidor. LiveView é capaz de alterar dinamicamente o conteúdo da página, mas apenas altera o layout do aplicativo, nunca o layout raiz. Confira <a href="https://hexdocs.pm/phoenix_live_view">a documentação do LiveView</a> para saber mais.</p><h2 id="corecomponents" class="section-heading">
+  <a href="#corecomponents" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">CoreComponents</span>
+</h2>
+<p>Em uma nova aplicação Phoenix, você também encontrará um módulo <code class="inline">core_components.ex</code> dentro da pasta <code class="inline">components</code>. Este módulo é um ótimo exemplo de definição de componentes de função para reutilização em toda a nossa aplicação. Isso garante que, à medida que nossa aplicação evolui, nossos componentes terão uma aparência consistente.</p><p>Se você olhar dentro de <code class="inline">def html</code> em <code class="inline">HelloWeb</code> localizado em <code class="inline">lib/hello_web.ex</code>, verá que <code class="inline">CoreComponents</code> é automaticamente importado em todas as visualizações HTML via <code class="inline">use HelloWeb, :html</code>. Esta também é a razão pela qual o próprio <code class="inline">CoreComponents</code> executa <code class="inline">use Phoenix.Component</code> em vez de <code class="inline">use HelloWeb, :html</code> no topo: fazer o último causaria um deadlock, pois tentaríamos importar <code class="inline">CoreComponents</code> dentro de si mesmo.</p><p>CoreComponents também desempenha um papel importante nos geradores de código Phoenix, pois os geradores pressupõem que esses componentes estão disponíveis para construir rapidamente sua aplicação. Caso você queira aprender mais sobre todas essas peças, você pode:</p><ul><li><p>Explorar o módulo <code class="inline">CoreComponents</code> gerado para aprender mais com exemplos práticos</p></li><li><p>Ler a documentação oficial para <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html"><code class="inline">Phoenix.Component</code></a></p></li><li><p>Ler a documentação oficial para <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#sigil_H/2">HEEx e os sigils ~H</a></p></li><li><p>Se você estiver procurando componentes de nível mais alto além dos mínimos incluídos pelo Phoenix, <a href="https://github.com/phoenixframework/phoenix_live_view#component-systems">o projeto LiveView mantém uma lista de sistemas de componentes</a></p></li></ul>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="controllers.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Controladores
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="ecto.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Ecto
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

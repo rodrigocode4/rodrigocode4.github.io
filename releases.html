@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Implantando com Releases — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Implantando com Releases</h1>
+
+
+  </div>
+
+<h2 id="do-que-precisamos" class="section-heading">
+  <a href="#do-que-precisamos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Do que precisamos</span>
+</h2>
+<p>A única coisa que precisamos para este guia é uma aplicação Phoenix funcional. Para aqueles que precisam de uma aplicação simples para implantar, por favor, siga o guia <a href="up_and_running.html">Up and Running</a>.</p><h2 id="objetivos" class="section-heading">
+  <a href="#objetivos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Objetivos</span>
+</h2>
+<p>Nosso principal objetivo para este guia é empacotar sua aplicação Phoenix em um diretório autônomo que inclui a VM Erlang, Elixir, todo o seu código e dependências. Este pacote pode então ser colocado em uma máquina de produção.</p><h2 id="releases-montagem" class="section-heading">
+  <a href="#releases-montagem" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Releases, montagem!</span>
+</h2>
+<p>Se você ainda não está familiarizado com releases Elixir, recomendamos que leia a <a href="https://hexdocs.pm/mix/Mix.Tasks.Release.html">excelente documentação do Elixir</a> antes de continuar.</p><p>Depois disso, você pode montar uma release passando por todas as etapas do nosso <a href="deployment.html">guia geral de implantação</a> com <a href="https://hexdocs.pm/mix/Mix.Tasks.Release.html"><code class="inline">mix release</code></a> no final. Vamos recapitular.</p><p>Primeiro defina as variáveis de ambiente:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.secret
+</span><span class="">REALLY_LONG_SECRET
+</span><span class="gp unselectable">$ </span><span class="">export SECRET_KEY_BASE=REALLY_LONG_SECRET
+</span><span class="gp unselectable">$ </span><span class="">export DATABASE_URL=ecto://USER:PASS@HOST/database
+</span></code></pre><p>Em seguida, carregue as dependências para compilar código e assets:</p><pre><code class="makeup console" translate="no"><span class=""># Configuração inicial
+</span><span class="gp unselectable">$ </span><span class="">mix deps.get --only prod
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix compile
+</span><span class="">
+</span><span class=""># Compilar assets
+</span><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix assets.deploy
+</span></code></pre><p>E agora execute <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Release.html"><code class="inline">mix phx.gen.release</code></a>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.release
+</span><span class="">==&gt; my_app
+</span><span class="">* creating rel/overlays/bin/server
+</span><span class="">* creating rel/overlays/bin/server.bat
+</span><span class="">* creating rel/overlays/bin/migrate
+</span><span class="">* creating rel/overlays/bin/migrate.bat
+</span><span class="">* creating lib/my_app/release.ex
+</span><span class="">
+</span><span class="">Sua aplicação está pronta para ser implantada em uma release!
+</span><span class="">
+</span><span class="">    # Para iniciar seu sistema
+</span><span class="">    _build/dev/rel/my_app/bin/my_app start
+</span><span class="">
+</span><span class="">    # Para iniciar seu sistema com o servidor Phoenix rodando
+</span><span class="">    _build/dev/rel/my_app/bin/server
+</span><span class="">
+</span><span class="">    # Para executar migrações
+</span><span class="">    _build/dev/rel/my_app/bin/migrate
+</span><span class="">
+</span><span class="">Uma vez que a release esteja rodando:
+</span><span class="">
+</span><span class="">    # Para conectar remotamente
+</span><span class="">    _build/dev/rel/my_app/bin/my_app remote
+</span><span class="">
+</span><span class="">    # Para parar graciosamente (você também pode enviar SIGINT/SIGTERM)
+</span><span class="">    _build/dev/rel/my_app/bin/my_app stop
+</span><span class="">
+</span><span class="">Para listar todos os comandos:
+</span><span class="">
+</span><span class="">    _build/dev/rel/my_app/bin/my_app
+</span><span class="">
+</span></code></pre><p>A tarefa <code class="inline">phx.gen.release</code> gerou alguns arquivos para nos auxiliar nas releases. Primeiro, ela criou scripts <em>overlay</em> <code class="inline">server</code> e <code class="inline">migrate</code> para executar convenientemente o servidor phoenix dentro de uma release ou invocar migrações a partir de uma release. Os arquivos no diretório <code class="inline">rel/overlays</code> são copiados para todos os ambientes de release. Em seguida, gerou um arquivo <code class="inline">release.ex</code> que é usado para invocar migrações do Ecto sem depender do próprio <code class="inline">mix</code>.</p><p><em>Nota</em>: Se você é usuário do Docker, pode passar a flag <code class="inline">--docker</code> para <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Release.html"><code class="inline">mix phx.gen.release</code></a> para gerar um Dockerfile pronto para implantação.</p><p>Em seguida, podemos invocar <a href="https://hexdocs.pm/mix/Mix.Tasks.Release.html"><code class="inline">mix release</code></a> para construir a release:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">MIX_ENV=prod mix release
+</span><span class="">Generated my_app app
+</span><span class="">* assembling my_app-0.1.0 on MIX_ENV=prod
+</span><span class="">* using config/runtime.exs to configure the release at runtime
+</span><span class="">
+</span><span class="">Release criada em _build/prod/rel/my_app!
+</span><span class="">
+</span><span class="">    # Para iniciar seu sistema
+</span><span class="">    _build/prod/rel/my_app/bin/my_app start
+</span><span class="">
+</span><span class="">...
+</span></code></pre><p>Você pode iniciar a release chamando <code class="inline">_build/prod/rel/my_app/bin/my_app start</code>, ou iniciar seu servidor web chamando <code class="inline">_build/prod/rel/my_app/bin/server</code>, onde você deve substituir <code class="inline">my_app</code> pelo nome atual da sua aplicação.</p><p>Agora você pode obter todos os arquivos no diretório <code class="inline">_build/prod/rel/my_app</code>, empacotá-los e executá-los em qualquer máquina de produção com o mesmo sistema operacional e arquitetura do que montou a release. Para mais detalhes, consulte a <a href="https://hexdocs.pm/mix/Mix.Tasks.Release.html">documentação de <code class="inline">mix release</code></a>.</p><p>Mas antes de terminarmos este guia, há mais um recurso das releases que a maioria das aplicações Phoenix usará, então vamos falar sobre isso.</p><h2 id="migrações-ecto-e-comandos-personalizados" class="section-heading">
+  <a href="#migrações-ecto-e-comandos-personalizados" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Migrações Ecto e comandos personalizados</span>
+</h2>
+<p>Uma necessidade comum em sistemas de produção é executar comandos personalizados necessários para configurar o ambiente de produção. Um desses comandos é precisamente a migração do banco de dados. Como não temos o <a href="https://hexdocs.pm/mix/Mix.html"><code class="inline">Mix</code></a>, uma ferramenta de <em>build</em>, dentro das releases, que são um artefato de produção, precisamos trazer esses comandos diretamente para a release.</p><p>O comando <code class="inline">phx.gen.release</code> criou o seguinte arquivo <code class="inline">release.ex</code> no seu projeto <code class="inline">lib/my_app/release.ex</code>, com o seguinte conteúdo:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp.Release</span><span class="w"> </span><span class="k" data-group-id="0393943450-1">do</span><span class="w">
+  </span><span class="na">@app</span><span class="w"> </span><span class="ss">:my_app</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">migrate</span><span class="w"> </span><span class="k" data-group-id="0393943450-2">do</span><span class="w">
+    </span><span class="n">load_app</span><span class="p" data-group-id="0393943450-3">(</span><span class="p" data-group-id="0393943450-3">)</span><span class="w">
+
+    </span><span class="k">for</span><span class="w"> </span><span class="n">repo</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">repos</span><span class="p" data-group-id="0393943450-4">(</span><span class="p" data-group-id="0393943450-4">)</span><span class="w"> </span><span class="k" data-group-id="0393943450-5">do</span><span class="w">
+      </span><span class="p" data-group-id="0393943450-6">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="0393943450-6">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Ecto.Migrator</span><span class="o">.</span><span class="n">with_repo</span><span class="p" data-group-id="0393943450-7">(</span><span class="n">repo</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nc">Ecto.Migrator</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="0393943450-8">(</span><span class="ni">&amp;1</span><span class="p">,</span><span class="w"> </span><span class="ss">:up</span><span class="p">,</span><span class="w"> </span><span class="ss">all</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="0393943450-8">)</span><span class="p" data-group-id="0393943450-7">)</span><span class="w">
+    </span><span class="k" data-group-id="0393943450-5">end</span><span class="w">
+  </span><span class="k" data-group-id="0393943450-2">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">rollback</span><span class="p" data-group-id="0393943450-9">(</span><span class="n">repo</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p" data-group-id="0393943450-9">)</span><span class="w"> </span><span class="k" data-group-id="0393943450-10">do</span><span class="w">
+    </span><span class="n">load_app</span><span class="p" data-group-id="0393943450-11">(</span><span class="p" data-group-id="0393943450-11">)</span><span class="w">
+    </span><span class="p" data-group-id="0393943450-12">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="0393943450-12">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Ecto.Migrator</span><span class="o">.</span><span class="n">with_repo</span><span class="p" data-group-id="0393943450-13">(</span><span class="n">repo</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nc">Ecto.Migrator</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="0393943450-14">(</span><span class="ni">&amp;1</span><span class="p">,</span><span class="w"> </span><span class="ss">:down</span><span class="p">,</span><span class="w"> </span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="n">version</span><span class="p" data-group-id="0393943450-14">)</span><span class="p" data-group-id="0393943450-13">)</span><span class="w">
+  </span><span class="k" data-group-id="0393943450-10">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">repos</span><span class="w"> </span><span class="k" data-group-id="0393943450-15">do</span><span class="w">
+    </span><span class="nc">Application</span><span class="o">.</span><span class="n">fetch_env!</span><span class="p" data-group-id="0393943450-16">(</span><span class="na">@app</span><span class="p">,</span><span class="w"> </span><span class="ss">:ecto_repos</span><span class="p" data-group-id="0393943450-16">)</span><span class="w">
+  </span><span class="k" data-group-id="0393943450-15">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">load_app</span><span class="w"> </span><span class="k" data-group-id="0393943450-17">do</span><span class="w">
+    </span><span class="nc">Application</span><span class="o">.</span><span class="n">load</span><span class="p" data-group-id="0393943450-18">(</span><span class="na">@app</span><span class="p" data-group-id="0393943450-18">)</span><span class="w">
+  </span><span class="k" data-group-id="0393943450-17">end</span><span class="w">
+</span><span class="k" data-group-id="0393943450-1">end</span></code></pre><p>Onde você substitui as duas primeiras linhas pelos nomes da sua aplicação.</p><p>Agora você pode montar uma nova release com <code class="inline">MIX_ENV=prod mix release</code> e pode invocar qualquer código, incluindo as funções no módulo acima, chamando o comando <code class="inline">eval</code>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">_build/prod/rel/my_app/bin/my_app eval &quot;MyApp.Release.migrate&quot;
+</span></code></pre><p>E é isso! Se você olhar dentro do script <code class="inline">migrate</code>, verá que ele encapsula exatamente esta invocação.</p><p>Você pode usar essa abordagem para criar qualquer comando personalizado para executar em produção. Neste caso, usamos <code class="inline">load_app</code>, que chama <a href="https://hexdocs.pm/elixir/Application.html#load/1"><code class="inline">Application.load/1</code></a> para carregar a aplicação atual sem iniciá-la. No entanto, você pode querer escrever um comando personalizado que inicie toda a aplicação. Nesses casos, <a href="https://hexdocs.pm/elixir/Application.html#ensure_all_started/1"><code class="inline">Application.ensure_all_started/1</code></a> deve ser usado. Tenha em mente que iniciar a aplicação iniciará todos os processos para a aplicação atual, incluindo o endpoint Phoenix. Isso pode ser contornado alterando sua árvore de supervisão para não iniciar certos filhos sob certas condições. Por exemplo, no arquivo de comandos da release, você poderia fazer:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defp</span><span class="w"> </span><span class="nf">start_app</span><span class="w"> </span><span class="k" data-group-id="4424800514-1">do</span><span class="w">
+  </span><span class="n">load_app</span><span class="p" data-group-id="4424800514-2">(</span><span class="p" data-group-id="4424800514-2">)</span><span class="w">
+  </span><span class="nc">Application</span><span class="o">.</span><span class="n">put_env</span><span class="p" data-group-id="4424800514-3">(</span><span class="na">@app</span><span class="p">,</span><span class="w"> </span><span class="ss">:minimal</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="4424800514-3">)</span><span class="w">
+  </span><span class="nc">Application</span><span class="o">.</span><span class="n">ensure_all_started</span><span class="p" data-group-id="4424800514-4">(</span><span class="na">@app</span><span class="p" data-group-id="4424800514-4">)</span><span class="w">
+</span><span class="k" data-group-id="4424800514-1">end</span></code></pre><p>E então na sua aplicação, você verifica <code class="inline">Application.get_env(@app, :minimal)</code> e inicia apenas parte dos filhos quando definido.</p><h2 id="contêineres" class="section-heading">
+  <a href="#contêineres" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Contêineres</span>
+</h2>
+<p>Releases Elixir funcionam bem com tecnologias de contêineres, como Docker. A ideia é que você monte a release dentro do contêiner Docker e depois construa uma imagem baseada nos artefatos da release.</p><p>Se você chamar <code class="inline">mix phx.gen.release --docker</code>, verá um novo arquivo com estes conteúdos:</p><pre><code class="makeup Dockerfile" translate="no"><span class="c">#</span><span class="c"> Encontre imagens adequadas de builder e runner no Docker Hub. Usamos Ubuntu/Debian
+</span><span class="c">#</span><span class="c"> em vez de Alpine para evitar problemas de resolução de DNS em produção.
+</span><span class="c">#</span><span class="w">
+</span><span class="c">#</span><span class="c"> https://hub.docker.com/r/hexpm/elixir/tags?page=1&amp;name=ubuntu
+</span><span class="c">#</span><span class="c"> https://hub.docker.com/_/ubuntu?tab=tags
+</span><span class="c">#</span><span class="w">
+</span><span class="c">#</span><span class="c"> Este arquivo é baseado nestas imagens:
+</span><span class="c">#</span><span class="w">
+</span><span class="c">#</span><span class="c">   - https://hub.docker.com/r/hexpm/elixir/tags - para a imagem de build
+</span><span class="c">#</span><span class="c">   - https://hub.docker.com/_/debian?tab=tags&amp;page=1&amp;name=bullseye-20230612-slim - para a imagem de release
+</span><span class="c">#</span><span class="c">   - https://pkgs.org/ - recurso para encontrar pacotes necessários
+</span><span class="c">#</span><span class="c">   - Ex: hexpm/elixir:1.14.5-erlang-25.3.2.4-debian-bullseye-20230612-slim
+</span><span class="c">#</span><span class="w">
+</span><span class="k">ARG </span><span class="n">ELIXIR_VERSION=1.14.5
+</span><span class="k">ARG </span><span class="n">OTP_VERSION=25.3.2.4
+</span><span class="k">ARG </span><span class="n">DEBIAN_VERSION=bullseye-20230612-slim
+</span><span class="w">
+</span><span class="k">ARG </span><span class="n">BUILDER_IMAGE=&quot;hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}&quot;
+</span><span class="k">ARG </span><span class="n">RUNNER_IMAGE=&quot;debian:${DEBIAN_VERSION}&quot;
+</span><span class="w">
+</span><span class="k">FROM</span><span class="n"> ${BUILDER_IMAGE} </span><span class="k">as</span><span class="w"> </span><span class="nv">builder</span><span class="w">
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> instalar dependências de build
+</span><span class="k">RUN </span><span class="n">apt-get update -y &amp;&amp; apt-get install -y build-essential git \
+</span><span class="n">    &amp;&amp; apt-get clean &amp;&amp; rm -f /var/lib/apt/lists/*_*
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> preparar diretório de build
+</span><span class="k">WORKDIR </span><span class="n">/app
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> instalar hex + rebar
+</span><span class="k">RUN </span><span class="n">mix local.hex --force &amp;&amp; \
+</span><span class="n">    mix local.rebar --force
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> definir ENV de build
+</span><span class="k">ENV </span><span class="n">MIX_ENV=</span><span class="p">&quot;</span><span class="s2">prod</span><span class="p">&quot;</span><span class="w">
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> instalar dependências mix
+</span><span class="k">COPY</span><span class="n"> mix.exs mix.lock ./
+</span><span class="k">RUN </span><span class="n">mix deps.get --only $MIX_ENV
+</span><span class="k">RUN </span><span class="n">mkdir config
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> copiar arquivos de configuração de tempo de compilação antes de compilarmos dependências
+</span><span class="c">#</span><span class="c"> para garantir que qualquer alteração de configuração relevante acionará as dependências
+</span><span class="c">#</span><span class="c"> a serem recompiladas.
+</span><span class="k">COPY</span><span class="n"> config/config.exs config/${MIX_ENV}.exs config/
+</span><span class="k">RUN </span><span class="n">mix deps.compile
+</span><span class="w">
+</span><span class="k">COPY</span><span class="n"> priv priv
+</span><span class="w">
+</span><span class="k">COPY</span><span class="n"> lib lib
+</span><span class="w">
+</span><span class="k">COPY</span><span class="n"> assets assets
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> compilar assets
+</span><span class="k">RUN </span><span class="n">mix assets.deploy
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> Compilar a release
+</span><span class="k">RUN </span><span class="n">mix compile
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> Mudanças em config/runtime.exs não requerem recompilação do código
+</span><span class="k">COPY</span><span class="n"> config/runtime.exs config/
+</span><span class="w">
+</span><span class="k">COPY</span><span class="n"> rel rel
+</span><span class="k">RUN </span><span class="n">mix release
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> iniciar um novo estágio de build para que a imagem final contenha apenas
+</span><span class="c">#</span><span class="c"> a release compilada e outras necessidades de runtime
+</span><span class="k">FROM</span><span class="n"> ${RUNNER_IMAGE}
+</span><span class="w">
+</span><span class="k">RUN </span><span class="n">apt-get update -y &amp;&amp; \
+</span><span class="n">  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+</span><span class="n">  &amp;&amp; apt-get clean &amp;&amp; rm -f /var/lib/apt/lists/*_*
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> Definir o locale
+</span><span class="k">RUN </span><span class="n">sed -i </span><span class="p">&#39;</span><span class="s1">/en_US.UTF-8/s/^# //g</span><span class="p">&#39;</span><span class="n"> /etc/locale.gen &amp;&amp; locale-gen
+</span><span class="w">
+</span><span class="k">ENV </span><span class="n">LANG en_US.UTF-8
+</span><span class="k">ENV </span><span class="n">LANGUAGE en_US:en
+</span><span class="k">ENV </span><span class="n">LC_ALL en_US.UTF-8
+</span><span class="w">
+</span><span class="k">WORKDIR </span><span class="p">&quot;</span><span class="s2">/app</span><span class="p">&quot;</span><span class="w">
+</span><span class="k">RUN </span><span class="n">chown nobody /app
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> definir ENV do runner
+</span><span class="k">ENV </span><span class="n">MIX_ENV=</span><span class="p">&quot;</span><span class="s2">prod</span><span class="p">&quot;</span><span class="w">
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> Copiar apenas a release final do estágio de build
+</span><span class="k">COPY</span><span class="n"> --from=</span><span class="nv">builder</span><span class="n"> --chown=nobody:root /app/_build/${MIX_ENV}/rel/my_app ./
+</span><span class="w">
+</span><span class="k">USER </span><span class="n">nobody
+</span><span class="w">
+</span><span class="c">#</span><span class="c"> Se estiver usando um ambiente que não elimina automaticamente processos zumbis, é
+</span><span class="c">#</span><span class="c"> aconselhável adicionar um processo init como tini via `apt-get install`
+</span><span class="c">#</span><span class="c"> acima e adicionar um entrypoint. Veja https://github.com/krallin/tini para detalhes
+</span><span class="c">#</span><span class="c"> ENTRYPOINT [&quot;/tini&quot;, &quot;--&quot;]
+</span><span class="w">
+</span><span class="o">CMD </span><span class="n">[</span><span class="p">&quot;</span><span class="s2">/app/bin/server</span><span class="p">&quot;</span><span class="n">]</span></code></pre><p>Onde <code class="inline">my_app</code> é o nome da sua aplicação. No final, você terá uma aplicação em <code class="inline">/app</code> pronta para executar como <code class="inline">/app/bin/server</code>.</p><p>Alguns pontos sobre a configuração de uma aplicação em contêiner:</p><ul><li>Se você executar sua aplicação em um contêiner, o <code class="inline">Endpoint</code> precisa ser configurado para escutar em um endereço <code class="inline">:ip</code> &quot;público&quot; (como <code class="inline">0.0.0.0</code>) para que a aplicação possa ser acessada de fora do contêiner. Se o host deve publicar as portas do contêiner para seu próprio IP público ou para localhost depende das suas necessidades.</li><li>Quanto mais configuração você puder fornecer em tempo de execução (usando <code class="inline">config/runtime.exs</code>), mais reutilizáveis serão suas imagens em diferentes ambientes. Em particular, segredos como credenciais de banco de dados e chaves de API não devem ser compilados na imagem, mas sim fornecidos ao criar contêineres baseados nessa imagem. É por isso que a <code class="inline">:secret_key_base</code> do <code class="inline">Endpoint</code> é configurada em <code class="inline">config/runtime.exs</code> por padrão.</li><li>Se possível, quaisquer variáveis de ambiente necessárias em tempo de execução devem ser lidas em <code class="inline">config/runtime.exs</code>, e não espalhadas por todo o seu código. Ter todas elas visíveis em um só lugar facilitará garantir que os contêineres obtenham o que precisam, especialmente se a pessoa que faz o trabalho de infraestrutura não trabalha no código Elixir. Em particular, as bibliotecas nunca devem ler diretamente variáveis de ambiente; toda a configuração delas deve ser passada pela aplicação de nível superior, preferencialmente <a href="https://hexdocs.pm/elixir/library-guidelines.html#avoid-application-configuration">sem usar o ambiente da aplicação</a>.</li></ul>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="deployment.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Introdução ao Deployment
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="gigalixir.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Implantando no Gigalixir
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

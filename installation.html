@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Instalação — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Instalação</h1>
+
+
+  </div>
+
+<p>Para construir uma aplicação Phoenix, precisamos de algumas dependências instaladas em nosso Sistema Operacional:</p><ul><li>a máquina virtual Erlang e a linguagem de programação Elixir</li><li>um banco de dados - Phoenix recomenda PostgreSQL, mas você pode escolher outros ou nem mesmo usar um banco de dados</li><li>e outros pacotes opcionais.</li></ul><p>Por favor, dê uma olhada nesta lista e certifique-se de instalar tudo o que for necessário para o seu sistema. Ter dependências instaladas com antecedência pode evitar problemas frustrantes posteriormente.</p><h2 id="elixir-1-15-ou-posterior" class="section-heading">
+  <a href="#elixir-1-15-ou-posterior" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Elixir 1.15 ou posterior</span>
+</h2>
+<p>Phoenix é escrito em Elixir, e nosso código de aplicação também será escrito em Elixir. Não iremos muito longe em uma aplicação Phoenix sem ele! O site do Elixir mantém uma excelente <a href="https://elixir-lang.org/install.html">Página de Instalação</a> para ajudar.</p><h2 id="erlang-24-ou-posterior" class="section-heading">
+  <a href="#erlang-24-ou-posterior" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Erlang 24 ou posterior</span>
+</h2>
+<p>O código Elixir é compilado para byte code Erlang para executar na máquina virtual Erlang. Sem Erlang, o código Elixir não tem uma máquina virtual para executar, então precisamos instalar o Erlang também.</p><p>Quando instalamos o Elixir usando as instruções da <a href="https://elixir-lang.org/install.html">Página de Instalação</a> do Elixir, geralmente também obtemos o Erlang. Se o Erlang não foi instalado junto com o Elixir, consulte a seção <a href="https://elixir-lang.org/install.html#installing-erlang">Instruções do Erlang</a> na Página de Instalação do Elixir para obter instruções.</p><h2 id="phoenix" class="section-heading">
+  <a href="#phoenix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Phoenix</span>
+</h2>
+<p>Para verificar se estamos no Elixir 1.15 e Erlang 24 ou posterior, execute:</p><pre><code class="makeup console" translate="no"><span class="">elixir -v
+</span><span class="">Erlang/OTP 24 [erts-12.0] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+</span><span class="">
+</span><span class="">Elixir 1.15.0
+</span></code></pre><p>Uma vez que temos Elixir e Erlang, estamos prontos para instalar o gerador de aplicações Phoenix:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix archive.install hex phx_new
+</span></code></pre><p>O gerador <code class="inline">phx.new</code> agora está disponível para gerar novas aplicações no próximo guia, chamado <a href="up_and_running.html">Up and Running</a>. As flags mencionadas abaixo são opções de linha de comando para o gerador; veja todas as opções disponíveis chamando <code class="inline">mix help phx.new</code>.</p><h2 id="postgresql" class="section-heading">
+  <a href="#postgresql" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">PostgreSQL</span>
+</h2>
+<p>PostgreSQL é um servidor de banco de dados relacional. O Phoenix configura aplicações para usá-lo por padrão, mas podemos mudar para MySQL, MSSQL ou SQLite3 passando a flag <code class="inline">--database</code> ao criar uma nova aplicação.</p><p>Para se comunicar com bancos de dados, as aplicações Phoenix usam outro pacote Elixir, chamado <a href="https://github.com/elixir-ecto/ecto">Ecto</a>. Se você não planeja usar bancos de dados em sua aplicação, pode passar a flag <code class="inline">--no-ecto</code>.</p><p>No entanto, se você está apenas começando com Phoenix, recomendamos que instale o PostgreSQL e certifique-se de que ele esteja rodando. O wiki do PostgreSQL possui <a href="https://wiki.postgresql.org/wiki/Detailed_installation_guides">guias de instalação</a> para vários sistemas diferentes.</p><h2 id="inotify-tools-para-usuários-linux" class="section-heading">
+  <a href="#inotify-tools-para-usuários-linux" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">inotify-tools (para usuários Linux)</span>
+</h2>
+<p>Phoenix fornece um recurso muito útil chamado Live Reloading. Conforme você altera suas views ou seus assets, ele recarrega automaticamente a página no navegador. Para que essa funcionalidade funcione, você precisa de um observador de sistema de arquivos.</p><p>Usuários de macOS e Windows já possuem um observador de sistema de arquivos, mas usuários de Linux devem instalar o inotify-tools. Consulte o <a href="https://github.com/rvoicilas/inotify-tools/wiki">wiki do inotify-tools</a> para instruções de instalação específicas da distribuição.</p><h2 id="resumo" class="section-heading">
+  <a href="#resumo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Resumo</span>
+</h2>
+<p>Ao final desta seção, você deve ter instalado Elixir, Hex, Phoenix e PostgreSQL. Agora que temos tudo instalado, vamos criar nossa primeira aplicação Phoenix e <a href="up_and_running.html">colocá-la para funcionar</a>.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="overview.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Visão Geral
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="up_and_running.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Instalação e Execução
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

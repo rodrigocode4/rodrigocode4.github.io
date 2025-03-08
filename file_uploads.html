@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Upload de Arquivos — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Upload de Arquivos</h1>
+
+
+  </div>
+
+<p>Uma tarefa comum para aplicações web é o upload de arquivos. Esses arquivos podem ser imagens, vídeos, PDFs ou arquivos de qualquer outro tipo. Para fazer upload de arquivos através de uma interface HTML, precisamos de uma tag de input <code class="inline">file</code> em um formulário multipart.</p><section role="note" class="admonition neutral"><h4 class="admonition-title neutral">Procurando pelo guia de Uploads do LiveView?</h4><p>Este guia explica uploads de arquivos HTTP multipart via <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a>.
+Para mais informações sobre uploads de arquivos do LiveView, incluindo uploads externos direto para a nuvem no
+cliente, consulte o <a href="https://hexdocs.pm/phoenix_live_view/uploads.html">guia de Uploads do LiveView</a>.</p></section><p>O Plug fornece uma struct <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> para conter os dados do input <code class="inline">file</code>. Uma struct <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> aparecerá automaticamente em seus parâmetros de requisição se um usuário tiver selecionado um arquivo ao enviar o formulário.</p><p>Neste guia, você fará o seguinte:</p><ol><li><p> Configurar um formulário multipart</p></li><li><p>Adicionar um elemento de input de arquivo ao formulário</p></li><li><p>Verificar seus parâmetros de upload</p></li><li><p>Gerenciar seus arquivos enviados</p></li></ol><p>No <a href="contexts.html"><code class="inline">guia de Contextos</code></a>, geramos um recurso HTML para produtos. Podemos reutilizar o formulário que geramos lá para demonstrar como os uploads de arquivos funcionam no Phoenix. Consulte esse guia para obter instruções sobre como gerar o recurso de produto que você usará aqui.</p><h3 id="configurar-um-formulário-multipart" class="section-heading">
+  <a href="#configurar-um-formulário-multipart" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Configurar um formulário multipart</span>
+</h3>
+<p>A primeira coisa que você precisa fazer é transformar seu formulário em um formulário multipart. O componente <code class="inline">simple_form/1</code> do <code class="inline">HelloWeb.CoreComponents</code> aceita um atributo <code class="inline">multipart</code> onde você pode especificar isso.</p><p>Aqui está o formulário de <code class="inline">lib/hello_web/controllers/product_html/product_form.html.heex</code> com essa alteração:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nf">.simple_form</span><span class="w"> </span><span class="na">:let</span><span class="p">=</span><span class="p" data-group-id="5809459535-1">{</span><span class="n">f</span><span class="p" data-group-id="5809459535-1">}</span><span class="w"> </span><span class="na">for</span><span class="p">=</span><span class="p" data-group-id="5809459535-2">{</span><span class="na">@changeset</span><span class="p" data-group-id="5809459535-2">}</span><span class="w"> </span><span class="na">action</span><span class="p">=</span><span class="p" data-group-id="5809459535-3">{</span><span class="na">@action</span><span class="p" data-group-id="5809459535-3">}</span><span class="w"> </span><span class="na">multipart</span><span class="p">&gt;</span><span class="w">
+</span><span class="n">. . .</span></code></pre><h3 id="adicionar-um-input-de-arquivo" class="section-heading">
+  <a href="#adicionar-um-input-de-arquivo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Adicionar um input de arquivo</span>
+</h3>
+<p>Uma vez que você tenha um formulário multipart, você precisa de um input <code class="inline">file</code>. Veja como você faria isso, também em <code class="inline">product_form.html.heex</code>:</p><pre><code class="makeup heex" translate="no"><span class="n">. . .
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nf">.input</span><span class="w"> </span><span class="na">field</span><span class="p">=</span><span class="p" data-group-id="8390730148-1">{</span><span class="n">f</span><span class="p" data-group-id="8390730148-ex-1">[</span><span class="ss">:photo</span><span class="p" data-group-id="8390730148-ex-1">]</span><span class="p" data-group-id="8390730148-1">}</span><span class="w"> </span><span class="na">type</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">file</span><span class="p">&quot;</span><span class="w"> </span><span class="na">label</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">Foto</span><span class="p">&quot;</span><span class="w"> </span><span class="p">/&gt;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="ss">:actions</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nf">.button</span><span class="p">&gt;</span><span class="n">Salvar Produto</span><span class="p">&lt;/</span><span class="nf">.button</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;/</span><span class="ss">:actions</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nf">.simple_form</span><span class="p">&gt;</span></code></pre><p>Quando renderizado, aqui está o HTML para o componente padrão <code class="inline">input/1</code> do <code class="inline">HelloWeb.CoreComponents</code>:</p><pre><code class="makeup html" translate="no"><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">label</span><span class="w"> </span><span class="na">for</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">product_photo</span><span class="p">&quot;</span><span class="w"> </span><span class="na">class</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">b</span><span class="s2">l</span><span class="s2">o</span><span class="s2">c</span><span class="s2">k </span><span class="s2">t</span><span class="s2">e</span><span class="s2">x</span><span class="s2">t</span><span class="s2">-</span><span class="s2">s</span><span class="s2">m</span><span class="s2">.</span><span class="s2">.</span><span class="s2">.</span><span class="p">&quot;</span><span class="p">&gt;</span><span class="n">Foto</span><span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">  </span><span class="p">&lt;</span><span class="nt">input</span><span class="w"> </span><span class="na">type</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">file</span><span class="p">&quot;</span><span class="w"> </span><span class="na">name</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">product[photo]</span><span class="p">&quot;</span><span class="w"> </span><span class="na">id</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">p</span><span class="s2">r</span><span class="s2">o</span><span class="s2">d</span><span class="s2">u</span><span class="s2">c</span><span class="s2">t</span><span class="s2">_</span><span class="s2">p</span><span class="s2">h</span><span class="s2">o</span><span class="s2">t</span><span class="s2">o</span><span class="p">&quot;</span><span class="w"> </span><span class="na">class</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">m</span><span class="s2">t</span><span class="s2">-</span><span class="s2">2 </span><span class="s2">b</span><span class="s2">l</span><span class="s2">o</span><span class="s2">c</span><span class="s2">k </span><span class="s2">w</span><span class="s2">-</span><span class="s2">f</span><span class="s2">u</span><span class="s2">l</span><span class="s2">l</span><span class="s2">.</span><span class="s2">.</span><span class="s2">.</span><span class="p">&quot;</span><span class="p">&gt;</span><span class="w">
+</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre><p>Observe o atributo <code class="inline">name</code> do seu input <code class="inline">file</code>. Isso criará a chave <code class="inline">&quot;photo&quot;</code> no mapa <code class="inline">product_params</code> que estará disponível na ação do seu controlador.</p><p>Isso é tudo do lado do formulário. Agora, quando os usuários enviarem o formulário, uma requisição <code class="inline">POST</code> será roteada para a ação <code class="inline">create/2</code> do seu <code class="inline">HelloWeb.ProductController</code>.</p><section role="note" class="admonition neutral"><h4 class="admonition-title neutral">Devo adicionar a foto ao meu schema Ecto?</h4><p>O input de foto não precisa fazer parte do seu schema para aparecer nos <code class="inline">product_params</code>. No entanto, se você quiser persistir quaisquer propriedades da foto em um banco de dados, você precisaria adicioná-la ao seu schema <code class="inline">Hello.Product</code>.</p></section><h3 id="verificar-seus-parâmetros-de-upload" class="section-heading">
+  <a href="#verificar-seus-parâmetros-de-upload" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Verificar seus parâmetros de upload</span>
+</h3>
+<p>Uma vez que você gerou um recurso HTML, agora você pode iniciar seu servidor com <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Server.html"><code class="inline">mix phx.server</code></a>, visitar <a href="http://localhost:4000/products/new">http://localhost:4000/products/new</a> e criar um novo produto com uma foto.</p><p>Antes de começar, adicione <code class="inline">IO.inspect product_params</code> no topo da sua ação <code class="inline">ProductController.create/2</code> em <code class="inline">lib/hello_web/controllers/product_controller.ex</code>. Isso mostrará os <code class="inline">product_params</code> em seu log de desenvolvimento para que você possa ter uma ideia melhor do que está acontecendo.</p><pre><code class="makeup elixir" translate="no"><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create</span><span class="p" data-group-id="1909500707-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1909500707-2">%{</span><span class="s">&quot;product&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">product_params</span><span class="p" data-group-id="1909500707-2">}</span><span class="p" data-group-id="1909500707-1">)</span><span class="w"> </span><span class="k" data-group-id="1909500707-3">do</span><span class="w">
+    </span><span class="nc">IO</span><span class="o">.</span><span class="n">inspect</span><span class="w"> </span><span class="n">product_params</span><span class="w">
+</span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">.</span></code></pre><p>Quando você fizer isso, isso é o que seus <code class="inline">product_params</code> irão gerar no log:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="5749879046-1">%{</span><span class="s">&quot;title&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;Metaprogramming Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;description&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;Write Less Code, Get More Done (and Have Fun!)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;price&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;15.000000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;views&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="p">,</span><span class="w">
+</span><span class="s">&quot;photo&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p" data-group-id="5749879046-2">%</span><span class="nc" data-group-id="5749879046-2">Plug.Upload</span><span class="p" data-group-id="5749879046-2">{</span><span class="ss">content_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;image/png&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;meta-cover.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/var/folders/_6/xbsnn7tx6g9dblyx149nrvbw0000gn/T//plug-1434/multipart-558399-917557-1&quot;</span><span class="p" data-group-id="5749879046-2">}</span><span class="p" data-group-id="5749879046-1">}</span></code></pre><p>Você tem uma chave <code class="inline">&quot;photo&quot;</code> que mapeia para a struct <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> pré-populada representando sua foto enviada.</p><p>Para facilitar a leitura, concentre-se na própria struct:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="6508079509-1">%</span><span class="nc" data-group-id="6508079509-1">Plug.Upload</span><span class="p" data-group-id="6508079509-1">{</span><span class="ss">content_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;image/png&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;meta-cover.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/var/folders/_6/xbsnn7tx6g9dblyx149nrvbw0000gn/T//plug-1434/multipart-558399-917557-1&quot;</span><span class="p" data-group-id="6508079509-1">}</span></code></pre><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> fornece o tipo de conteúdo do arquivo, o nome original do arquivo e o caminho para o arquivo temporário que o Plug criou para você. Neste caso, <code class="inline">&quot;/var/folders/_6/xbsnn7tx6g9dblyx149nrvbw0000gn/T//plug-1434/&quot;</code> é o diretório criado pelo Plug para colocar os arquivos enviados. O diretório persistirá entre requisições. <code class="inline">&quot;multipart-558399-917557-1&quot;</code> é o nome que o Plug deu ao seu arquivo enviado. Se você tivesse vários inputs <code class="inline">file</code> e se o usuário tivesse selecionado fotos para todos eles, você teria vários arquivos espalhados em diretórios temporários. O Plug garantirá que todos os nomes de arquivo sejam únicos.</p><section role="note" class="admonition info"><h4 class="admonition-title info">Arquivos Plug.Upload são temporários</h4><p>O Plug remove os uploads de seu diretório conforme a requisição é concluída. Se você precisar fazer qualquer coisa com este arquivo, você precisa fazê-lo antes disso (ou <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html#give_away/3">entregá-lo</a>, mas isso está fora do escopo deste guia).</p></section><h3 id="gerenciar-seus-arquivos-enviados" class="section-heading">
+  <a href="#gerenciar-seus-arquivos-enviados" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Gerenciar seus arquivos enviados</span>
+</h3>
+<p>Uma vez que você tenha a struct <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> disponível em seu controlador, você pode realizar qualquer operação que desejar sobre ela. Por exemplo, você pode querer fazer uma ou mais das seguintes coisas:</p><ul><li><p>Verificar se o arquivo existe com <a href="https://hexdocs.pm/elixir/File.html#exists?/1"><code class="inline">File.exists?/1</code></a></p></li><li><p>Copiar o arquivo para outro lugar no sistema de arquivos com <a href="https://hexdocs.pm/elixir/File.html#cp/2"><code class="inline">File.cp/2</code></a></p></li><li><p>Entregar o arquivo para outro processo Elixir com <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html#give_away/3"><code class="inline">Plug.Upload.give_away/3</code></a></p></li><li><p>Enviá-lo para o S3 com uma biblioteca externa</p></li><li><p>Enviá-lo de volta para o cliente com <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html#send_file/5"><code class="inline">Plug.Conn.send_file/5</code></a></p></li></ul><p>Em um sistema de produção, você pode querer copiar o arquivo para um diretório raiz, como <code class="inline">/media</code>. Ao fazer isso, é importante garantir que os nomes sejam únicos. Por exemplo, se você está permitindo que os usuários façam upload de imagens de capa de produtos, você poderia usar o id do produto para gerar um nome único:</p><pre><code class="makeup elixir" translate="no"><span class="k">if</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">product_params</span><span class="p" data-group-id="2960299403-1">[</span><span class="s">&quot;photo&quot;</span><span class="p" data-group-id="2960299403-1">]</span><span class="w"> </span><span class="k" data-group-id="2960299403-2">do</span><span class="w">
+  </span><span class="n">extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Path</span><span class="o">.</span><span class="n">extname</span><span class="p" data-group-id="2960299403-3">(</span><span class="n">upload</span><span class="o">.</span><span class="n">filename</span><span class="p" data-group-id="2960299403-3">)</span><span class="w">
+  </span><span class="nc">File</span><span class="o">.</span><span class="n">cp</span><span class="p" data-group-id="2960299403-4">(</span><span class="n">upload</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/media/</span><span class="si" data-group-id="2960299403-5">#{</span><span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="si" data-group-id="2960299403-5">}</span><span class="s">-cover</span><span class="si" data-group-id="2960299403-6">#{</span><span class="n">extension</span><span class="si" data-group-id="2960299403-6">}</span><span class="s">&quot;</span><span class="p" data-group-id="2960299403-4">)</span><span class="w">
+</span><span class="k" data-group-id="2960299403-2">end</span></code></pre><p>Em seguida, um plug <a href="https://hexdocs.pm/plug/1.16.1/Plug.Static.html"><code class="inline">Plug.Static</code></a> poderia ser adicionado em seu <code class="inline">lib/my_app_web/endpoint.ex</code> para servir os arquivos em <code class="inline">&quot;/media&quot;</code>:</p><pre><code class="makeup elixir" translate="no"><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Static</span><span class="p">,</span><span class="w"> </span><span class="ss">at</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/uploads&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/media&quot;</span></code></pre><p>O arquivo enviado agora pode ser acessado de seus navegadores usando um caminho como <code class="inline">&quot;/uploads/1-cover.jpg&quot;</code>. Na prática, existem outras preocupações que você deseja lidar ao fazer upload de arquivos, como validar extensões, codificar nomes e assim por diante. Muitas vezes, usar uma biblioteca que já lida com esses casos é preferível.</p><p>Finalmente, observe que quando não há dados do input <code class="inline">file</code>, você não obtém nem a chave <code class="inline">&quot;photo&quot;</code> nem uma struct <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a>. Aqui estão os <code class="inline">product_params</code> do log.</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="9909562140-1">%{</span><span class="s">&quot;title&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;Metaprogramming Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;description&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;Write Less Code, Get More Done (and Have Fun!)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;price&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;15.000000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;views&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="p" data-group-id="9909562140-1">}</span></code></pre><h2 id="configurando-limites-de-upload" class="section-heading">
+  <a href="#configurando-limites-de-upload" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Configurando limites de upload</span>
+</h2>
+<p>A conversão dos dados enviados pelo formulário para um <a href="https://hexdocs.pm/plug/1.16.1/Plug.Upload.html"><code class="inline">Plug.Upload</code></a> real é feita pelo plug <a href="https://hexdocs.pm/plug/1.16.1/Plug.Parsers.html"><code class="inline">Plug.Parsers</code></a> que você pode encontrar dentro de <code class="inline">HelloWeb.Endpoint</code>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/hello_web/endpoint.ex</span><span class="w">
+</span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Parsers</span><span class="p">,</span><span class="w">
+  </span><span class="ss">parsers</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4558500328-1">[</span><span class="ss">:urlencoded</span><span class="p">,</span><span class="w"> </span><span class="ss">:multipart</span><span class="p">,</span><span class="w"> </span><span class="ss">:json</span><span class="p" data-group-id="4558500328-1">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">pass</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4558500328-2">[</span><span class="s">&quot;*/*&quot;</span><span class="p" data-group-id="4558500328-2">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">json_decoder</span><span class="p">:</span><span class="w"> </span><span class="nc">Phoenix</span><span class="o">.</span><span class="n">json_library</span><span class="p" data-group-id="4558500328-3">(</span><span class="p" data-group-id="4558500328-3">)</span></code></pre><p>Além das opções acima, <a href="https://hexdocs.pm/plug/1.16.1/Plug.Parsers.html"><code class="inline">Plug.Parsers</code></a> aceita outras opções para controlar o upload de dados:</p><ul><li><code class="inline">:length</code> - define o comprimento máximo do corpo a ser lido, o padrão é <code class="inline">8_000_000</code> bytes</li><li><code class="inline">:read_length</code> - define a quantidade de bytes a serem lidos de uma vez, o padrão é <code class="inline">1_000_000</code> bytes</li><li><code class="inline">:read_timeout</code> - define o tempo limite para cada pedaço recebido, o padrão é <code class="inline">15_000</code> ms</li></ul><p>A primeira opção configura o máximo de dados permitidos. As restantes configuram quanto dados esperamos ler e sua frequência. Se o cliente não conseguir enviar dados rápido o suficiente, a conexão será encerrada. Phoenix vem com padrões razoáveis, mas você pode querer personalizá-los em circunstâncias especiais, por exemplo, se você está esperando clientes realmente lentos para enviar grandes pedaços de dados.</p><p>Também vale a pena apontar que esses limites são importantes como um mecanismo de segurança. Por exemplo, se você não definir um limite para o upload de dados, os atacantes poderiam abrir milhares de conexões para sua aplicação e enviar um byte a cada 2 minutos, o que levaria muito tempo para completar enquanto usa todas as conexões para o seu servidor. Os limites acima esperam pelo menos uma quantidade razoável de progresso, tornando a vida dos atacantes um pouco mais difícil.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="custom_error_pages.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Páginas de Erro Personalizadas
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="using_ssl.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Usando SSL
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

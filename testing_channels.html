@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Testando Canais — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Testando Canais</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido os <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido o <a href="testing.html">Guia de Introdução a Testes</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia pressupõe que você tenha lido o <a href="channels.html">Guia de Canais</a>.</p></blockquote><p>No guia de Canais, vimos que um &quot;Canal&quot; é um sistema em camadas com diferentes componentes. Sendo assim, haverá casos em que escrever testes unitários para nossas funções de Canal pode não ser o suficiente. Podemos querer verificar se suas diferentes partes estão funcionando juntas como esperamos. Este teste de integração nos asseguraria que definimos corretamente nossa rota de canal, o módulo do canal e seus callbacks; e que as camadas de nível inferior, como o PubSub e Transport, estão configuradas corretamente e funcionando conforme o esperado.</p><h2 id="gerando-canais" class="section-heading">
+  <a href="#gerando-canais" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Gerando canais</span>
+</h2>
+<p>À medida que avançamos neste guia, seria útil ter um exemplo concreto para trabalharmos. O Phoenix vem com uma tarefa Mix para gerar um canal básico e seus testes. Esses arquivos gerados servem como uma boa referência para escrever canais e seus testes correspondentes. Vamos em frente e gerar nosso Canal:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.channel Room
+</span><span class="">* creating lib/hello_web/channels/room_channel.ex
+</span><span class="">* creating test/hello_web/channels/room_channel_test.exs
+</span><span class="">* creating test/support/channel_case.ex
+</span><span class="">
+</span><span class="">The default socket handler - HelloWeb.UserSocket - was not found.
+</span><span class="">
+</span><span class="">Do you want to create it? [Yn]  
+</span><span class="">* creating lib/hello_web/channels/user_socket.ex
+</span><span class="">* creating assets/js/user_socket.js
+</span><span class="">
+</span><span class="">Add the socket handler to your `lib/hello_web/endpoint.ex`, for example:
+</span><span class="">
+</span><span class="">    socket &quot;/socket&quot;, HelloWeb.UserSocket,
+</span><span class="">      websocket: true,
+</span><span class="">      longpoll: false
+</span><span class="">
+</span><span class="">For the front-end integration, you need to import the `user_socket.js`
+</span><span class="">in your `assets/js/app.js` file:
+</span><span class="">
+</span><span class="">    import &quot;./user_socket.js&quot;
+</span></code></pre><p>Isso cria um canal, seu teste e nos instrui a adicionar uma rota de canal em <code class="inline">lib/hello_web/channels/user_socket.ex</code>. É importante adicionar a rota do canal, caso contrário, nosso canal não funcionará de forma alguma!</p><h2 id="o-channelcase" class="section-heading">
+  <a href="#o-channelcase" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O ChannelCase</span>
+</h2>
+<p>Abra <code class="inline">test/hello_web/channels/room_channel_test.exs</code> e você encontrará isso:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.RoomChannelTest</span><span class="w"> </span><span class="k" data-group-id="1923167180-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ChannelCase</span></code></pre><p>Semelhante ao <code class="inline">ConnCase</code> e ao <code class="inline">DataCase</code>, agora temos um <code class="inline">ChannelCase</code>. Todos os três foram gerados para nós quando iniciamos nossa aplicação Phoenix. Vamos dar uma olhada nele. Abra <code class="inline">test/support/channel_case.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ChannelCase</span><span class="w"> </span><span class="k" data-group-id="1043870042-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">ExUnit.CaseTemplate</span><span class="w">
+
+  </span><span class="n">using</span><span class="w"> </span><span class="k" data-group-id="1043870042-2">do</span><span class="w">
+    </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="1043870042-3">do</span><span class="w">
+      </span><span class="c1"># Import conveniences for testing with channels</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Phoenix.ChannelTest</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">HelloWeb.ChannelCase</span><span class="w">
+
+      </span><span class="c1"># The default endpoint for testing</span><span class="w">
+      </span><span class="na">@endpoint</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="w">
+    </span><span class="k" data-group-id="1043870042-3">end</span><span class="w">
+  </span><span class="k" data-group-id="1043870042-2">end</span><span class="w">
+
+  </span><span class="n">setup</span><span class="w"> </span><span class="c">_tags</span><span class="w"> </span><span class="k" data-group-id="1043870042-4">do</span><span class="w">
+    </span><span class="nc">Hello.DataCase</span><span class="o">.</span><span class="n">setup_sandbox</span><span class="p" data-group-id="1043870042-5">(</span><span class="n">tags</span><span class="p" data-group-id="1043870042-5">)</span><span class="w">
+    </span><span class="ss">:ok</span><span class="w">
+  </span><span class="k" data-group-id="1043870042-4">end</span><span class="w">
+</span><span class="k" data-group-id="1043870042-1">end</span></code></pre><p>É muito direto. Ele configura um template de caso que importa todo o <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.ChannelTest.html"><code class="inline">Phoenix.ChannelTest</code></a> ao usar. No bloco <code class="inline">setup</code>, ele inicia o SQL Sandbox, que discutimos no <a href="testing_contexts.html">guia de Testes de contextos</a>.</p><h2 id="inscrevendo-se-e-entrando" class="section-heading">
+  <a href="#inscrevendo-se-e-entrando" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Inscrevendo-se e entrando</span>
+</h2>
+<p>Agora que sabemos que o Phoenix nos fornece um Caso de Teste personalizado apenas para canais e o que ele fornece, podemos seguir em frente para entender o resto de <code class="inline">test/hello_web/channels/room_channel_test.exs</code>.</p><p>Primeiro, temos o bloco de configuração:</p><pre><code class="makeup elixir" translate="no"><span class="n">setup</span><span class="w"> </span><span class="k" data-group-id="7019568841-1">do</span><span class="w">
+  </span><span class="p" data-group-id="7019568841-2">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7019568841-2">}</span><span class="w"> </span><span class="o">=</span><span class="w">
+    </span><span class="nc">HelloWeb.UserSocket</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7019568841-3">(</span><span class="s">&quot;user_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7019568841-4">%{</span><span class="ss">some</span><span class="p">:</span><span class="w"> </span><span class="ss">:assign</span><span class="p" data-group-id="7019568841-4">}</span><span class="p" data-group-id="7019568841-3">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">subscribe_and_join</span><span class="p" data-group-id="7019568841-5">(</span><span class="nc">HelloWeb.RoomChannel</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;room:lobby&quot;</span><span class="p" data-group-id="7019568841-5">)</span><span class="w">
+
+  </span><span class="p" data-group-id="7019568841-6">%{</span><span class="ss">socket</span><span class="p">:</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7019568841-6">}</span><span class="w">
+</span><span class="k" data-group-id="7019568841-1">end</span></code></pre><p>O bloco <code class="inline">setup</code> configura um <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Socket.html"><code class="inline">Phoenix.Socket</code></a> baseado no módulo <code class="inline">UserSocket</code>, que você pode encontrar em <code class="inline">lib/hello_web/channels/user_socket.ex</code>. Em seguida, ele diz que queremos nos inscrever e entrar no <code class="inline">RoomChannel</code>, acessível como <code class="inline">&quot;room:lobby&quot;</code> no <code class="inline">UserSocket</code>. No final do teste, retornamos o <code class="inline">%{socket: socket}</code> como metadados, para que possamos reutilizá-lo em cada teste.</p><p>Em resumo, <code class="inline">subscribe_and_join/3</code> emula o cliente entrando em um canal e inscreve o processo de teste no tópico fornecido. Este é um passo necessário, já que os clientes precisam entrar em um canal antes que possam enviar e receber eventos nesse canal.</p><h2 id="testando-uma-resposta-síncrona" class="section-heading">
+  <a href="#testando-uma-resposta-síncrona" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando uma resposta síncrona</span>
+</h2>
+<p>O primeiro bloco de teste em nosso teste de canal gerado parece com:</p><pre><code class="makeup elixir" translate="no"><span class="n">test</span><span class="w"> </span><span class="s">&quot;ping replies with status ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2982548139-1">%{</span><span class="ss">socket</span><span class="p">:</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="2982548139-1">}</span><span class="w"> </span><span class="k" data-group-id="2982548139-2">do</span><span class="w">
+  </span><span class="n">ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">push</span><span class="p" data-group-id="2982548139-3">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ping&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2982548139-4">%{</span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;there&quot;</span><span class="p" data-group-id="2982548139-4">}</span><span class="p" data-group-id="2982548139-3">)</span><span class="w">
+  </span><span class="n">assert_reply</span><span class="w"> </span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2982548139-5">%{</span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;there&quot;</span><span class="p" data-group-id="2982548139-5">}</span><span class="w">
+</span><span class="k" data-group-id="2982548139-2">end</span></code></pre><p>Isso testa o seguinte código em nosso <code class="inline">HelloWeb.RoomChannel</code>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># Channels can be used in a request/response fashion</span><span class="w">
+</span><span class="c1"># by sending replies to requests from the client</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_in</span><span class="p" data-group-id="3972746489-1">(</span><span class="s">&quot;ping&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="3972746489-1">)</span><span class="w"> </span><span class="k" data-group-id="3972746489-2">do</span><span class="w">
+  </span><span class="p" data-group-id="3972746489-3">{</span><span class="ss">:reply</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3972746489-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p" data-group-id="3972746489-4">}</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="3972746489-3">}</span><span class="w">
+</span><span class="k" data-group-id="3972746489-2">end</span></code></pre><p>Como é indicado no comentário acima, vemos que uma <code class="inline">reply</code> é síncrona, já que imita o padrão de solicitação/resposta com o qual estamos familiarizados no HTTP. Esta resposta síncrona é melhor utilizada quando queremos enviar um evento de volta ao cliente apenas quando terminamos de processar a mensagem no servidor. Por exemplo, quando salvamos algo no banco de dados e então enviamos uma mensagem ao cliente somente depois que isso for concluído.</p><p>Na linha <code class="inline">test &quot;ping replies with status ok&quot;, %{socket: socket} do</code>, vemos que temos o mapa <code class="inline">%{socket: socket}</code>. Isso nos dá acesso ao <code class="inline">socket</code> no bloco de configuração.</p><p>Emulamos o cliente enviando uma mensagem para o canal com <code class="inline">push/3</code>. Na linha <code class="inline">ref = push(socket, &quot;ping&quot;, %{&quot;hello&quot; =&gt; &quot;there&quot;})</code>, enviamos o evento <code class="inline">&quot;ping&quot;</code> com a carga útil <code class="inline">%{&quot;hello&quot; =&gt; &quot;there&quot;}</code> para o canal. Isso aciona o callback <code class="inline">handle_in/3</code> que temos para o evento <code class="inline">&quot;ping&quot;</code> em nosso canal. Observe que armazenamos a <code class="inline">ref</code> porque precisamos disso na próxima linha para afirmar a resposta. Com <code class="inline">assert_reply ref, :ok, %{&quot;hello&quot; =&gt; &quot;there&quot;}</code>, afirmamos que o servidor envia uma resposta síncrona <code class="inline">:ok, %{&quot;hello&quot; =&gt; &quot;there&quot;}</code>. É assim que verificamos que o callback <code class="inline">handle_in/3</code> para o <code class="inline">&quot;ping&quot;</code> foi acionado.</p><h3 id="testando-um-broadcast" class="section-heading">
+  <a href="#testando-um-broadcast" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando um Broadcast</span>
+</h3>
+<p>É comum receber mensagens do cliente e transmiti-las para todos os inscritos em um tópico atual. Este padrão comum é simples de expressar no Phoenix e é um dos callbacks <code class="inline">handle_in/3</code> gerados em nosso <code class="inline">HelloWeb.RoomChannel</code>.</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">handle_in</span><span class="p" data-group-id="2934231546-1">(</span><span class="s">&quot;shout&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="2934231546-1">)</span><span class="w"> </span><span class="k" data-group-id="2934231546-2">do</span><span class="w">
+  </span><span class="n">broadcast</span><span class="p" data-group-id="2934231546-3">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;shout&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p" data-group-id="2934231546-3">)</span><span class="w">
+  </span><span class="p" data-group-id="2934231546-4">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="2934231546-4">}</span><span class="w">
+</span><span class="k" data-group-id="2934231546-2">end</span></code></pre><p>Seu teste correspondente parece com:</p><pre><code class="makeup elixir" translate="no"><span class="n">test</span><span class="w"> </span><span class="s">&quot;shout broadcasts to room:lobby&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7588276736-1">%{</span><span class="ss">socket</span><span class="p">:</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7588276736-1">}</span><span class="w"> </span><span class="k" data-group-id="7588276736-2">do</span><span class="w">
+  </span><span class="n">push</span><span class="p" data-group-id="7588276736-3">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;shout&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7588276736-4">%{</span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;all&quot;</span><span class="p" data-group-id="7588276736-4">}</span><span class="p" data-group-id="7588276736-3">)</span><span class="w">
+  </span><span class="n">assert_broadcast</span><span class="w"> </span><span class="s">&quot;shout&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7588276736-5">%{</span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;all&quot;</span><span class="p" data-group-id="7588276736-5">}</span><span class="w">
+</span><span class="k" data-group-id="7588276736-2">end</span></code></pre><p>Notamos que acessamos o mesmo <code class="inline">socket</code> que está no bloco de configuração. Que conveniente! Também fazemos o mesmo <code class="inline">push/3</code> que fizemos no teste de resposta síncrona. Então, enviamos o evento <code class="inline">&quot;shout&quot;</code> com a carga útil <code class="inline">%{&quot;hello&quot; =&gt; &quot;all&quot;}</code>.</p><p>Como o callback <code class="inline">handle_in/3</code> para o evento <code class="inline">&quot;shout&quot;</code> apenas transmite o mesmo evento e carga útil, todos os inscritos no <code class="inline">&quot;room:lobby&quot;</code> devem receber a mensagem. Para verificar isso, fazemos <code class="inline">assert_broadcast &quot;shout&quot;, %{&quot;hello&quot; =&gt; &quot;all&quot;}</code>.</p><p><strong>NOTA:</strong> <code class="inline">assert_broadcast/3</code> testa se a mensagem foi transmitida no sistema PubSub. Para testar se um cliente recebe uma mensagem, use <code class="inline">assert_push/3</code>.</p><h3 id="testando-um-push-assíncrono-do-servidor" class="section-heading">
+  <a href="#testando-um-push-assíncrono-do-servidor" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testando um push assíncrono do servidor</span>
+</h3>
+<p>O último teste em nosso <code class="inline">HelloWeb.RoomChannelTest</code> verifica que as transmissões do servidor são enviadas para o cliente. Diferentemente dos testes anteriores discutidos, estamos testando indiretamente se o callback <code class="inline">handle_out/3</code> do canal é acionado. Por padrão, <code class="inline">handle_out/3</code> é implementado para nós e simplesmente envia a mensagem para o cliente.</p><p>Como o evento <code class="inline">handle_out/3</code> só é acionado quando chamamos <code class="inline">broadcast/3</code> do nosso canal, precisaremos emular isso em nosso teste. Fazemos isso chamando <code class="inline">broadcast_from</code> ou <code class="inline">broadcast_from!</code>. Ambos servem ao mesmo propósito, com a única diferença de que <code class="inline">broadcast_from!</code> gera um erro quando a transmissão falha.</p><p>A linha <code class="inline">broadcast_from!(socket, &quot;broadcast&quot;, %{&quot;some&quot; =&gt; &quot;data&quot;})</code> acionará o callback <code class="inline">handle_out/3</code>, que envia o mesmo evento e carga útil de volta para o cliente. Para testar isso, fazemos <code class="inline">assert_push &quot;broadcast&quot;, %{&quot;some&quot; =&gt; &quot;data&quot;}</code>.</p><p>É isso. Agora você está pronto para desenvolver e testar completamente aplicações em tempo real. Para saber mais sobre outras funcionalidades fornecidas ao testar canais, consulte a documentação de <a href="https://hexdocs.pm/phoenix/Phoenix.ChannelTest.html"><code class="inline">Phoenix.ChannelTest</code></a>.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="testing_controllers.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Testando Controllers
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="deployment.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Introdução ao Deployment
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

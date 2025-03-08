@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Introdução aos Testes — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Introdução aos Testes</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><p>Testar tornou-se parte integral do processo de desenvolvimento de software, e a capacidade de escrever facilmente testes significativos é uma característica indispensável para qualquer framework web moderno. O Phoenix leva isso a sério, fornecendo arquivos de suporte para facilitar o teste de todos os principais componentes do framework. Ele também gera módulos de teste com exemplos do mundo real junto com quaisquer módulos gerados para nos ajudar a começar.</p><p>O Elixir vem com um framework de testes integrado chamado <a href="https://hexdocs.pm/ex_unit">ExUnit</a>. O ExUnit se esforça para ser claro e explícito, mantendo a mágica ao mínimo. O Phoenix usa o ExUnit para todos os seus testes, e nós também o usaremos aqui.</p><h2 id="executando-testes" class="section-heading">
+  <a href="#executando-testes" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Executando testes</span>
+</h2>
+<p>Quando o Phoenix gera uma aplicação web para nós, ele também inclui testes. Para executá-los, simplesmente digite <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span><span class="">....
+</span><span class="">
+</span><span class="">Finished in 0.09 seconds
+</span><span class="">5 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 652656
+</span></code></pre><p>Já temos cinco testes!</p><p>Na verdade, já temos uma estrutura de diretórios completamente configurada para testes, incluindo um helper de teste e arquivos de suporte.</p><pre><code class="makeup console" translate="no"><span class="">test
+</span><span class="">├── hello_web
+</span><span class="">│   └── controllers
+</span><span class="">│       ├── error_html_test.exs
+</span><span class="">│       ├── error_json_test.exs
+</span><span class="">│       └── page_controller_test.exs
+</span><span class="">├── support
+</span><span class="">│   ├── conn_case.ex
+</span><span class="">│   └── data_case.ex
+</span><span class="">└── test_helper.exs
+</span></code></pre><p>Os casos de teste que obtemos gratuitamente incluem aqueles de <code class="inline">test/hello_web/controllers/</code>. Eles estão testando nossos controladores e views. Se você não leu os guias para controladores e views, agora é um bom momento.</p><h2 id="entendendo-os-módulos-de-teste" class="section-heading">
+  <a href="#entendendo-os-módulos-de-teste" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Entendendo os módulos de teste</span>
+</h2>
+<p>Vamos usar as próximas seções para nos familiarizar com a estrutura de testes do Phoenix. Começaremos com os três arquivos de teste gerados pelo Phoenix.</p><p>O primeiro arquivo de teste que veremos é <code class="inline">test/hello_web/controllers/page_controller_test.exs</code>.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.PageControllerTest</span><span class="w"> </span><span class="k" data-group-id="5105701875-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="w">
+
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;GET /&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5105701875-2">%{</span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="n">conn</span><span class="p" data-group-id="5105701875-2">}</span><span class="w"> </span><span class="k" data-group-id="5105701875-3">do</span><span class="w">
+    </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p" data-group-id="5105701875-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="5105701875-4">)</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="n">html_response</span><span class="p" data-group-id="5105701875-5">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="5105701875-5">)</span><span class="w"> </span><span class="o">=~</span><span class="w"> </span><span class="s">&quot;Peace of mind from prototype to production&quot;</span><span class="w">
+  </span><span class="k" data-group-id="5105701875-3">end</span><span class="w">
+</span><span class="k" data-group-id="5105701875-1">end</span></code></pre><p>Existem algumas coisas interessantes acontecendo aqui.</p><p>Nossos arquivos de teste simplesmente definem módulos. No topo de cada módulo, você encontrará uma linha como:</p><pre><code class="makeup elixir" translate="no"><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span></code></pre><p>Se você estivesse escrevendo uma biblioteca Elixir, fora do Phoenix, em vez de <code class="inline">use HelloWeb.ConnCase</code>, você escreveria <code class="inline">use ExUnit.Case</code>. No entanto, o Phoenix já vem com várias funcionalidades para testar controladores e <code class="inline">HelloWeb.ConnCase</code> constrói sobre <a href="https://hexdocs.pm/ex_unit/ExUnit.Case.html"><code class="inline">ExUnit.Case</code></a> para trazer essas funcionalidades. Exploraremos o módulo <code class="inline">HelloWeb.ConnCase</code> em breve.</p><p>Em seguida, definimos cada teste usando a macro <code class="inline">test/3</code>. A macro <code class="inline">test/3</code> recebe três argumentos: o nome do teste, o contexto de teste que estamos fazendo pattern matching e o conteúdo do teste. Neste teste, acessamos a página raiz de nossa aplicação através de uma requisição HTTP &quot;GET&quot; no caminho &quot;/&quot; com a macro <code class="inline">get/2</code>. Então nós <strong>afirmamos</strong> que a página renderizada contém a string &quot;Peace of mind from prototype to production&quot;.</p><p>Ao escrever testes em Elixir, usamos asserções para verificar se algo é verdadeiro. Em nosso caso, <code class="inline">assert html_response(conn, 200) =~ &quot;Peace of mind from prototype to production&quot;</code> está fazendo algumas coisas:</p><ul><li>Afirma que <code class="inline">conn</code> renderizou uma resposta</li><li>Afirma que a resposta tem o código de status 200 (que significa OK no jargão HTTP)</li><li>Afirma que o tipo da resposta é HTML</li><li>Afirma que o resultado de <code class="inline">html_response(conn, 200)</code>, que é uma resposta HTML, contém a string &quot;Peace of mind from prototype to production&quot;</li></ul><p>No entanto, de onde vem o <code class="inline">conn</code> que usamos em <code class="inline">get</code> e <code class="inline">html_response</code>? Para responder a esta pergunta, vamos dar uma olhada em <code class="inline">HelloWeb.ConnCase</code>.</p><h2 id="o-conncase" class="section-heading">
+  <a href="#o-conncase" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O ConnCase</span>
+</h2>
+<p>Se você abrir <code class="inline">test/support/conn_case.ex</code>, encontrará isto (com comentários removidos):</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="w"> </span><span class="k" data-group-id="1171477385-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">ExUnit.CaseTemplate</span><span class="w">
+
+  </span><span class="n">using</span><span class="w"> </span><span class="k" data-group-id="1171477385-2">do</span><span class="w">
+    </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="1171477385-3">do</span><span class="w">
+      </span><span class="c1"># The default endpoint for testing</span><span class="w">
+      </span><span class="na">@endpoint</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="w">
+
+      </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:verified_routes</span><span class="w">
+
+      </span><span class="c1"># Import conveniences for testing with connections</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Plug.Conn</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">Phoenix.ConnTest</span><span class="w">
+      </span><span class="kn">import</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="w">
+    </span><span class="k" data-group-id="1171477385-3">end</span><span class="w">
+  </span><span class="k" data-group-id="1171477385-2">end</span><span class="w">
+  
+  </span><span class="n">setup</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="k" data-group-id="1171477385-4">do</span><span class="w">
+    </span><span class="nc">Hello.DataCase</span><span class="o">.</span><span class="n">setup_sandbox</span><span class="p" data-group-id="1171477385-5">(</span><span class="n">tags</span><span class="p" data-group-id="1171477385-5">)</span><span class="w">
+    </span><span class="p" data-group-id="1171477385-6">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="nc">Phoenix.ConnTest</span><span class="o">.</span><span class="n">build_conn</span><span class="p" data-group-id="1171477385-7">(</span><span class="p" data-group-id="1171477385-7">)</span><span class="p" data-group-id="1171477385-6">}</span><span class="w">
+  </span><span class="k" data-group-id="1171477385-4">end</span><span class="w">
+</span><span class="k" data-group-id="1171477385-1">end</span></code></pre><p>Há muito para descompactar aqui.</p><p>A segunda linha diz que este é um template de caso. Esta é uma funcionalidade do ExUnit que permite aos desenvolvedores substituir o <code class="inline">use ExUnit.Case</code> integrado pelo seu próprio caso. Esta linha é basicamente o que nos permite escrever <code class="inline">use HelloWeb.ConnCase</code> no topo de nossos testes de controlador.</p><p>Agora que tornamos este módulo um template de caso, podemos definir callbacks que são invocados em certas ocasiões. O callback <code class="inline">using</code> define código a ser injetado em cada módulo que chama <code class="inline">use HelloWeb.ConnCase</code>. Neste caso, ele começa definindo o atributo de módulo <code class="inline">@endpoint</code> com o nome do nosso endpoint.</p><p>Em seguida, ele conecta <code class="inline">:verified_routes</code> para permitir que usemos caminhos baseados em <code class="inline">~p</code> em nosso teste, assim como fazemos no resto de nossa aplicação, para gerar facilmente caminhos e URLs em nossos testes.</p><p>Finalmente, importamos <a href="https://hexdocs.pm/plug/Plug.Conn.html"><code class="inline">Plug.Conn</code></a>, para que todos os helpers de conexão disponíveis nos controladores também estejam disponíveis nos testes, e então importamos <a href="https://hexdocs.pm/phoenix/Phoenix.ConnTest.html"><code class="inline">Phoenix.ConnTest</code></a>. Você pode consultar esses módulos para aprender todas as funcionalidades disponíveis.</p><p>Em seguida, nosso template de caso define um bloco <code class="inline">setup</code>. O bloco <code class="inline">setup</code> será chamado antes do teste. A maior parte do bloco de configuração está configurando o SQL Sandbox, sobre o qual falaremos mais tarde. Na última linha do bloco <code class="inline">setup</code>, encontraremos isto:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="9946215327-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="nc">Phoenix.ConnTest</span><span class="o">.</span><span class="n">build_conn</span><span class="p" data-group-id="9946215327-2">(</span><span class="p" data-group-id="9946215327-2">)</span><span class="p" data-group-id="9946215327-1">}</span></code></pre><p>A última linha de <code class="inline">setup</code> pode retornar metadados de teste que estarão disponíveis em cada teste. Os metadados que estamos passando adiante aqui são uma conexão <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html"><code class="inline">Plug.Conn</code></a> recém-construída. Em nosso teste, extraímos a conexão desses metadados logo no início do nosso teste:</p><pre><code class="makeup elixir" translate="no"><span class="n">test</span><span class="w"> </span><span class="s">&quot;GET /&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3022664525-1">%{</span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="n">conn</span><span class="p" data-group-id="3022664525-1">}</span><span class="w"> </span><span class="k" data-group-id="3022664525-2">do</span></code></pre><p>E é daí que vem a conexão! No início, a estrutura de testes vem com um pouco de indireção, mas essa indireção compensa à medida que nossa suíte de testes cresce, pois nos permite reduzir a quantidade de código repetitivo.</p><h2 id="testes-de-view" class="section-heading">
+  <a href="#testes-de-view" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testes de View</span>
+</h2>
+<p>Os outros arquivos de teste em nossa aplicação são responsáveis por testar nossas views.</p><p>O caso de teste da view de erro, <code class="inline">test/hello_web/controllers/error_html_test.exs</code>, ilustra algumas coisas interessantes próprias.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTMLTest</span><span class="w"> </span><span class="k" data-group-id="6772852781-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="c1"># Bring render_to_string/4 for testing custom views</span><span class="w">
+  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Phoenix.Template</span><span class="w">
+
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;renders 404.html&quot;</span><span class="w"> </span><span class="k" data-group-id="6772852781-2">do</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="n">render_to_string</span><span class="p" data-group-id="6772852781-3">(</span><span class="nc">HelloWeb.ErrorHTML</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;404&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;html&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6772852781-4">[</span><span class="p" data-group-id="6772852781-4">]</span><span class="p" data-group-id="6772852781-3">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Not Found&quot;</span><span class="w">
+  </span><span class="k" data-group-id="6772852781-2">end</span><span class="w">
+
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;renders 500.html&quot;</span><span class="w"> </span><span class="k" data-group-id="6772852781-5">do</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="n">render_to_string</span><span class="p" data-group-id="6772852781-6">(</span><span class="nc">HelloWeb.ErrorHTML</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;500&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;html&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6772852781-7">[</span><span class="p" data-group-id="6772852781-7">]</span><span class="p" data-group-id="6772852781-6">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Internal Server Error&quot;</span><span class="w">
+  </span><span class="k" data-group-id="6772852781-5">end</span><span class="w">
+</span><span class="k" data-group-id="6772852781-1">end</span></code></pre><p><code class="inline">HelloWeb.ErrorHTMLTest</code> define <code class="inline">async: true</code>, o que significa que este caso de teste será executado em paralelo com outros casos de teste. Embora os testes individuais dentro do caso ainda sejam executados serialmente, isso pode aumentar bastante a velocidade geral dos testes.</p><p>Ele também importa <a href="https://hexdocs.pm/phoenix_template/1.0.4/Phoenix.Template.html"><code class="inline">Phoenix.Template</code></a> para usar a função <code class="inline">render_to_string/4</code>. Com isso, todas as asserções podem ser simples testes de igualdade de strings.</p><h2 id="executando-testes-por-diretório-arquivo" class="section-heading">
+  <a href="#executando-testes-por-diretório-arquivo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Executando testes por diretório/arquivo</span>
+</h2>
+<p>Agora que temos uma ideia do que nossos testes estão fazendo, vamos olhar para diferentes maneiras de executá-los.</p><p>Como vimos perto do início deste guia, podemos executar toda a nossa suíte de testes com <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span><span class="">....
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 540755
+</span></code></pre><p>Se quisermos executar todos os testes em um determinado diretório, <code class="inline">test/hello_web/controllers</code> por exemplo, podemos passar o caminho para esse diretório para <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test test/hello_web/controllers/
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 652376
+</span></code></pre><p>Para executar todos os testes em um arquivo específico, podemos passar o caminho para esse arquivo para <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test test/hello_web/controllers/error_html_test.exs
+</span><span class="">...
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">2 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 220535
+</span></code></pre><p>E podemos executar um único teste em um arquivo adicionando dois pontos e um número de linha ao nome do arquivo.</p><p>Digamos que só queremos executar o teste para a forma como <code class="inline">HelloWeb.ErrorHTML</code> renderiza <code class="inline">500.html</code>. O teste começa na linha 11 do arquivo, então é assim que faríamos:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test test/hello_web/controllers/error_html_test.exs:11
+</span><span class="">Including tags: [line: &quot;11&quot;]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">2 tests, 0 failures, 1 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 288117
+</span></code></pre><p>Escolhemos executar isso especificando a primeira linha do teste, mas na verdade, qualquer linha desse teste servirá. Esses números de linha funcionariam - <code class="inline">:11</code>, <code class="inline">:12</code> ou <code class="inline">:13</code>.</p><h2 id="executando-testes-usando-tags" class="section-heading">
+  <a href="#executando-testes-usando-tags" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Executando testes usando tags</span>
+</h2>
+<p>O ExUnit nos permite marcar nossos testes individualmente ou para todo o módulo. Podemos então escolher executar apenas os testes com uma tag específica, ou podemos excluir testes com essa tag e executar todo o resto.</p><p>Vamos experimentar como isso funciona.</p><p>Primeiro, vamos adicionar um <code class="inline">@moduletag</code> a <code class="inline">test/hello_web/controllers/error_html_test.exs</code>.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTMLTest</span><span class="w"> </span><span class="k" data-group-id="0064921758-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="na">@moduletag</span><span class="w"> </span><span class="ss">:error_view_case</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="0064921758-1">end</span></code></pre><p>Se usarmos apenas um átomo para nossa tag de módulo, o ExUnit assume que ele tem um valor de <code class="inline">true</code>. Também poderíamos especificar um valor diferente se quiséssemos.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTMLTest</span><span class="w"> </span><span class="k" data-group-id="5149262673-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="na">@moduletag</span><span class="w"> </span><span class="ss">error_view_case</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;some_interesting_value&quot;</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="k" data-group-id="5149262673-1">end</span></code></pre><p>Por enquanto, vamos deixá-lo como um simples átomo <code class="inline">@moduletag :error_view_case</code>.</p><p>Podemos executar apenas os testes do caso de view de erro passando <code class="inline">--only error_view_case</code> para <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --only error_view_case
+</span><span class="">Including tags: [:error_view_case]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">...
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">5 tests, 0 failures, 3 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 125659
+</span></code></pre><blockquote><p>Nota: O ExUnit nos diz exatamente quais tags está incluindo e excluindo para cada execução de teste. Se olharmos de volta para a seção anterior sobre execução de testes, veremos que os números de linha especificados para testes individuais são realmente tratados como tags.</p></blockquote><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test test/hello_web/controllers/error_html_test.exs:11
+</span><span class="">Including tags: [line: &quot;11&quot;]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">2 tests, 0 failures, 1 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 364723
+</span></code></pre><p>Especificar um valor de <code class="inline">true</code> para <code class="inline">error_view_case</code> gera os mesmos resultados.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --only error_view_case:true
+</span><span class="">Including tags: [error_view_case: &quot;true&quot;]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">...
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">5 tests, 0 failures, 3 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 833356
+</span></code></pre><p>Especificar <code class="inline">false</code> como valor para <code class="inline">error_view_case</code>, no entanto, não executará nenhum teste porque nenhuma tag em nosso sistema corresponde a <code class="inline">error_view_case: false</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --only error_view_case:false
+</span><span class="">Including tags: [error_view_case: &quot;false&quot;]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">5 tests, 0 failures, 5 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 622422
+</span><span class="">The --only option was given to &quot;mix test&quot; but no test executed
+</span></code></pre><p>Podemos usar a flag <code class="inline">--exclude</code> de maneira similar. Isso executará todos os testes, exceto aqueles no caso de view de erro.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --exclude error_view_case
+</span><span class="">Excluding tags: [:error_view_case]
+</span><span class="">
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures, 2 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 682868
+</span></code></pre><p>Especificar valores para uma tag funciona da mesma maneira para <code class="inline">--exclude</code> como funciona para <code class="inline">--only</code>.</p><p>Podemos marcar testes individuais, assim como casos de teste completos. Vamos marcar alguns testes no caso de view de erro para ver como isso funciona.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.ErrorHTMLTest</span><span class="w"> </span><span class="k" data-group-id="8357703803-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb.ConnCase</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="na">@moduletag</span><span class="w"> </span><span class="ss">:error_view_case</span><span class="w">
+
+  </span><span class="c1"># Bring render/4 and render_to_string/4 for testing custom views</span><span class="w">
+  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Phoenix.Template</span><span class="w">
+
+  </span><span class="na">@tag</span><span class="w"> </span><span class="ss">individual_test</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yup&quot;</span><span class="w">
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;renders 404.html&quot;</span><span class="w"> </span><span class="k" data-group-id="8357703803-2">do</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="n">render_to_string</span><span class="p" data-group-id="8357703803-3">(</span><span class="nc">HelloWeb.ErrorView</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;404&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;html&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8357703803-4">[</span><span class="p" data-group-id="8357703803-4">]</span><span class="p" data-group-id="8357703803-3">)</span><span class="w"> </span><span class="o">==</span><span class="w">
+           </span><span class="s">&quot;Not Found&quot;</span><span class="w">
+  </span><span class="k" data-group-id="8357703803-2">end</span><span class="w">
+
+  </span><span class="na">@tag</span><span class="w"> </span><span class="ss">individual_test</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nope&quot;</span><span class="w">
+  </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;renders 500.html&quot;</span><span class="w"> </span><span class="k" data-group-id="8357703803-5">do</span><span class="w">
+    </span><span class="n">assert</span><span class="w"> </span><span class="n">render_to_string</span><span class="p" data-group-id="8357703803-6">(</span><span class="nc">HelloWeb.ErrorView</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;500&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;html&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8357703803-7">[</span><span class="p" data-group-id="8357703803-7">]</span><span class="p" data-group-id="8357703803-6">)</span><span class="w"> </span><span class="o">==</span><span class="w">
+           </span><span class="s">&quot;Internal Server Error&quot;</span><span class="w">
+  </span><span class="k" data-group-id="8357703803-5">end</span><span class="w">
+</span><span class="k" data-group-id="8357703803-1">end</span></code></pre><p>Se quisermos executar apenas testes marcados como <code class="inline">individual_test</code>, independentemente de seu valor, isso funcionará.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --only individual_test
+</span><span class="">Including tags: [:individual_test]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">..
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">5 tests, 0 failures, 3 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 813729
+</span></code></pre><p>Também podemos especificar um valor e executar apenas testes com esse valor.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --only individual_test:yup
+</span><span class="">Including tags: [individual_test: &quot;yup&quot;]
+</span><span class="">Excluding tags: [:test]
+</span><span class="">
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">5 tests, 0 failures, 4 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 770938
+</span></code></pre><p>Da mesma forma, podemos executar todos os testes, exceto aqueles marcados com um determinado valor.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --exclude individual_test:nope
+</span><span class="">Excluding tags: [individual_test: &quot;nope&quot;]
+</span><span class="">
+</span><span class="">...
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures, 1 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 539324
+</span></code></pre><p>Podemos ser mais específicos e excluir todos os testes do caso de view de erro, exceto aquele marcado com <code class="inline">individual_test</code> que tem o valor &quot;yup&quot;.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --exclude error_view_case --include individual_test:yup
+</span><span class="">Including tags: [individual_test: &quot;yup&quot;]
+</span><span class="">Excluding tags: [:error_view_case]
+</span><span class="">
+</span><span class="">..
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures, 1 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 61472
+</span></code></pre><p>Finalmente, podemos configurar o ExUnit para excluir tags por padrão. A configuração padrão do ExUnit é feita no arquivo <code class="inline">test/test_helper.exs</code>:</p><pre><code class="makeup elixir" translate="no"><span class="nc">ExUnit</span><span class="o">.</span><span class="n">start</span><span class="p" data-group-id="9753500060-1">(</span><span class="ss">exclude</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9753500060-2">[</span><span class="ss">error_view_case</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="9753500060-2">]</span><span class="p" data-group-id="9753500060-1">)</span><span class="w">
+
+</span><span class="nc">Ecto.Adapters.SQL.Sandbox</span><span class="o">.</span><span class="n">mode</span><span class="p" data-group-id="9753500060-3">(</span><span class="nc">Hello.Repo</span><span class="p">,</span><span class="w"> </span><span class="ss">:manual</span><span class="p" data-group-id="9753500060-3">)</span></code></pre><p>Agora, quando executamos <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>, ele executa apenas as especificações de <code class="inline">page_controller_test.exs</code> e <code class="inline">error_json_test.exs</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span><span class="">Excluding tags: [error_view_case: true]
+</span><span class="">
+</span><span class="">.
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures, 2 excluded
+</span><span class="">
+</span><span class="">Randomized with seed 186055
+</span></code></pre><p>Podemos substituir esse comportamento com a flag <code class="inline">--include</code>, informando ao <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a> para incluir testes marcados com <code class="inline">error_view_case</code>.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --include error_view_case
+</span><span class="">Including tags: [:error_view_case]
+</span><span class="">Excluding tags: [error_view_case: true]
+</span><span class="">
+</span><span class="">....
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 748424
+</span></code></pre><p>Esta técnica pode ser muito útil para controlar testes de execução muito longa, os quais você pode querer executar apenas em CI ou em cenários específicos.</p><h2 id="aleatorização" class="section-heading">
+  <a href="#aleatorização" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Aleatorização</span>
+</h2>
+<p>Executar testes em ordem aleatória é uma boa maneira de garantir que nossos testes estejam realmente isolados. Se notarmos que obtemos falhas esporádicas para um determinado teste, pode ser porque um teste anterior altera o estado do sistema de maneiras que não são limpas posteriormente, afetando assim os testes que seguem. Essas falhas podem se apresentar apenas se os testes forem executados em uma ordem específica.</p><p>O ExUnit aleatoriza a ordem dos testes por padrão, usando um número inteiro para semear a aleatorização. Se notarmos que uma semente aleatória específica desencadeia nossa falha intermitente, podemos reexecutar os testes com a mesma semente para recriar de forma confiável essa sequência de teste, a fim de nos ajudar a descobrir qual é o problema.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test --seed 401472
+</span><span class="">....
+</span><span class="">
+</span><span class="">Finished in 0.2 seconds
+</span><span class="">5 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 401472
+</span></code></pre><h2 id="concorrência-e-particionamento" class="section-heading">
+  <a href="#concorrência-e-particionamento" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Concorrência e particionamento</span>
+</h2>
+<p>Como vimos, o ExUnit permite que os desenvolvedores executem testes simultaneamente. Isso permite que os desenvolvedores usem todo o poder em suas máquinas para executar suas suítes de teste o mais rápido possível. Junte isso ao desempenho do Phoenix, a maioria das suítes de teste compila e executa em uma fração do tempo em comparação com outros frameworks.</p><p>Embora os desenvolvedores geralmente tenham máquinas poderosas disponíveis para eles durante o desenvolvimento, esse pode nem sempre ser o caso em seus servidores de Integração Contínua. Por essa razão, o ExUnit também suporta o particionamento de testes nativamente em ambientes de teste. Se você abrir seu <code class="inline">config/test.exs</code>, encontrará o nome do banco de dados definido como:</p><pre><code class="makeup elixir" translate="no"><span class="ss">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello_test</span><span class="si" data-group-id="6092132180-1">#{</span><span class="nc">System</span><span class="o">.</span><span class="n">get_env</span><span class="p" data-group-id="6092132180-2">(</span><span class="s">&quot;MIX_TEST_PARTITION&quot;</span><span class="p" data-group-id="6092132180-2">)</span><span class="si" data-group-id="6092132180-1">}</span><span class="s">&quot;</span><span class="p">,</span></code></pre><p>Por padrão, a variável de ambiente <code class="inline">MIX_TEST_PARTITION</code> não tem valor e, portanto, não tem efeito. Mas em seu servidor de CI, você pode, por exemplo, dividir sua suíte de testes entre máquinas usando quatro comandos distintos:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">MIX_TEST_PARTITION=1 mix test --partitions 4
+</span><span class="gp unselectable">$ </span><span class="">MIX_TEST_PARTITION=2 mix test --partitions 4
+</span><span class="gp unselectable">$ </span><span class="">MIX_TEST_PARTITION=3 mix test --partitions 4
+</span><span class="gp unselectable">$ </span><span class="">MIX_TEST_PARTITION=4 mix test --partitions 4
+</span></code></pre><p>Isso é tudo o que você precisa fazer e o ExUnit e o Phoenix cuidarão de todo o resto, incluindo a configuração do banco de dados para cada partição distinta com um nome distinto.</p><h2 id="indo-além" class="section-heading">
+  <a href="#indo-além" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Indo além</span>
+</h2>
+<p>Embora o ExUnit seja um framework de teste simples, ele fornece um executor de teste realmente flexível e robusto através do comando <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a>. Recomendamos que você execute <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix help test</code></a> ou <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html">leia a documentação online</a></p><p>Vimos o que o Phoenix nos dá com um aplicativo recém-gerado. Além disso, sempre que você gera um novo recurso, o Phoenix também gerará todos os testes apropriados para esse recurso. Por exemplo, você pode criar um scaffold completo com schema, contexto, controladores e views executando o seguinte comando na raiz de sua aplicação:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.html Blog Post posts title body:text
+</span><span class="">* creating lib/hello_web/controllers/post_controller.ex
+</span><span class="">* creating lib/hello_web/controllers/post_html/edit.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/index.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/new.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/show.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html/post_form.html.heex
+</span><span class="">* creating lib/hello_web/controllers/post_html.ex
+</span><span class="">* creating test/hello_web/controllers/post_controller_test.exs
+</span><span class="">* creating lib/hello/blog/post.ex
+</span><span class="">* creating priv/repo/migrations/20211001233016_create_posts.exs
+</span><span class="">* creating lib/hello/blog.ex
+</span><span class="">* injecting lib/hello/blog.ex
+</span><span class="">* creating test/hello/blog_test.exs
+</span><span class="">* injecting test/hello/blog_test.exs
+</span><span class="">* creating test/support/fixtures/blog_fixtures.ex
+</span><span class="">* injecting test/support/fixtures/blog_fixtures.ex
+</span><span class="">
+</span><span class="">Add the resource to your browser scope in lib/demo_web/router.ex:
+</span><span class="">
+</span><span class="">    resources &quot;/posts&quot;, PostController
+</span><span class="">
+</span><span class="">
+</span><span class="">Remember to update your repository by running migrations:
+</span><span class="">
+</span><span class="">    $ mix ecto.migrate
+</span><span class="">
+</span></code></pre><p>Agora, vamos seguir as instruções e adicionar a nova rota de recursos ao nosso arquivo <code class="inline">lib/hello_web/router.ex</code> e executar as migrações.</p><p>Quando executamos <a href="https://hexdocs.pm/mix/Mix.Tasks.Test.html"><code class="inline">mix test</code></a> novamente, vemos que agora temos vinte e um testes!</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span><span class="">................
+</span><span class="">
+</span><span class="">Finished in 0.1 seconds
+</span><span class="">21 tests, 0 failures
+</span><span class="">
+</span><span class="">Randomized with seed 537537
+</span></code></pre><p>Neste ponto, estamos em um ótimo lugar para transição para o resto dos guias de teste, nos quais examinaremos esses testes em muito mais detalhes e adicionaremos alguns dos nossos próprios.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="presence.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Presença
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="testing_contexts.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Testando Contextos
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

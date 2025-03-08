@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Plug — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Plug</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelo <a href="request_lifecycle.html">guia do ciclo de vida da requisição</a>.</p></blockquote><p>O Plug está no coração da camada HTTP do Phoenix, e o Phoenix coloca o Plug em destaque. Nós interagimos com plugs em cada etapa do ciclo de vida da requisição, e os componentes principais do Phoenix como endpoints, roteadores e controladores são internamente apenas plugs. Vamos mergulhar e descobrir o que torna o Plug tão especial.</p><p><a href="https://github.com/elixir-lang/plug">Plug</a> é uma especificação para módulos componíveis entre aplicações web. Também é uma camada de abstração para adaptadores de conexão de diferentes servidores web. A ideia básica do Plug é unificar o conceito de &quot;conexão&quot; com o qual operamos. Isso difere de outras camadas de middleware HTTP como o Rack, onde a requisição e a resposta são separadas na pilha de middleware.</p><p>No nível mais simples, a especificação Plug vem em dois sabores: <em>plugs de função</em> e <em>plugs de módulo</em>.</p><h2 id="plugs-de-função" class="section-heading">
+  <a href="#plugs-de-função" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs de função</span>
+</h2>
+<p>Para atuar como um plug, uma função precisa:</p><ol><li>aceitar uma struct de conexão (<code class="inline">%Plug.Conn{}</code>) como seu primeiro argumento e opções de conexão como seu segundo;</li><li>retornar uma struct de conexão.</li></ol><p>Qualquer função que atenda a esses dois critérios servirá. Aqui está um exemplo.</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">introspect</span><span class="p" data-group-id="8012344272-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_opts</span><span class="p" data-group-id="8012344272-1">)</span><span class="w"> </span><span class="k" data-group-id="8012344272-2">do</span><span class="w">
+  </span><span class="nc">IO</span><span class="o">.</span><span class="n">puts</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Verbo: </span><span class="si" data-group-id="8012344272-3">#{</span><span class="n">inspect</span><span class="p" data-group-id="8012344272-4">(</span><span class="n">conn</span><span class="o">.</span><span class="n">method</span><span class="p" data-group-id="8012344272-4">)</span><span class="si" data-group-id="8012344272-3">}</span><span class="s">
+  Host: </span><span class="si" data-group-id="8012344272-5">#{</span><span class="n">inspect</span><span class="p" data-group-id="8012344272-6">(</span><span class="n">conn</span><span class="o">.</span><span class="n">host</span><span class="p" data-group-id="8012344272-6">)</span><span class="si" data-group-id="8012344272-5">}</span><span class="s">
+  Cabeçalhos: </span><span class="si" data-group-id="8012344272-7">#{</span><span class="n">inspect</span><span class="p" data-group-id="8012344272-8">(</span><span class="n">conn</span><span class="o">.</span><span class="n">req_headers</span><span class="p" data-group-id="8012344272-8">)</span><span class="si" data-group-id="8012344272-7">}</span><span class="s">
+  &quot;&quot;&quot;</span><span class="w">
+
+  </span><span class="n">conn</span><span class="w">
+</span><span class="k" data-group-id="8012344272-2">end</span></code></pre><p>Esta função faz o seguinte:</p><ol><li>Ela recebe uma conexão e opções (que não utilizamos)</li><li>Imprime algumas informações da conexão no terminal</li><li>Retorna a conexão</li></ol><p>Bem simples, certo? Vamos ver esta função em ação adicionando-a ao nosso endpoint em <code class="inline">lib/hello_web/endpoint.ex</code>. Podemos conectá-la em qualquer lugar, então vamos fazer isso inserindo <code class="inline">plug :introspect</code> logo antes de delegarmos a requisição ao roteador:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="w"> </span><span class="k" data-group-id="4352952017-1">do</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:introspect</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">introspect</span><span class="p" data-group-id="4352952017-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_opts</span><span class="p" data-group-id="4352952017-2">)</span><span class="w"> </span><span class="k" data-group-id="4352952017-3">do</span><span class="w">
+    </span><span class="nc">IO</span><span class="o">.</span><span class="n">puts</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+    Verbo: </span><span class="si" data-group-id="4352952017-4">#{</span><span class="n">inspect</span><span class="p" data-group-id="4352952017-5">(</span><span class="n">conn</span><span class="o">.</span><span class="n">method</span><span class="p" data-group-id="4352952017-5">)</span><span class="si" data-group-id="4352952017-4">}</span><span class="s">
+    Host: </span><span class="si" data-group-id="4352952017-6">#{</span><span class="n">inspect</span><span class="p" data-group-id="4352952017-7">(</span><span class="n">conn</span><span class="o">.</span><span class="n">host</span><span class="p" data-group-id="4352952017-7">)</span><span class="si" data-group-id="4352952017-6">}</span><span class="s">
+    Cabeçalhos: </span><span class="si" data-group-id="4352952017-8">#{</span><span class="n">inspect</span><span class="p" data-group-id="4352952017-9">(</span><span class="n">conn</span><span class="o">.</span><span class="n">req_headers</span><span class="p" data-group-id="4352952017-9">)</span><span class="si" data-group-id="4352952017-8">}</span><span class="s">
+    &quot;&quot;&quot;</span><span class="w">
+
+    </span><span class="n">conn</span><span class="w">
+  </span><span class="k" data-group-id="4352952017-3">end</span><span class="w">
+</span><span class="k" data-group-id="4352952017-1">end</span></code></pre><p>Os plugs de função são conectados passando o nome da função como um átomo. Para testar o plug, volte ao seu navegador e acesse <a href="http://localhost:4000">http://localhost:4000</a>. Você deverá ver algo como isto impresso no seu terminal shell:</p><pre><code class="makeup console" translate="no"><span class="">Verbo: &quot;GET&quot;
+</span><span class="">Host: &quot;localhost&quot;
+</span><span class="">Cabeçalhos: [...]
+</span></code></pre><p>Nosso plug simplesmente imprime informações da conexão. Embora nosso plug inicial seja muito simples, você pode fazer praticamente qualquer coisa que quiser dentro dele. Para aprender sobre todos os campos disponíveis na conexão e todas as funcionalidades associadas a ela, consulte a <a href="https://hexdocs.pm/plug/Plug.Conn.html">documentação de <code class="inline">Plug.Conn</code></a>.</p><p>Agora vamos olhar a outra variante de plug, os plugs de módulo.</p><h2 id="plugs-de-módulo" class="section-heading">
+  <a href="#plugs-de-módulo" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs de módulo</span>
+</h2>
+<p>Plugs de módulo são outro tipo de plug que nos permite definir uma transformação de conexão em um módulo. O módulo só precisa implementar duas funções:</p><ul><li><a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:init/1" title=""><code class="inline">init/1</code></a> que inicializa quaisquer argumentos ou opções a serem passados para <a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:call/2" title=""><code class="inline">call/2</code></a></li><li><a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:call/2" title=""><code class="inline">call/2</code></a> que realiza a transformação da conexão. <a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:call/2" title=""><code class="inline">call/2</code></a> é apenas um plug de função que vimos anteriormente</li></ul><p>Para ver isso em ação, vamos escrever um plug de módulo que coloca a chave e o valor <code class="inline">:locale</code> na conexão para uso downstream em outros plugs, ações do controlador e nossas views. Coloque o conteúdo abaixo em um arquivo chamado <code class="inline">lib/hello_web/plugs/locale.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Plugs.Locale</span><span class="w"> </span><span class="k" data-group-id="9501389495-1">do</span><span class="w">
+  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Plug.Conn</span><span class="w">
+
+  </span><span class="na">@locales</span><span class="w"> </span><span class="p" data-group-id="9501389495-2">[</span><span class="s">&quot;en&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fr&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;de&quot;</span><span class="p" data-group-id="9501389495-2">]</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="9501389495-3">(</span><span class="n">default</span><span class="p" data-group-id="9501389495-3">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">default</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call</span><span class="p" data-group-id="9501389495-4">(</span><span class="p" data-group-id="9501389495-5">%</span><span class="nc" data-group-id="9501389495-5">Plug.Conn</span><span class="p" data-group-id="9501389495-5">{</span><span class="ss">params</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9501389495-6">%{</span><span class="s">&quot;locale&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">loc</span><span class="p" data-group-id="9501389495-6">}</span><span class="p" data-group-id="9501389495-5">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_default</span><span class="p" data-group-id="9501389495-4">)</span><span class="w"> </span><span class="ow">when</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="na">@locales</span><span class="w"> </span><span class="k" data-group-id="9501389495-7">do</span><span class="w">
+    </span><span class="n">assign</span><span class="p" data-group-id="9501389495-8">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:locale</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p" data-group-id="9501389495-8">)</span><span class="w">
+  </span><span class="k" data-group-id="9501389495-7">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call</span><span class="p" data-group-id="9501389495-9">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">default</span><span class="p" data-group-id="9501389495-9">)</span><span class="w"> </span><span class="k" data-group-id="9501389495-10">do</span><span class="w">
+    </span><span class="n">assign</span><span class="p" data-group-id="9501389495-11">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:locale</span><span class="p">,</span><span class="w"> </span><span class="n">default</span><span class="p" data-group-id="9501389495-11">)</span><span class="w">
+  </span><span class="k" data-group-id="9501389495-10">end</span><span class="w">
+</span><span class="k" data-group-id="9501389495-1">end</span></code></pre><p>Para experimentá-lo, vamos adicionar este plug de módulo ao nosso roteador, anexando <code class="inline">plug HelloWeb.Plugs.Locale, &quot;en&quot;</code> ao nosso pipeline <code class="inline">:browser</code> em <code class="inline">lib/hello_web/router.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="6638931340-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="6638931340-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6638931340-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="6638931340-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Plugs.Locale</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;en&quot;</span><span class="w">
+  </span><span class="k" data-group-id="6638931340-2">end</span><span class="w">
+  </span><span class="n">...</span></code></pre><p>No callback <a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:init/1" title=""><code class="inline">init/1</code></a>, passamos um locale padrão para usar se nenhum estiver presente nos parâmetros. Também usamos pattern matching para definir múltiplas cabeças de função <a href="https://hexdocs.pm/plug/1.16.1/Plug.html#c:call/2" title=""><code class="inline">call/2</code></a> para validar o locale nos parâmetros e recorrer a <code class="inline">&quot;en&quot;</code> se não houver uma correspondência. O <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html#assign/3" title=""><code class="inline">assign/3</code></a> é parte do módulo <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html"><code class="inline">Plug.Conn</code></a> e é como armazenamos valores na estrutura de dados <code class="inline">conn</code>.</p><p>Para ver a atribuição em ação, vá para o template em <code class="inline">lib/hello_web/controllers/page_html/home.html.heex</code> e adicione o seguinte código após o fechamento da tag <code class="inline">&lt;/h1&gt;</code>:</p><pre><code class="makeup heex" translate="no"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="n">Locale: </span><span class="p" data-group-id="9536238653-1">{</span><span class="na">@locale</span><span class="p" data-group-id="9536238653-1">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></code></pre><p>Vá para <a href="http://localhost:4000/">http://localhost:4000/</a> e você deverá ver o locale exibido. Visite <a href="http://localhost:4000/?locale=fr">http://localhost:4000/?locale=fr</a> e deverá ver a atribuição alterada para <code class="inline">&quot;fr&quot;</code>. Alguém pode usar essa informação junto com <a href="https://hexdocs.pm/gettext/Gettext.html">Gettext</a> para fornecer uma aplicação web totalmente internacionalizada.</p><p>Isso é tudo que há para o Plug. O Phoenix abraça o design de plug de transformações componíveis em toda a pilha. Vamos ver alguns exemplos!</p><h2 id="onde-conectar-plug" class="section-heading">
+  <a href="#onde-conectar-plug" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Onde conectar (plug)</span>
+</h2>
+<p>O endpoint, o roteador e os controladores no Phoenix aceitam plugs.</p><h3 id="plugs-de-endpoint" class="section-heading">
+  <a href="#plugs-de-endpoint" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs de endpoint</span>
+</h3>
+<p>Os endpoints organizam todos os plugs comuns a cada requisição e os aplicam antes de despachar para o roteador com seus pipelines personalizados. Adicionamos um plug ao endpoint assim:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Endpoint</span><span class="w"> </span><span class="k" data-group-id="8275885199-1">do</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:introspect</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Router</span></code></pre><p>Os plugs de endpoint padrão fazem bastante trabalho. Aqui estão eles em ordem:</p><ul><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Static.html"><code class="inline">Plug.Static</code></a> - serve ativos estáticos. Como este plug vem antes do logger, as requisições de ativos estáticos não são registradas.</p></li><li><p><code class="inline">Phoenix.LiveDashboard.RequestLogger</code> - configura o <em>Request Logger</em> para o Phoenix LiveDashboard, isso permitirá que você tenha a opção de passar um parâmetro de consulta para transmitir logs de requisições ou ativar/desativar um cookie que transmite logs de requisições do seu painel.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.RequestId.html"><code class="inline">Plug.RequestId</code></a> - gera um ID de requisição único para cada requisição.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Telemetry.html"><code class="inline">Plug.Telemetry</code></a> - adiciona pontos de instrumentação para que o Phoenix possa registrar o caminho da requisição, código de status e tempo de requisição por padrão.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Parsers.html"><code class="inline">Plug.Parsers</code></a> - analisa o corpo da requisição quando um analisador conhecido está disponível. Por padrão, este plug pode lidar com conteúdo codificado em URL, multipart e JSON (com <code class="inline">Jason</code>). O corpo da requisição fica intocado se o tipo de conteúdo da requisição não puder ser analisado.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.MethodOverride.html"><code class="inline">Plug.MethodOverride</code></a> - converte o método da requisição para PUT, PATCH ou DELETE para requisições POST com um parâmetro <code class="inline">_method</code> válido.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Head.html"><code class="inline">Plug.Head</code></a> - converte requisições HEAD para requisições GET.</p></li><li><p><a href="https://hexdocs.pm/plug/1.16.1/Plug.Session.html"><code class="inline">Plug.Session</code></a> - um plug que configura o gerenciamento de sessão. Observe que <code class="inline">fetch_session/2</code> ainda deve ser explicitamente chamado antes de usar a sessão, pois este plug apenas configura como a sessão é buscada.</p></li></ul><p>No meio do endpoint, há também um bloco condicional:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">code_reloading?</span><span class="w"> </span><span class="k" data-group-id="0608002769-1">do</span><span class="w">
+    </span><span class="n">socket</span><span class="w"> </span><span class="s">&quot;/phoenix/live_reload/socket&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Phoenix.LiveReloader.Socket</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">Phoenix.LiveReloader</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">Phoenix.CodeReloader</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">Phoenix.Ecto.CheckRepoStatus</span><span class="p">,</span><span class="w"> </span><span class="ss">otp_app</span><span class="p">:</span><span class="w"> </span><span class="ss">:hello</span><span class="w">
+  </span><span class="k" data-group-id="0608002769-1">end</span></code></pre><p>Este bloco é executado apenas em desenvolvimento. Ele habilita:</p><ul><li>recarregamento ao vivo - se você alterar um arquivo CSS, eles são atualizados no navegador sem atualizar a página;</li><li><a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.CodeReloader.html">recarregamento de código</a> - para que possamos ver mudanças em nossa aplicação sem reiniciar o servidor;</li><li>verificação do status do repositório - que garante que nosso banco de dados esteja atualizado, levantando um erro legível e acionável caso contrário.</li></ul><h3 id="plugs-de-roteador" class="section-heading">
+  <a href="#plugs-de-roteador" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs de roteador</span>
+</h3>
+<p>No roteador, podemos declarar plugs dentro de pipelines:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.Router</span><span class="w"> </span><span class="k" data-group-id="3360998589-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:router</span><span class="w">
+
+  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:browser</span><span class="w"> </span><span class="k" data-group-id="3360998589-2">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3360998589-3">[</span><span class="s">&quot;html&quot;</span><span class="p" data-group-id="3360998589-3">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_session</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_live_flash</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_root_layout</span><span class="p">,</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3360998589-4">{</span><span class="nc">HelloWeb.LayoutView</span><span class="p">,</span><span class="w"> </span><span class="ss">:root</span><span class="p" data-group-id="3360998589-4">}</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:protect_from_forgery</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:put_secure_browser_headers</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Plugs.Locale</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;en&quot;</span><span class="w">
+  </span><span class="k" data-group-id="3360998589-2">end</span><span class="w">
+
+  </span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="w"> </span><span class="k" data-group-id="3360998589-5">do</span><span class="w">
+    </span><span class="n">pipe_through</span><span class="w"> </span><span class="ss">:browser</span><span class="w">
+
+    </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">PageController</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span><span class="w">
+  </span><span class="k" data-group-id="3360998589-5">end</span></code></pre><p>As rotas são definidas dentro de escopos e os escopos podem passar por múltiplos pipelines. Uma vez que uma rota corresponde, o Phoenix invoca todos os plugs definidos em todos os pipelines associados a essa rota. Por exemplo, acessar &quot;/&quot; passará pelo pipeline <code class="inline">:browser</code>, consequentemente invocando todos os seus plugs.</p><p>Como veremos no <a href="routing.html">guia de roteamento</a>, os próprios pipelines são plugs. Lá, também discutiremos todos os plugs no pipeline <code class="inline">:browser</code>.</p><h3 id="plugs-de-controlador" class="section-heading">
+  <a href="#plugs-de-controlador" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs de controlador</span>
+</h3>
+<p>Finalmente, os controladores também são plugs, então podemos fazer:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.PageController</span><span class="w"> </span><span class="k" data-group-id="9711283511-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Plugs.Locale</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;en&quot;</span></code></pre><p>Em particular, os plugs de controlador fornecem um recurso que nos permite executar plugs apenas dentro de certas ações. Por exemplo, você pode fazer:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.PageController</span><span class="w"> </span><span class="k" data-group-id="4424644987-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">HelloWeb.Plugs.Locale</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;en&quot;</span><span class="w"> </span><span class="ow">when</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p" data-group-id="4424644987-2">[</span><span class="ss">:index</span><span class="p" data-group-id="4424644987-2">]</span></code></pre><p>E o plug será executado apenas para a ação <code class="inline">index</code>.</p><h2 id="plugs-como-composição" class="section-heading">
+  <a href="#plugs-como-composição" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plugs como composição</span>
+</h2>
+<p>Ao aderir ao contrato de plug, transformamos uma requisição de aplicação em uma série de transformações explícitas. Não para por aí. Para realmente ver quão eficaz é o design do Plug, vamos imaginar um cenário onde precisamos verificar uma série de condições e então redirecionar ou parar se uma condição falhar. Sem plug, acabaríamos com algo como isso:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.MessageController</span><span class="w"> </span><span class="k" data-group-id="7332794360-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="7332794360-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="7332794360-2">)</span><span class="w"> </span><span class="k" data-group-id="7332794360-3">do</span><span class="w">
+    </span><span class="k">case</span><span class="w"> </span><span class="nc">Authenticator</span><span class="o">.</span><span class="n">find_user</span><span class="p" data-group-id="7332794360-4">(</span><span class="n">conn</span><span class="p" data-group-id="7332794360-4">)</span><span class="w"> </span><span class="k" data-group-id="7332794360-5">do</span><span class="w">
+      </span><span class="p" data-group-id="7332794360-6">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="7332794360-6">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="k">case</span><span class="w"> </span><span class="n">find_message</span><span class="p" data-group-id="7332794360-7">(</span><span class="n">params</span><span class="p" data-group-id="7332794360-8">[</span><span class="s">&quot;id&quot;</span><span class="p" data-group-id="7332794360-8">]</span><span class="p" data-group-id="7332794360-7">)</span><span class="w"> </span><span class="k" data-group-id="7332794360-9">do</span><span class="w">
+          </span><span class="no">nil</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+            </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="7332794360-10">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Essa mensagem não foi encontrada&quot;</span><span class="p" data-group-id="7332794360-10">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="7332794360-11">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="7332794360-11">)</span><span class="w">
+          </span><span class="n">message</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+            </span><span class="k">if</span><span class="w"> </span><span class="nc">Authorizer</span><span class="o">.</span><span class="n">can_access?</span><span class="p" data-group-id="7332794360-12">(</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p" data-group-id="7332794360-12">)</span><span class="w"> </span><span class="k" data-group-id="7332794360-13">do</span><span class="w">
+              </span><span class="n">render</span><span class="p" data-group-id="7332794360-14">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">page</span><span class="p">:</span><span class="w"> </span><span class="n">message</span><span class="p" data-group-id="7332794360-14">)</span><span class="w">
+            </span><span class="k" data-group-id="7332794360-13">else</span><span class="w">
+              </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="7332794360-15">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Você não pode acessar essa página&quot;</span><span class="p" data-group-id="7332794360-15">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="7332794360-16">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="7332794360-16">)</span><span class="w">
+            </span><span class="k" data-group-id="7332794360-13">end</span><span class="w">
+        </span><span class="k" data-group-id="7332794360-9">end</span><span class="w">
+      </span><span class="ss">:error</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="7332794360-17">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Você deve estar logado&quot;</span><span class="p" data-group-id="7332794360-17">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="7332794360-18">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="7332794360-18">)</span><span class="w">
+    </span><span class="k" data-group-id="7332794360-5">end</span><span class="w">
+  </span><span class="k" data-group-id="7332794360-3">end</span><span class="w">
+</span><span class="k" data-group-id="7332794360-1">end</span></code></pre><p>Perceba como apenas alguns passos de autenticação e autorização requerem aninhamento e duplicação complicados? Vamos melhorar isso com alguns plugs.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.MessageController</span><span class="w"> </span><span class="k" data-group-id="1637002134-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:authenticate</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_message</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:authorize_message</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="1637002134-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="1637002134-2">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-3">do</span><span class="w">
+    </span><span class="n">render</span><span class="p" data-group-id="1637002134-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:show</span><span class="p">,</span><span class="w"> </span><span class="ss">page</span><span class="p">:</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="p" data-group-id="1637002134-5">[</span><span class="ss">:message</span><span class="p" data-group-id="1637002134-5">]</span><span class="p" data-group-id="1637002134-4">)</span><span class="w">
+  </span><span class="k" data-group-id="1637002134-3">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">authenticate</span><span class="p" data-group-id="1637002134-6">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="1637002134-6">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-7">do</span><span class="w">
+    </span><span class="k">case</span><span class="w"> </span><span class="nc">Authenticator</span><span class="o">.</span><span class="n">find_user</span><span class="p" data-group-id="1637002134-8">(</span><span class="n">conn</span><span class="p" data-group-id="1637002134-8">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-9">do</span><span class="w">
+      </span><span class="p" data-group-id="1637002134-10">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="1637002134-10">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">assign</span><span class="p" data-group-id="1637002134-11">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:user</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="1637002134-11">)</span><span class="w">
+      </span><span class="ss">:error</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="1637002134-12">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Você deve estar logado&quot;</span><span class="p" data-group-id="1637002134-12">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="1637002134-13">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="1637002134-13">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">halt</span><span class="p" data-group-id="1637002134-14">(</span><span class="p" data-group-id="1637002134-14">)</span><span class="w">
+    </span><span class="k" data-group-id="1637002134-9">end</span><span class="w">
+  </span><span class="k" data-group-id="1637002134-7">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">fetch_message</span><span class="p" data-group-id="1637002134-15">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="1637002134-15">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-16">do</span><span class="w">
+    </span><span class="k">case</span><span class="w"> </span><span class="n">find_message</span><span class="p" data-group-id="1637002134-17">(</span><span class="n">conn</span><span class="o">.</span><span class="n">params</span><span class="p" data-group-id="1637002134-18">[</span><span class="s">&quot;id&quot;</span><span class="p" data-group-id="1637002134-18">]</span><span class="p" data-group-id="1637002134-17">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-19">do</span><span class="w">
+      </span><span class="no">nil</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="1637002134-20">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Essa mensagem não foi encontrada&quot;</span><span class="p" data-group-id="1637002134-20">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="1637002134-21">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="1637002134-21">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">halt</span><span class="p" data-group-id="1637002134-22">(</span><span class="p" data-group-id="1637002134-22">)</span><span class="w">
+      </span><span class="n">message</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">assign</span><span class="p" data-group-id="1637002134-23">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:message</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p" data-group-id="1637002134-23">)</span><span class="w">
+    </span><span class="k" data-group-id="1637002134-19">end</span><span class="w">
+  </span><span class="k" data-group-id="1637002134-16">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">authorize_message</span><span class="p" data-group-id="1637002134-24">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="1637002134-24">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-25">do</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="nc">Authorizer</span><span class="o">.</span><span class="n">can_access?</span><span class="p" data-group-id="1637002134-26">(</span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="p" data-group-id="1637002134-27">[</span><span class="ss">:user</span><span class="p" data-group-id="1637002134-27">]</span><span class="p">,</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="p" data-group-id="1637002134-28">[</span><span class="ss">:message</span><span class="p" data-group-id="1637002134-28">]</span><span class="p" data-group-id="1637002134-26">)</span><span class="w"> </span><span class="k" data-group-id="1637002134-29">do</span><span class="w">
+      </span><span class="n">conn</span><span class="w">
+    </span><span class="k" data-group-id="1637002134-29">else</span><span class="w">
+      </span><span class="n">conn</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">put_flash</span><span class="p" data-group-id="1637002134-30">(</span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Você não pode acessar essa página&quot;</span><span class="p" data-group-id="1637002134-30">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">redirect</span><span class="p" data-group-id="1637002134-31">(</span><span class="ss">to</span><span class="p">:</span><span class="w"> </span><span class="sx">~p&quot;/&quot;</span><span class="p" data-group-id="1637002134-31">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">halt</span><span class="p" data-group-id="1637002134-32">(</span><span class="p" data-group-id="1637002134-32">)</span><span class="w">
+    </span><span class="k" data-group-id="1637002134-29">end</span><span class="w">
+  </span><span class="k" data-group-id="1637002134-25">end</span><span class="w">
+</span><span class="k" data-group-id="1637002134-1">end</span></code></pre><p>Para fazer tudo isso funcionar, convertemos os blocos aninhados de código e usamos <code class="inline">halt(conn)</code> sempre que chegávamos a um caminho de falha. A funcionalidade <code class="inline">halt(conn)</code> é essencial aqui: ela diz ao Plug que o próximo plug não deve ser invocado.</p><p>No final do dia, ao substituir os blocos aninhados de código por uma série plana de transformações de plug, somos capazes de alcançar a mesma funcionalidade de uma maneira muito mais componível, clara e reutilizável.</p><p>Para saber mais sobre plugs, consulte a documentação do <a href="https://hexdocs.pm/plug/1.16.1/Plug.html">projeto Plug</a>, que fornece muitos plugs e funcionalidades integradas.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="request_lifecycle.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Ciclo de vida da requisição
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="routing.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Roteamento
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

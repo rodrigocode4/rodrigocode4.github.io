@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Presença — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Presença</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelos <a href="installation.html">guias introdutórios</a> e tenha uma aplicação Phoenix <a href="up_and_running.html">funcionando</a>.</p></blockquote><blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha passado pelo <a href="channels.html">guia de Canais</a>.</p></blockquote><p>Phoenix Presence é um recurso que permite registrar informações de processos em um tópico e replicá-las de forma transparente em um cluster. É uma combinação de uma biblioteca do lado do servidor e do cliente, o que torna simples sua implementação. Um caso de uso simples seria mostrar quais usuários estão atualmente online em uma aplicação.</p><p>Phoenix Presence é especial por várias razões. Não possui ponto único de falha, não possui fonte única de verdade, depende inteiramente da biblioteca padrão sem dependências operacionais e se autocura.</p><h2 id="configuração" class="section-heading">
+  <a href="#configuração" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Configuração</span>
+</h2>
+<p>Vamos usar o Presence para rastrear quais usuários estão conectados no servidor e enviar atualizações para o cliente à medida que os usuários entram e saem. Entregaremos essas atualizações via Phoenix Channels. Portanto, vamos criar um <code class="inline">RoomChannel</code>, como fizemos nos guias de canais:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.channel Room
+</span></code></pre><p>Siga os passos após o gerador e você estará pronto para começar a rastrear a presença.</p><h2 id="o-gerador-de-presence" class="section-heading">
+  <a href="#o-gerador-de-presence" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O gerador de Presence</span>
+</h2>
+<p>Para começar com o Presence, primeiro precisamos gerar um módulo de presença. Podemos fazer isso com a tarefa <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Presence.html"><code class="inline">mix phx.gen.presence</code></a>:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.presence
+</span><span class="">* creating lib/hello_web/channels/presence.ex
+</span><span class="">
+</span><span class="">Adicione seu novo módulo à sua árvore de supervisão,
+</span><span class="">em lib/hello/application.ex:
+</span><span class="">
+</span><span class="">    children = [
+</span><span class="">      ...
+</span><span class="">      HelloWeb.Presence,
+</span><span class="">    ]
+</span><span class="">
+</span><span class="">Você está pronto! Veja a documentação do Phoenix.Presence para mais detalhes:
+</span><span class="">https://hexdocs.pm/phoenix/Phoenix.Presence.html
+</span></code></pre><p>Se abrirmos o arquivo <code class="inline">lib/hello_web/channels/presence.ex</code>, veremos a seguinte linha:</p><pre><code class="makeup elixir" translate="no"><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Presence</span><span class="p">,</span><span class="w">
+  </span><span class="ss">otp_app</span><span class="p">:</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w">
+  </span><span class="ss">pubsub_server</span><span class="p">:</span><span class="w"> </span><span class="nc">Hello.PubSub</span></code></pre><p>Isso configura o módulo para presença, definindo as funções que precisamos para rastrear presenças. Como mencionado na tarefa do gerador, devemos adicionar este módulo à nossa árvore de supervisão em
+<code class="inline">application.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5490988255-1">[</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="nc">HelloWeb.Presence</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="5490988255-1">]</span></code></pre><h2 id="uso-com-canais-e-javascript" class="section-heading">
+  <a href="#uso-com-canais-e-javascript" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Uso com Canais e JavaScript</span>
+</h2>
+<p>Em seguida, criaremos o canal pelo qual comunicaremos a presença. Depois que um usuário se juntar, podemos enviar a lista de presenças pelo canal e depois rastrear a conexão. Também podemos fornecer um mapa de informações adicionais para rastrear.</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.RoomChannel</span><span class="w"> </span><span class="k" data-group-id="8011748181-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Phoenix.Channel</span><span class="w">
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">HelloWeb.Presence</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">join</span><span class="p" data-group-id="8011748181-2">(</span><span class="s">&quot;room:lobby&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8011748181-3">%{</span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">name</span><span class="p" data-group-id="8011748181-3">}</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="8011748181-2">)</span><span class="w"> </span><span class="k" data-group-id="8011748181-4">do</span><span class="w">
+    </span><span class="n">send</span><span class="p" data-group-id="8011748181-5">(</span><span class="n">self</span><span class="p" data-group-id="8011748181-6">(</span><span class="p" data-group-id="8011748181-6">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:after_join</span><span class="p" data-group-id="8011748181-5">)</span><span class="w">
+    </span><span class="p" data-group-id="8011748181-7">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">assign</span><span class="p" data-group-id="8011748181-8">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:name</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p" data-group-id="8011748181-8">)</span><span class="p" data-group-id="8011748181-7">}</span><span class="w">
+  </span><span class="k" data-group-id="8011748181-4">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="8011748181-9">(</span><span class="ss">:after_join</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="8011748181-9">)</span><span class="w"> </span><span class="k" data-group-id="8011748181-10">do</span><span class="w">
+    </span><span class="p" data-group-id="8011748181-11">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="8011748181-11">}</span><span class="w"> </span><span class="o">=</span><span class="w">
+      </span><span class="nc">Presence</span><span class="o">.</span><span class="n">track</span><span class="p" data-group-id="8011748181-12">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8011748181-13">%{</span><span class="w">
+        </span><span class="ss">online_at</span><span class="p">:</span><span class="w"> </span><span class="n">inspect</span><span class="p" data-group-id="8011748181-14">(</span><span class="nc">System</span><span class="o">.</span><span class="n">system_time</span><span class="p" data-group-id="8011748181-15">(</span><span class="ss">:second</span><span class="p" data-group-id="8011748181-15">)</span><span class="p" data-group-id="8011748181-14">)</span><span class="w">
+      </span><span class="p" data-group-id="8011748181-13">}</span><span class="p" data-group-id="8011748181-12">)</span><span class="w">
+
+    </span><span class="n">push</span><span class="p" data-group-id="8011748181-16">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;presence_state&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Presence</span><span class="o">.</span><span class="n">list</span><span class="p" data-group-id="8011748181-17">(</span><span class="n">socket</span><span class="p" data-group-id="8011748181-17">)</span><span class="p" data-group-id="8011748181-16">)</span><span class="w">
+    </span><span class="p" data-group-id="8011748181-18">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="8011748181-18">}</span><span class="w">
+  </span><span class="k" data-group-id="8011748181-10">end</span><span class="w">
+</span><span class="k" data-group-id="8011748181-1">end</span></code></pre><p>Finalmente, podemos usar a biblioteca de Presence do lado do cliente incluída em <code class="inline">phoenix.js</code> para gerenciar o estado e as diferenças de presença que vêm pelo socket. Ela escuta os eventos <code class="inline">&quot;presence_state&quot;</code> e <code class="inline">&quot;presence_diff&quot;</code> e fornece um callback simples para você lidar com os eventos à medida que acontecem, com o callback <code class="inline">onSync</code>.</p><p>O callback <code class="inline">onSync</code> permite que você reaja facilmente às mudanças de estado de presença, o que geralmente resulta em uma nova renderização de uma lista atualizada de usuários ativos. Você pode usar o método <code class="inline">list</code> para formatar e retornar cada presença individual com base nas necessidades de sua aplicação.</p><p>Para iterar sobre os usuários, usamos a função <code class="inline">presences.list()</code> que aceita um callback. O callback será chamado para cada item de presença com 2 argumentos, o id de presença e uma lista de metas (uma para cada presença para esse id de presença). Usamos isso para exibir os usuários e o número de dispositivos com os quais eles estão online.</p><p>Podemos ver a presença funcionando adicionando o seguinte a <code class="inline">assets/js/app.js</code>:</p><pre><code class="makeup javascript" translate="no"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nv">Socket</span><span class="p">,</span><span class="w"> </span><span class="nv">Presence</span><span class="p">}</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">phoenix</span><span class="p">&quot;</span><span class="w">
+</span><span class="w">
+</span><span class="kt">let</span><span class="w"> </span><span class="nv">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nv">Socket</span><span class="p">(</span><span class="p">&quot;</span><span class="s2">/socket</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">params</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">token</span><span class="p">:</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="n">userToken</span><span class="p">}</span><span class="p">}</span><span class="p">)</span><span class="w">
+</span><span class="kt">let</span><span class="w"> </span><span class="nv">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">socket</span><span class="p">.</span><span class="nf">channel</span><span class="p">(</span><span class="p">&quot;</span><span class="s2">room:lobby</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="n">location</span><span class="p">.</span><span class="n">search</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="p">&quot;</span><span class="s2">=</span><span class="p">&quot;</span><span class="p">)</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">}</span><span class="p">)</span><span class="w">
+</span><span class="kt">let</span><span class="w"> </span><span class="nv">presence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nv">Presence</span><span class="p">(</span><span class="nv">channel</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="kt">function</span><span class="w"> </span><span class="nf">renderOnlineUsers</span><span class="p">(</span><span class="nv">presence</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">  </span><span class="kt">let</span><span class="w"> </span><span class="nv">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&quot;</span><span class="p">&quot;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="nv">presence</span><span class="p">.</span><span class="nf">list</span><span class="p">(</span><span class="p">(</span><span class="nv">id</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">metas</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nv">first</span><span class="p">,</span><span class="w"> </span><span class="kd">...</span><span class="nv">rest</span><span class="p">]</span><span class="p">}</span><span class="p">)</span><span class="w"> </span><span class="kt">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">    </span><span class="kt">let</span><span class="w"> </span><span class="nv">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">rest</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="w">    </span><span class="nv">response</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">`</span><span class="s">&lt;br&gt;</span><span class="si">${</span><span class="nv">id</span><span class="si">}</span><span class="s"> (count: </span><span class="si">${</span><span class="nv">count</span><span class="si">}</span><span class="s">)&lt;/br&gt;</span><span class="p">`</span><span class="w">
+</span><span class="w">  </span><span class="p">}</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nf">querySelector</span><span class="p">(</span><span class="p">&quot;</span><span class="s2">main</span><span class="p">&quot;</span><span class="p">)</span><span class="p">.</span><span class="n">innerHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">response</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="nv">socket</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="nv">presence</span><span class="p">.</span><span class="nf">onSync</span><span class="p">(</span><span class="p">(</span><span class="p">)</span><span class="w"> </span><span class="kt">=&gt;</span><span class="w"> </span><span class="nf">renderOnlineUsers</span><span class="p">(</span><span class="nv">presence</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="nv">channel</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="p">)</span></code></pre><p>Podemos garantir que isso esteja funcionando abrindo 3 abas do navegador. Se navegarmos para <a href="http://localhost:4000/?name=Alice">http://localhost:4000/?name=Alice</a> em duas abas do navegador e <a href="http://localhost:4000/?name=Bob">http://localhost:4000/?name=Bob</a>, então deveríamos ver:</p><pre><code class="plaintext">Alice (count: 2)
+Bob (count: 1)</code></pre><p>Se fecharmos uma das abas da Alice, então a contagem deve diminuir para 1. Se fecharmos outra aba, o usuário deve desaparecer completamente da lista.</p><h3 id="tornando-seguro" class="section-heading">
+  <a href="#tornando-seguro" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Tornando seguro</span>
+</h3>
+<p>Em nossa implementação inicial, estamos passando o nome do usuário como parte da URL. No entanto, em muitos sistemas, você deseja permitir que apenas usuários logados acessem a funcionalidade de presença. Para fazer isso, você deve configurar a autenticação por token, <a href="channels.html#using-token-authentication">conforme detalhado na seção de autenticação por token do guia de canais</a>.</p><p>Com a autenticação por token, você deve acessar <code class="inline">socket.assigns.user_id</code>, definido em <code class="inline">UserSocket</code>, em vez de <code class="inline">socket.assigns.name</code> definido a partir de parâmetros.</p><h2 id="uso-com-liveview" class="section-heading">
+  <a href="#uso-com-liveview" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Uso com LiveView</span>
+</h2>
+<p>Embora o Phoenix venha com uma API JavaScript para lidar com a presença, também é possível estender o módulo <code class="inline">HelloWeb.Presence</code> para suportar <a href="https://hexdocs.pm/phoenix_live_view">LiveView</a>.</p><p>Uma coisa a ter em mente ao lidar com LiveView é que cada LiveView é um processo com estado, então se mantivermos o estado de presença no LiveView, cada processo LiveView conterá a lista completa de usuários online na memória. Em vez disso, podemos rastrear os usuários online dentro do processo <code class="inline">Presence</code> e passar eventos separados para o LiveView, que pode usar um stream para atualizar a lista online.</p><p>Para começar, precisamos atualizar o arquivo <code class="inline">lib/hello_web/channels/presence.ex</code> para adicionar alguns callbacks opcionais ao módulo <code class="inline">HelloWeb.Presence</code>.</p><p>Primeiro, adicionamos o callback <code class="inline">init/1</code>. Isso nos permite rastrear o estado de presença dentro do processo.</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="7087824776-1">(</span><span class="c">_opts</span><span class="p" data-group-id="7087824776-1">)</span><span class="w"> </span><span class="k" data-group-id="7087824776-2">do</span><span class="w">
+    </span><span class="p" data-group-id="7087824776-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7087824776-4">%{</span><span class="p" data-group-id="7087824776-4">}</span><span class="p" data-group-id="7087824776-3">}</span><span class="w">
+  </span><span class="k" data-group-id="7087824776-2">end</span></code></pre><p>O módulo de presença também permite um callback <code class="inline">fetch/2</code>, isso permite que os dados obtidos da presença sejam modificados, permitindo que definamos a forma da resposta. Neste caso, estamos adicionando um <code class="inline">id</code> e um mapa <code class="inline">user</code>.</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p" data-group-id="7000303125-1">(</span><span class="c">_topic</span><span class="p">,</span><span class="w"> </span><span class="n">presences</span><span class="p" data-group-id="7000303125-1">)</span><span class="w"> </span><span class="k" data-group-id="7000303125-2">do</span><span class="w">
+    </span><span class="k">for</span><span class="w"> </span><span class="p" data-group-id="7000303125-3">{</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7000303125-4">%{</span><span class="ss">metas</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7000303125-5">[</span><span class="n">meta</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">metas</span><span class="p" data-group-id="7000303125-5">]</span><span class="p" data-group-id="7000303125-4">}</span><span class="p" data-group-id="7000303125-3">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">presences</span><span class="p">,</span><span class="w"> </span><span class="ss">into</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7000303125-6">%{</span><span class="p" data-group-id="7000303125-6">}</span><span class="w"> </span><span class="k" data-group-id="7000303125-7">do</span><span class="w">
+      </span><span class="c1"># o usuário pode ser populado aqui a partir do banco de dados; aqui populamos</span><span class="w">
+      </span><span class="c1"># o nome para fins de demonstração</span><span class="w">
+      </span><span class="p" data-group-id="7000303125-8">{</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7000303125-9">%{</span><span class="ss">metas</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7000303125-10">[</span><span class="n">meta</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">metas</span><span class="p" data-group-id="7000303125-10">]</span><span class="p">,</span><span class="w"> </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">meta</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="ss">user</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7000303125-11">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">meta</span><span class="o">.</span><span class="n">id</span><span class="p" data-group-id="7000303125-11">}</span><span class="p" data-group-id="7000303125-9">}</span><span class="p" data-group-id="7000303125-8">}</span><span class="w">
+    </span><span class="k" data-group-id="7000303125-7">end</span><span class="w">
+  </span><span class="k" data-group-id="7000303125-2">end</span></code></pre><p>A última coisa a adicionar é o callback <code class="inline">handle_metas/4</code>. Este callback atualiza o estado que rastreamos em <code class="inline">HelloWeb.Presence</code> com base nas saídas e entradas dos usuários.</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_metas</span><span class="p" data-group-id="5146635413-1">(</span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5146635413-2">%{</span><span class="ss">joins</span><span class="p">:</span><span class="w"> </span><span class="n">joins</span><span class="p">,</span><span class="w"> </span><span class="ss">leaves</span><span class="p">:</span><span class="w"> </span><span class="n">leaves</span><span class="p" data-group-id="5146635413-2">}</span><span class="p">,</span><span class="w"> </span><span class="n">presences</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="5146635413-1">)</span><span class="w"> </span><span class="k" data-group-id="5146635413-3">do</span><span class="w">
+    </span><span class="k">for</span><span class="w"> </span><span class="p" data-group-id="5146635413-4">{</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="5146635413-4">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">joins</span><span class="w"> </span><span class="k" data-group-id="5146635413-5">do</span><span class="w">
+      </span><span class="n">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5146635413-6">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="ss">user</span><span class="p">:</span><span class="w"> </span><span class="n">presence</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="ss">metas</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">fetch!</span><span class="p" data-group-id="5146635413-7">(</span><span class="n">presences</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p" data-group-id="5146635413-7">)</span><span class="p" data-group-id="5146635413-6">}</span><span class="w">
+      </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5146635413-8">{</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5146635413-9">{</span><span class="ss">:join</span><span class="p">,</span><span class="w"> </span><span class="n">user_data</span><span class="p" data-group-id="5146635413-9">}</span><span class="p" data-group-id="5146635413-8">}</span><span class="w">
+      </span><span class="nc">Phoenix.PubSub</span><span class="o">.</span><span class="n">local_broadcast</span><span class="p" data-group-id="5146635413-10">(</span><span class="nc">Hello.PubSub</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;proxy:</span><span class="si" data-group-id="5146635413-11">#{</span><span class="n">topic</span><span class="si" data-group-id="5146635413-11">}</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p" data-group-id="5146635413-10">)</span><span class="w">
+    </span><span class="k" data-group-id="5146635413-5">end</span><span class="w">
+
+    </span><span class="k">for</span><span class="w"> </span><span class="p" data-group-id="5146635413-12">{</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="5146635413-12">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">leaves</span><span class="w"> </span><span class="k" data-group-id="5146635413-13">do</span><span class="w">
+      </span><span class="n">metas</span><span class="w"> </span><span class="o">=</span><span class="w">
+        </span><span class="k">case</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">fetch</span><span class="p" data-group-id="5146635413-14">(</span><span class="n">presences</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p" data-group-id="5146635413-14">)</span><span class="w"> </span><span class="k" data-group-id="5146635413-15">do</span><span class="w">
+          </span><span class="p" data-group-id="5146635413-16">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">presence_metas</span><span class="p" data-group-id="5146635413-16">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">presence_metas</span><span class="w">
+          </span><span class="ss">:error</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="5146635413-17">[</span><span class="p" data-group-id="5146635413-17">]</span><span class="w">
+        </span><span class="k" data-group-id="5146635413-15">end</span><span class="w">
+
+      </span><span class="n">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5146635413-18">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="ss">user</span><span class="p">:</span><span class="w"> </span><span class="n">presence</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="ss">metas</span><span class="p">:</span><span class="w"> </span><span class="n">metas</span><span class="p" data-group-id="5146635413-18">}</span><span class="w">
+      </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5146635413-19">{</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5146635413-20">{</span><span class="ss">:leave</span><span class="p">,</span><span class="w"> </span><span class="n">user_data</span><span class="p" data-group-id="5146635413-20">}</span><span class="p" data-group-id="5146635413-19">}</span><span class="w">
+      </span><span class="nc">Phoenix.PubSub</span><span class="o">.</span><span class="n">local_broadcast</span><span class="p" data-group-id="5146635413-21">(</span><span class="nc">Hello.PubSub</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;proxy:</span><span class="si" data-group-id="5146635413-22">#{</span><span class="n">topic</span><span class="si" data-group-id="5146635413-22">}</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p" data-group-id="5146635413-21">)</span><span class="w">
+    </span><span class="k" data-group-id="5146635413-13">end</span><span class="w">
+
+    </span><span class="p" data-group-id="5146635413-23">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="5146635413-23">}</span><span class="w">
+  </span><span class="k" data-group-id="5146635413-3">end</span></code></pre><p>Você pode ver que estamos transmitindo eventos para as entradas e saídas. Estes serão ouvidos pelo processo LiveView. Você também verá que usamos um canal &quot;proxy&quot; ao transmitir as entradas e saídas. Isso porque não queremos que nosso processo LiveView receba os eventos de presença diretamente. Podemos adicionar algumas funções auxiliares para que esse detalhe específico de implementação seja abstraído do módulo LiveView.</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">list_online_users</span><span class="p" data-group-id="8649246632-1">(</span><span class="p" data-group-id="8649246632-1">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">list</span><span class="p" data-group-id="8649246632-2">(</span><span class="s">&quot;online_users&quot;</span><span class="p" data-group-id="8649246632-2">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">map</span><span class="p" data-group-id="8649246632-3">(</span><span class="k" data-group-id="8649246632-4">fn</span><span class="w"> </span><span class="p" data-group-id="8649246632-5">{</span><span class="c">_id</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="8649246632-5">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">presence</span><span class="w"> </span><span class="k" data-group-id="8649246632-4">end</span><span class="p" data-group-id="8649246632-3">)</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">track_user</span><span class="p" data-group-id="8649246632-6">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="8649246632-6">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">track</span><span class="p" data-group-id="8649246632-7">(</span><span class="n">self</span><span class="p" data-group-id="8649246632-8">(</span><span class="p" data-group-id="8649246632-8">)</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;online_users&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="8649246632-7">)</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p" data-group-id="8649246632-9">(</span><span class="p" data-group-id="8649246632-9">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">Phoenix.PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p" data-group-id="8649246632-10">(</span><span class="nc">Hello.PubSub</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;proxy:online_users&quot;</span><span class="p" data-group-id="8649246632-10">)</span></code></pre><p>Agora que temos nosso módulo de presença configurado e transmitindo eventos, podemos criar um LiveView. Crie um novo arquivo <code class="inline">lib/hello_web/live/online/index.ex</code> com o seguinte conteúdo:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">HelloWeb.OnlineLive</span><span class="w"> </span><span class="k" data-group-id="7012557181-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">HelloWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:live_view</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">mount</span><span class="p" data-group-id="7012557181-2">(</span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="c">_session</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7012557181-2">)</span><span class="w"> </span><span class="k" data-group-id="7012557181-3">do</span><span class="w">
+    </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span><span class="p" data-group-id="7012557181-4">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:presences</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7012557181-5">[</span><span class="p" data-group-id="7012557181-5">]</span><span class="p" data-group-id="7012557181-4">)</span><span class="w">
+    </span><span class="n">socket</span><span class="w"> </span><span class="o">=</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="n">connected?</span><span class="p" data-group-id="7012557181-6">(</span><span class="n">socket</span><span class="p" data-group-id="7012557181-6">)</span><span class="w"> </span><span class="k" data-group-id="7012557181-7">do</span><span class="w">
+      </span><span class="nc">HelloWeb.Presence</span><span class="o">.</span><span class="n">track_user</span><span class="p" data-group-id="7012557181-8">(</span><span class="n">params</span><span class="p" data-group-id="7012557181-9">[</span><span class="s">&quot;name&quot;</span><span class="p" data-group-id="7012557181-9">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7012557181-10">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="7012557181-11">[</span><span class="s">&quot;name&quot;</span><span class="p" data-group-id="7012557181-11">]</span><span class="p" data-group-id="7012557181-10">}</span><span class="p" data-group-id="7012557181-8">)</span><span class="w">
+      </span><span class="nc">HelloWeb.Presence</span><span class="o">.</span><span class="n">subscribe</span><span class="p" data-group-id="7012557181-12">(</span><span class="p" data-group-id="7012557181-12">)</span><span class="w">
+      </span><span class="n">stream</span><span class="p" data-group-id="7012557181-13">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:presences</span><span class="p">,</span><span class="w"> </span><span class="nc">HelloWeb.Presence</span><span class="o">.</span><span class="n">list_online_users</span><span class="p" data-group-id="7012557181-14">(</span><span class="p" data-group-id="7012557181-14">)</span><span class="p" data-group-id="7012557181-13">)</span><span class="w">
+    </span><span class="k" data-group-id="7012557181-7">else</span><span class="w">
+       </span><span class="n">socket</span><span class="w">
+    </span><span class="k" data-group-id="7012557181-7">end</span><span class="w">
+
+    </span><span class="p" data-group-id="7012557181-15">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7012557181-15">}</span><span class="w">
+  </span><span class="k" data-group-id="7012557181-3">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">render</span><span class="p" data-group-id="7012557181-16">(</span><span class="n">assigns</span><span class="p" data-group-id="7012557181-16">)</span><span class="w"> </span><span class="k" data-group-id="7012557181-17">do</span><span class="w">
+    </span><span class="sx">~H&quot;&quot;&quot;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;</span><span class="nt">ul</span><span class="w"> </span><span class="na">id</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">o</span><span class="s2">n</span><span class="s2">l</span><span class="s2">i</span><span class="s2">n</span><span class="s2">e</span><span class="s2">_</span><span class="s2">u</span><span class="s2">s</span><span class="s2">e</span><span class="s2">r</span><span class="s2">s</span><span class="p">&quot;</span><span class="w"> </span><span class="na">phx-update</span><span class="p">=</span><span class="p">&quot;</span><span class="s2">stream</span><span class="p">&quot;</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">      </span><span class="p">&lt;</span><span class="nt">li</span><span class="w"> </span><span class="na">:for</span><span class="p">=</span><span class="p" data-group-id="1546235646-1">{</span><span class="p" data-group-id="7012557181-18">{</span><span class="n">dom_id</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7012557181-19">%{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="ss">metas</span><span class="p">:</span><span class="w"> </span><span class="n">metas</span><span class="p" data-group-id="7012557181-19">}</span><span class="p" data-group-id="7012557181-18">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="na">@streams</span><span class="o">.</span><span class="n">presences</span><span class="p" data-group-id="1546235646-1">}</span><span class="w"> </span><span class="na">id</span><span class="p">=</span><span class="p" data-group-id="1546235646-2">{</span><span class="n">dom_id</span><span class="p" data-group-id="1546235646-2">}</span><span class="p">&gt;</span><span class="p" data-group-id="1546235646-3">{</span><span class="n">id</span><span class="p" data-group-id="1546235646-3">}</span><span class="n"> (</span><span class="p" data-group-id="1546235646-4">{</span><span class="n">length</span><span class="p" data-group-id="7012557181-20">(</span><span class="n">metas</span><span class="p" data-group-id="7012557181-20">)</span><span class="p" data-group-id="1546235646-4">}</span><span class="n">)</span><span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span><span class="w">
+</span><span class="w">    </span><span class="sx">&quot;&quot;&quot;</span><span class="w">
+  </span><span class="k" data-group-id="7012557181-17">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="7012557181-21">(</span><span class="p" data-group-id="7012557181-22">{</span><span class="nc">HelloWeb.Presence</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7012557181-23">{</span><span class="ss">:join</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="7012557181-23">}</span><span class="p" data-group-id="7012557181-22">}</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7012557181-21">)</span><span class="w"> </span><span class="k" data-group-id="7012557181-24">do</span><span class="w">
+    </span><span class="p" data-group-id="7012557181-25">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">stream_insert</span><span class="p" data-group-id="7012557181-26">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:presences</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="7012557181-26">)</span><span class="p" data-group-id="7012557181-25">}</span><span class="w">
+  </span><span class="k" data-group-id="7012557181-24">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="7012557181-27">(</span><span class="p" data-group-id="7012557181-28">{</span><span class="nc">HelloWeb.Presence</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7012557181-29">{</span><span class="ss">:leave</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="7012557181-29">}</span><span class="p" data-group-id="7012557181-28">}</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="7012557181-27">)</span><span class="w"> </span><span class="k" data-group-id="7012557181-30">do</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="n">presence</span><span class="o">.</span><span class="n">metas</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="7012557181-31">[</span><span class="p" data-group-id="7012557181-31">]</span><span class="w"> </span><span class="k" data-group-id="7012557181-32">do</span><span class="w">
+      </span><span class="p" data-group-id="7012557181-33">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">stream_delete</span><span class="p" data-group-id="7012557181-34">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:presences</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="7012557181-34">)</span><span class="p" data-group-id="7012557181-33">}</span><span class="w">
+    </span><span class="k" data-group-id="7012557181-32">else</span><span class="w">
+      </span><span class="p" data-group-id="7012557181-35">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">stream_insert</span><span class="p" data-group-id="7012557181-36">(</span><span class="n">socket</span><span class="p">,</span><span class="w"> </span><span class="ss">:presences</span><span class="p">,</span><span class="w"> </span><span class="n">presence</span><span class="p" data-group-id="7012557181-36">)</span><span class="p" data-group-id="7012557181-35">}</span><span class="w">
+    </span><span class="k" data-group-id="7012557181-32">end</span><span class="w">
+  </span><span class="k" data-group-id="7012557181-30">end</span><span class="w">
+</span><span class="k" data-group-id="7012557181-1">end</span></code></pre><p>Se adicionarmos esta rota ao <code class="inline">lib/hello_web/router.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="w">    </span><span class="n">live</span><span class="w"> </span><span class="s">&quot;/online/:name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">OnlineLive</span><span class="p">,</span><span class="w"> </span><span class="ss">:index</span></code></pre><p>Então podemos navegar para <a href="http://localhost:4000/online/Alice">http://localhost:4000/online/Alice</a> em uma aba e <a href="http://localhost:4000/online/Bob">http://localhost:4000/online/Bob</a> em outra, você verá que as presenças são rastreadas, junto com o número de presenças por usuário. Abrir e fechar abas com vários usuários atualizará a lista de presença em tempo real.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="channels.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Canais
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="testing.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Introdução aos Testes
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

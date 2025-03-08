@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>mix phx.gen.auth — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>mix phx.gen.auth</h1>
+
+
+  </div>
+
+<p>O comando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> gera um sistema de autenticação flexível e pré-construído para sua aplicação Phoenix. Este gerador permite que você rapidamente supere a tarefa de adicionar autenticação ao seu código e mantenha o foco no problema do mundo real que sua aplicação está tentando resolver.</p><h2 id="primeiros-passos" class="section-heading">
+  <a href="#primeiros-passos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Primeiros passos</span>
+</h2>
+<blockquote><p>Antes de executar este comando, considere fazer um commit do seu trabalho, pois ele gera múltiplos arquivos.</p></blockquote><p>Vamos começar executando o seguinte comando a partir da raiz da nossa aplicação (ou <code class="inline">apps/my_app_web</code> em uma aplicação guarda-chuva):</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.auth Accounts User users
+</span><span class="">
+</span><span class="">Um sistema de autenticação pode ser criado de duas maneiras diferentes:
+</span><span class="">- Usando Phoenix.LiveView (padrão)
+</span><span class="">- Usando apenas Phoenix.Controller
+</span><span class="">
+</span><span class="">Você deseja criar um sistema de autenticação baseado em LiveView? [Y/n] Y
+</span></code></pre><p>Os geradores de autenticação suportam Phoenix LiveView, para uma melhor experiência do usuário, então responderemos <code class="inline">Y</code> aqui. Você também pode responder <code class="inline">n</code> para um sistema de autenticação baseado em controllers.</p><p>Qualquer abordagem criará um contexto <code class="inline">Accounts</code> com um módulo de esquema <code class="inline">Accounts.User</code>. O argumento final é a versão plural do módulo de esquema, que é usado para gerar nomes de tabelas de banco de dados e caminhos de rota. O gerador <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> é semelhante ao <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Html.html"><code class="inline">mix phx.gen.html</code></a>, exceto por não aceitar uma lista de campos adicionais para adicionar ao esquema, e por gerar muito mais funções de contexto.</p><p>Como este gerador instalou dependências adicionais em <code class="inline">mix.exs</code>, vamos buscá-las:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix deps.get
+</span></code></pre><p>Agora precisamos verificar os detalhes de conexão do banco de dados para os ambientes de desenvolvimento e teste em <code class="inline">config/</code> para que o migrador e os testes possam ser executados corretamente. Em seguida, execute o seguinte para criar o banco de dados:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix ecto.setup
+</span></code></pre><p>Vamos executar os testes para garantir que nosso novo sistema de autenticação funcione como esperado.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix test
+</span></code></pre><p>E finalmente, vamos iniciar nosso servidor Phoenix e testá-lo.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.server
+</span></code></pre><h2 id="responsabilidades-do-desenvolvedor" class="section-heading">
+  <a href="#responsabilidades-do-desenvolvedor" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Responsabilidades do desenvolvedor</span>
+</h2>
+<p>Como o Phoenix gera este código em sua aplicação em vez de incorporar esses módulos no próprio Phoenix, você agora tem total liberdade para modificar o sistema de autenticação, para que funcione melhor com seu caso de uso. A única ressalva ao usar um sistema de autenticação gerado é que ele não será atualizado após ser gerado. Portanto, à medida que melhorias são feitas na saída do <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a>, torna-se sua responsabilidade determinar se essas mudanças precisam ser portadas para sua aplicação. Melhorias relacionadas à segurança e outras melhorias importantes serão explícita e claramente marcadas no arquivo <code class="inline">CHANGELOG.md</code> e nas notas de atualização.</p><h2 id="código-gerado" class="section-heading">
+  <a href="#código-gerado" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Código gerado</span>
+</h2>
+<p>A seguir estão as notas sobre o sistema de autenticação gerado.</p><h3 id="hashing-de-senha" class="section-heading">
+  <a href="#hashing-de-senha" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Hashing de senha</span>
+</h3>
+<p>O mecanismo de hashing de senha usa por padrão <code class="inline">bcrypt</code> para sistemas Unix e <code class="inline">pbkdf2</code> para sistemas Windows. Ambos os sistemas usam a <a href="https://hexdocs.pm/comeonin/">interface Comeonin</a>.</p><p>O mecanismo de hashing de senha pode ser substituído com a opção <code class="inline">--hashing-lib</code>. Os seguintes valores são suportados:</p><ul><li><code class="inline">bcrypt</code> - <a href="https://hex.pm/packages/bcrypt_elixir">bcrypt_elixir</a></li><li><code class="inline">pbkdf2</code> - <a href="https://hex.pm/packages/pbkdf2_elixir">pbkdf2_elixir</a></li><li><code class="inline">argon2</code> - <a href="https://hex.pm/packages/argon2_elixir">argon2_elixir</a></li></ul><p>Recomendamos que os desenvolvedores considerem usar <code class="inline">argon2</code>, que é o mais robusto dos 3. A desvantagem é que o <code class="inline">argon2</code> é bastante intensivo em CPU e memória, e você precisará de instâncias mais poderosas para executar suas aplicações.</p><p>Para mais informações sobre a escolha dessas bibliotecas, consulte o <a href="https://github.com/riverrun/comeonin">projeto Comeonin</a>.</p><h3 id="proibindo-acesso" class="section-heading">
+  <a href="#proibindo-acesso" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Proibindo acesso</span>
+</h3>
+<p>O código gerado vem com um módulo de autenticação com vários plugs que buscam o usuário atual, exigem autenticação e assim por diante. Por exemplo, em um aplicativo chamado Demo que teve <code class="inline">mix phx.gen.auth Accounts User users</code> executado nele, você encontrará um módulo chamado <code class="inline">DemoWeb.UserAuth</code> com plugs como:</p><ul><li><code class="inline">fetch_current_user</code> - busca as informações do usuário atual, se disponíveis</li><li><code class="inline">require_authenticated_user</code> - deve ser invocado após <code class="inline">fetch_current_user</code> e requer que um usuário atual exista e esteja autenticado</li><li><code class="inline">redirect_if_user_is_authenticated</code> - usado para as poucas páginas que não devem estar disponíveis para usuários autenticados</li></ul><h3 id="confirmação" class="section-heading">
+  <a href="#confirmação" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Confirmação</span>
+</h3>
+<p>A funcionalidade gerada vem com um mecanismo de confirmação de conta, onde os usuários têm que confirmar sua conta, normalmente por e-mail. No entanto, o código gerado não proíbe os usuários de usar a aplicação se suas contas ainda não foram confirmadas. Você pode adicionar essa funcionalidade personalizando o <code class="inline">require_authenticated_user</code> no módulo <code class="inline">Auth</code> para verificar o campo <code class="inline">confirmed_at</code> (e qualquer outra propriedade que desejar).</p><h3 id="notificadores" class="section-heading">
+  <a href="#notificadores" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Notificadores</span>
+</h3>
+<p>O código gerado não está integrado a nenhum sistema para enviar SMSs ou e-mails para confirmar contas, redefinir senhas, etc. Em vez disso, ele simplesmente registra uma mensagem no terminal. É sua responsabilidade integrar-se ao sistema adequado após a geração.</p><p>Observe que se você gerou seu projeto Phoenix com <code class="inline">mix phx.new</code>, seu projeto está configurado para usar o mailer <a href="https://hexdocs.pm/swoosh/Swoosh.html">Swoosh</a> por padrão. Para visualizar e-mails do notificador durante o desenvolvimento com Swoosh, navegue até <code class="inline">/dev/mailbox</code>.</p><h3 id="rastreamento-de-sessões" class="section-heading">
+  <a href="#rastreamento-de-sessões" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Rastreamento de sessões</span>
+</h3>
+<p>Todas as sessões e tokens são rastreados em uma tabela separada. Isso permite que você acompanhe quantas sessões estão ativas para cada conta. Você poderia até mesmo expor essas informações aos usuários, se desejar.</p><p>Observe que sempre que a senha é alterada (seja por meio de redefinição de senha ou diretamente), todos os tokens são excluídos e o usuário precisa fazer login novamente em todos os dispositivos.</p><h3 id="ataques-de-enumeração-de-usuários" class="section-heading">
+  <a href="#ataques-de-enumeração-de-usuários" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Ataques de enumeração de usuários</span>
+</h3>
+<p>Um ataque de enumeração de usuários permite que alguém verifique se um e-mail está registrado na aplicação. O código de autenticação gerado não tenta proteger contra tais verificações. Por exemplo, quando você registra uma conta, se o e-mail já estiver registrado, o código notificará o usuário de que o e-mail já está registrado.</p><p>Se sua aplicação é sensível a ataques de enumeração, você precisa implementar seus próprios fluxos de trabalho, que tendem a ser muito diferentes da maioria das aplicações, já que você precisa equilibrar cuidadosamente segurança e experiência do usuário.</p><p>Além disso, se você está preocupado com ataques de enumeração, tenha cuidado também com ataques de tempo. Por exemplo, registrar uma nova conta normalmente envolve trabalho adicional (como escrever no banco de dados, enviar e-mails, etc.) em comparação com quando uma conta já existe. Alguém poderia medir o tempo necessário para executar essas tarefas adicionais para enumerar e-mails. Isso se aplica a todos os endpoints (registro, confirmação, recuperação de senha, etc.) que podem enviar e-mail, notificações no aplicativo, etc.</p><h3 id="sensibilidade-a-maiúsculas-e-minúsculas" class="section-heading">
+  <a href="#sensibilidade-a-maiúsculas-e-minúsculas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Sensibilidade a maiúsculas e minúsculas</span>
+</h3>
+<p>A busca por e-mail é feita para ser insensível a maiúsculas e minúsculas. Buscas insensíveis a maiúsculas e minúsculas são o padrão no MySQL e MSSQL. No SQLite3, usamos <a href="https://www.sqlite.org/datatype3.html#collating_sequences"><code class="inline">COLLATE NOCASE</code></a> na definição da coluna para suportá-lo. No PostgreSQL, usamos a <a href="https://www.postgresql.org/docs/current/citext.html">extensão <code class="inline">citext</code></a>.</p><p>Observe que <code class="inline">citext</code> faz parte do próprio PostgreSQL e é fornecido com ele na maioria dos sistemas operacionais e gerenciadores de pacotes. O <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> cuida da criação da extensão e nenhum trabalho extra é necessário na maioria dos casos. Se por algum motivo seu gerenciador de pacotes divide o <code class="inline">citext</code> em um pacote separado, você receberá um erro durante a migração e provavelmente poderá resolvê-lo instalando o pacote <code class="inline">postgres-contrib</code>.</p><h3 id="testes-concorrentes" class="section-heading">
+  <a href="#testes-concorrentes" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Testes concorrentes</span>
+</h3>
+<p>Os testes gerados são executados simultaneamente se você estiver usando um banco de dados que suporta testes concorrentes, o que é o caso do PostgreSQL.</p><h2 id="mais-sobre-mix-phx-gen-auth" class="section-heading">
+  <a href="#mais-sobre-mix-phx-gen-auth" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Mais sobre <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a></span>
+</h2>
+<p>Confira <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> para mais detalhes, como usar uma biblioteca de hashing de senha diferente, personalizar o namespace do módulo web, gerar tipo de ID binário, configurar as opções padrão e usar nomes de tabela personalizados.</p><h2 id="recursos-adicionais" class="section-heading">
+  <a href="#recursos-adicionais" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Recursos adicionais</span>
+</h2>
+<p>Os links a seguir têm mais informações sobre a motivação e o design do código que isso gera.</p><ul><li>Post do blog de Berenice Medel sobre a geração de LiveViews para autenticação (em vez de Controllers &amp; Views convencionais) - <a href="https://fly.io/phoenix-files/phx-gen-auth/">Bringing Phoenix Authentication to Life</a></li><li>Post do blog de José Valim - <a href="https://dashbit.co/blog/a-new-authentication-solution-for-phoenix">An upcoming authentication solution for Phoenix</a></li><li>O <a href="https://github.com/aaronrenner/phx_gen_auth" title="">repositório original <code class="inline">phx_gen_auth</code></a> (para aplicações Phoenix 1.5) - Este é um ótimo recurso para ver discussões sobre decisões que foram tomadas em versões anteriores do projeto.</li><li><a href="https://github.com/dashbitco/mix_phx_gen_auth_demo/pull/1" title="">Pull request original em aplicativo Phoenix simples</a></li><li><a href="https://github.com/dashbitco/mix_phx_gen_auth_demo/blob/auth/README.md">Especificação de design original</a></li></ul>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="asset_management.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Gerenciamento de Assets
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="api_authentication.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Autenticação de API
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

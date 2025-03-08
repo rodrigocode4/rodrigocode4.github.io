@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Implantando no Gigalixir — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Implantando no Gigalixir</h1>
+
+
+  </div>
+
+<h2 id="o-que-vamos-precisar" class="section-heading">
+  <a href="#o-que-vamos-precisar" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O que vamos precisar</span>
+</h2>
+<p>A única coisa que precisaremos para este guia é uma aplicação Phoenix funcional. Para aqueles que precisam de uma aplicação simples para implantar, por favor, siga o guia <a href="https://hexdocs.pm/phoenix/up_and_running.html">Up and Running</a>.</p><h2 id="objetivos" class="section-heading">
+  <a href="#objetivos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Objetivos</span>
+</h2>
+<p>Nosso principal objetivo para este guia é colocar uma aplicação Phoenix funcionando no Gigalixir.</p><h2 id="passos" class="section-heading">
+  <a href="#passos" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Passos</span>
+</h2>
+<p>Vamos separar este processo em alguns passos, para que possamos acompanhar onde estamos.</p><ul><li>Inicializar repositório Git</li><li>Instalar a CLI do Gigalixir</li><li>Cadastrar-se no Gigalixir</li><li>Criar e configurar a aplicação Gigalixir</li><li>Provisionar um banco de dados</li><li>Preparar nosso projeto para o Gigalixir</li><li>Hora do deploy!</li><li>Comandos úteis do Gigalixir</li></ul><h2 id="inicializando-repositório-git" class="section-heading">
+  <a href="#inicializando-repositório-git" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Inicializando repositório Git</span>
+</h2>
+<p>Se você ainda não fez isso, precisaremos fazer commit dos nossos arquivos no git. Podemos fazer isso executando os seguintes comandos no diretório do nosso projeto:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">git init
+</span><span class="gp unselectable">$ </span><span class="">git add .
+</span><span class="gp unselectable">$ </span><span class="">git commit -m &quot;Commit inicial&quot;
+</span></code></pre><h2 id="instalando-a-cli-do-gigalixir" class="section-heading">
+  <a href="#instalando-a-cli-do-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Instalando a CLI do Gigalixir</span>
+</h2>
+<p>Siga as instruções <a href="https://gigalixir.readthedocs.io/en/latest/getting-started-guide.html#install-the-command-line-interface">aqui</a> para instalar a interface de linha de comando para sua plataforma.</p><h2 id="cadastrando-se-no-gigalixir" class="section-heading">
+  <a href="#cadastrando-se-no-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Cadastrando-se no Gigalixir</span>
+</h2>
+<p>Podemos criar uma conta em <a href="https://www.gigalixir.com">gigalixir.com</a> ou com a CLI. Vamos usar a CLI.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir signup
+</span></code></pre><p>O plano gratuito do Gigalixir não requer cartão de crédito e vem com 1 instância de aplicação e 1 banco de dados PostgreSQL gratuitos, mas considere fazer upgrade para um plano pago se estiver executando uma aplicação em produção.</p><p>Em seguida, vamos fazer login</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir login
+</span></code></pre><p>E verificar</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir account
+</span></code></pre><h2 id="criando-e-configurando-nossa-aplicação-gigalixir" class="section-heading">
+  <a href="#criando-e-configurando-nossa-aplicação-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Criando e configurando nossa aplicação Gigalixir</span>
+</h2>
+<p>Existem três maneiras diferentes de implantar um aplicativo Phoenix no Gigalixir: com mix, com releases do Elixir ou com Distillery. Neste guia, usaremos o Mix porque é o mais fácil de começar a usar, mas você não poderá conectar um observador remoto ou fazer hot upgrade. Para mais informações, consulte <a href="https://gigalixir.readthedocs.io/en/latest/modify-app/index.html#mix-vs-distillery-vs-elixir-releases">Mix vs Distillery vs Elixir Releases</a>. Se quiser implantar com outro método, siga o <a href="https://gigalixir.readthedocs.io/en/latest/getting-started-guide.html">Guia de Introdução</a>.</p><h3 id="criando-uma-aplicação-gigalixir" class="section-heading">
+  <a href="#criando-uma-aplicação-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Criando uma aplicação Gigalixir</span>
+</h3>
+<p>Vamos criar uma aplicação Gigalixir</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir create -n &quot;nome_da_sua_aplicacao&quot;
+</span></code></pre><p>Observação: o nome da aplicação não pode ser alterado posteriormente. Um nome aleatório é usado se você não fornecer um.</p><p>Verifique se a aplicação foi criada</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir apps
+</span></code></pre><p>Verifique se um remote do git foi criado</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">git remote -v
+</span></code></pre><h3 id="especificando-versões" class="section-heading">
+  <a href="#especificando-versões" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Especificando versões</span>
+</h3>
+<p>Os buildpacks que usamos têm como padrão versões de Elixir, Erlang e Node.js bastante antigas, e geralmente é uma boa ideia executar a mesma versão em produção que você usa em desenvolvimento, então vamos fazer isso.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">echo &#39;elixir_version=1.14.3&#39; &gt; elixir_buildpack.config
+</span><span class="gp unselectable">$ </span><span class="">echo &#39;erlang_version=24.3&#39; &gt;&gt; elixir_buildpack.config
+</span><span class="gp unselectable">$ </span><span class="">echo &#39;node_version=12.16.3&#39; &gt; phoenix_static_buildpack.config
+</span></code></pre><p>O Phoenix v1.6 usa <code class="inline">esbuild</code> para compilar seus assets, mas todas as imagens do Gigalixir vêm com <code class="inline">npm</code>, então vamos configurar o <code class="inline">npm</code> diretamente para implantar nossos assets. Adicione um arquivo <code class="inline">assets/package.json</code> se você não tiver nenhum, com o seguinte:</p><pre><code class="makeup json" translate="no"><span class="p">{</span><span class="w">
+</span><span class="w">  </span><span class="p">&quot;</span><span class="s2">scripts</span><span class="p">&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">    </span><span class="p">&quot;</span><span class="s2">deploy</span><span class="p">&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">cd .. &amp;&amp; mix assets.deploy &amp;&amp; rm -f _build/esbuild*</span><span class="p">&quot;</span><span class="w">
+</span><span class="w">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre><p>Finalmente, não se esqueça de fazer commit:</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">git add elixir_buildpack.config phoenix_static_buildpack.config assets/package.json
+</span><span class="gp unselectable">$ </span><span class="">git commit -m &quot;Definir versão do Elixir, Erlang e Node&quot;
+</span></code></pre><h2 id="preparando-nosso-projeto-para-o-gigalixir" class="section-heading">
+  <a href="#preparando-nosso-projeto-para-o-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Preparando nosso Projeto para o Gigalixir</span>
+</h2>
+<p>Não há nada que precisemos fazer para que nossa aplicação funcione no Gigalixir, mas para uma aplicação de produção, você provavelmente quer forçar SSL. Para fazer isso, consulte <a href="https://hexdocs.pm/phoenix/using_ssl.html#force-ssl">Forçar SSL</a></p><p>Você também pode querer usar SSL para sua conexão com o banco de dados. Para isso, descomente a linha <code class="inline">ssl: true</code> na configuração do seu <code class="inline">Repo</code>.</p><h2 id="provisionando-um-banco-de-dados" class="section-heading">
+  <a href="#provisionando-um-banco-de-dados" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Provisionando um banco de dados</span>
+</h2>
+<p>Vamos provisionar um banco de dados para nossa aplicação</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir pg:create --free
+</span></code></pre><p>Verifique se o banco de dados foi criado</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir pg
+</span></code></pre><p>Verifique se <code class="inline">DATABASE_URL</code> e <code class="inline">POOL_SIZE</code> foram criados</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir config
+</span></code></pre><h2 id="hora-do-deploy" class="section-heading">
+  <a href="#hora-do-deploy" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Hora do Deploy!</span>
+</h2>
+<p>Nosso projeto agora está pronto para ser implantado no Gigalixir.</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">git push gigalixir
+</span></code></pre><p>Verifique o status da sua implantação e aguarde até que a aplicação esteja <code class="inline">Healthy</code> (Saudável)</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir ps
+</span></code></pre><p>Execute migrações</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir run mix ecto.migrate
+</span></code></pre><p>Verifique os logs da sua aplicação</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir logs
+</span></code></pre><p>Se tudo parecer bom, vamos dar uma olhada na sua aplicação rodando no Gigalixir</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir open
+</span></code></pre><h2 id="comandos-úteis-do-gigalixir" class="section-heading">
+  <a href="#comandos-úteis-do-gigalixir" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Comandos Úteis do Gigalixir</span>
+</h2>
+<p>Abrir um console remoto</p><pre><code class="makeup console" translate="no"><span class="gp unselectable">$ </span><span class="">gigalixir account:ssh_keys:add &quot;$(cat ~/.ssh/id_rsa.pub)&quot;
+</span><span class="gp unselectable">$ </span><span class="">gigalixir ps:remote_console
+</span></code></pre><p>Para abrir um observador remoto, consulte <a href="https://gigalixir.readthedocs.io/en/latest/runtime.html#how-to-launch-a-remote-observer">Observador Remoto</a></p><p>Para configurar clustering, consulte <a href="https://gigalixir.readthedocs.io/en/latest/cluster.html">Clustering de Nós</a></p><p>Para hot upgrade, consulte <a href="https://gigalixir.readthedocs.io/en/latest/deploy.html#how-to-hot-upgrade-an-app">Hot Upgrades</a></p><p>Para domínios personalizados, escalonamento, jobs e outros recursos, consulte a <a href="https://gigalixir.readthedocs.io/">Documentação do Gigalixir</a></p><h2 id="solução-de-problemas" class="section-heading">
+  <a href="#solução-de-problemas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Solução de Problemas</span>
+</h2>
+<p>Consulte <a href="https://gigalixir.readthedocs.io/en/latest/troubleshooting.html">Solução de Problemas</a></p><p>Além disso, não hesite em enviar um e-mail para <a href="mailto:help@gigalixir.com">help@gigalixir.com</a> ou <a href="https://elixir-lang.slack.com/join/shared_invite/zt-1f13hz7mb-N4KGjF523ONLCcHfb8jYgA#/shared-invite/email">solicitar um convite</a> e junte-se ao canal #gigalixir no <a href="https://elixir-lang.slack.com">Slack</a>.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="releases.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Implantando com Releases
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="fly.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Implantando no Fly.io
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

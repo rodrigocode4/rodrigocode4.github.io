@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Escrevendo um Cliente para Channels — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Escrevendo um Cliente para Channels</h1>
+
+
+  </div>
+
+<p>Bibliotecas cliente para Phoenix Channels já existem em <a href="https://hexdocs.pm/phoenix/channels.html#client-libraries">várias linguagens</a>, mas se você quiser escrever a sua própria, este guia deve ajudá-lo a começar.
+Também pode ser útil como um guia para testes manuais com um cliente WebSocket.</p><h2 id="visão-geral" class="section-heading">
+  <a href="#visão-geral" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Visão Geral</span>
+</h2>
+<p>Como os WebSockets são bidirecionais, as mensagens podem fluir em qualquer direção a qualquer momento.
+Por esta razão, os clientes geralmente usam callbacks para lidar com mensagens recebidas sempre que elas chegam.</p><p>Um cliente deve ingressar em pelo menos um tópico para começar a enviar e receber mensagens, e pode ingressar em qualquer número de tópicos usando a mesma conexão.</p><h2 id="conectando" class="section-heading">
+  <a href="#conectando" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Conectando</span>
+</h2>
+<p>Para estabelecer uma conexão WebSocket com Phoenix Channels, primeiro observe a declaração <code class="inline">socket</code> no módulo <code class="inline">Endpoint</code> da aplicação.
+Por exemplo, se você vê: <code class="inline">socket &quot;/mobile&quot;, MyAppWeb.MobileSocket</code>, o caminho para a requisição HTTP inicial é:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="1428875920-1">[</span><span class="n">host</span><span class="p" data-group-id="1428875920-1">]</span><span class="p">:</span><span class="p" data-group-id="1428875920-2">[</span><span class="n">porta</span><span class="p" data-group-id="1428875920-2">]</span><span class="o">/</span><span class="n">mobile</span><span class="o">/</span><span class="n">websocket?</span><span class="n">vsn</span><span class="o">=</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">0</span></code></pre><p>Passar <code class="inline">&amp;vsn=2.0.0</code> especifica <code class="inline">Phoenix.Socket.V2.JSONSerializer</code>, que é incorporado ao Phoenix, e que espera e retorna mensagens na forma de listas.</p><p>Você também precisa incluir <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Protocol_upgrade_mechanism">os campos de cabeçalho padrão para atualizar uma requisição HTTP para uma conexão WebSocket</a> ou usar uma biblioteca HTTP que lide com isso para você; em Elixir, <a href="https://hex.pm/packages/mint_web_socket">mint_web_socket</a> é um exemplo.</p><p>Outros parâmetros ou cabeçalhos podem ser esperados ou exigidos pela função específica <code class="inline">connect/3</code> no módulo socket da aplicação (no exemplo acima, <code class="inline">MyAppWeb.MobileSocket.connect/3</code>).</p><h2 id="formato-da-mensagem" class="section-heading">
+  <a href="#formato-da-mensagem" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Formato da Mensagem</span>
+</h2>
+<p>O formato da mensagem é determinado pelo serializador configurado para a aplicação.
+Para estes exemplos, <code class="inline">Phoenix.Socket.V2.JSONSerializer</code> é assumido.</p><p>O formato geral para mensagens que um cliente envia para um Phoenix Channel é o seguinte:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="6428669565-1">[</span><span class="n">referência_ingresso</span><span class="p">,</span><span class="w"> </span><span class="n">referência_mensagem</span><span class="p">,</span><span class="w"> </span><span class="n">nome_tópico</span><span class="p">,</span><span class="w"> </span><span class="n">nome_evento</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p" data-group-id="6428669565-1">]</span></code></pre><ul><li>A <code class="inline">referência_ingresso</code> também é escolhida pelo cliente e também deve ser um valor único. Só precisa ser enviada para um evento <code class="inline">&quot;phx_join&quot;</code>; para outras mensagens, pode ser <code class="inline">null</code>. É usada como referência de mensagem para mensagens <code class="inline">push</code> do servidor, ou seja, aquelas que não são respostas a uma mensagem específica do cliente. Por exemplo, imagine algo como &quot;um novo usuário acabou de entrar na sala de chat&quot;.</li><li>A <code class="inline">referência_mensagem</code> é escolhida pelo cliente e deve ser um valor único. O servidor a inclui em sua resposta para que o cliente saiba a qual mensagem a resposta se refere.</li><li>O <code class="inline">nome_tópico</code> deve ser um tópico conhecido para o endpoint do socket, e um cliente deve ingressar nesse tópico antes de enviar qualquer mensagem nele.</li><li>O <code class="inline">nome_evento</code> deve corresponder ao primeiro argumento de uma função <code class="inline">handle_in</code> no módulo do canal do servidor.</li><li>O <code class="inline">payload</code> deve ser um mapa e é passado como o segundo argumento para essa função <code class="inline">handle_in</code>.</li></ul><p>Existem três eventos que são compreendidos por todas as aplicações Phoenix.</p><p>Primeiro, <code class="inline">phx_join</code> é usado para ingressar em um canal. Por exemplo, para ingressar no canal <code class="inline">miami:weather</code>:</p><pre><code class="makeup json" translate="no"><span class="p">[</span><span class="p">&quot;</span><span class="s2">0</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">0</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">miami:weather</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">phx_join</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="p">&quot;</span><span class="s2">some</span><span class="p">&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">param</span><span class="p">&quot;</span><span class="p">}</span><span class="p">]</span></code></pre><p>Segundo, <code class="inline">phx_leave</code> é usado para sair de um canal. Por exemplo, para sair do canal <code class="inline">miami:weather</code>:</p><pre><code class="makeup json" translate="no"><span class="p">[</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">1</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">miami:weather</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">phx_leave</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="p">}</span><span class="p">]</span></code></pre><p>Terceiro, <code class="inline">heartbeat</code> é usado para manter a conexão WebSocket. Por exemplo:</p><pre><code class="makeup json" translate="no"><span class="p">[</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">2</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">phoenix</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">heartbeat</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="p">}</span><span class="p">]</span></code></pre><p>A mensagem de <code class="inline">heartbeat</code> só é necessária quando nenhuma outra mensagem está sendo enviada e impede que o Phoenix feche a conexão; o <code class="inline">:timeout</code> exato é configurado no módulo <code class="inline">Endpoint</code> da aplicação.</p><p>Outras mensagens permitidas dependem da aplicação Phoenix.</p><p>Por exemplo, se o Canal que serve o <code class="inline">miami:weather</code> pode lidar com um evento <code class="inline">report_emergency</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">handle_in</span><span class="p" data-group-id="6462286179-1">(</span><span class="s">&quot;report_emergency&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="6462286179-1">)</span><span class="w"> </span><span class="k" data-group-id="6462286179-2">do</span><span class="w">
+  </span><span class="nc">MyApp.Emergencies</span><span class="o">.</span><span class="n">report</span><span class="p" data-group-id="6462286179-3">(</span><span class="n">payload</span><span class="p" data-group-id="6462286179-3">)</span><span class="w"> </span><span class="c1"># ou o que for</span><span class="w">
+  </span><span class="p" data-group-id="6462286179-4">{</span><span class="ss">:reply</span><span class="p">,</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">socket</span><span class="p" data-group-id="6462286179-4">}</span><span class="w">
+</span><span class="k" data-group-id="6462286179-2">end</span></code></pre><p>...um cliente poderia enviar:</p><pre><code class="makeup json" translate="no"><span class="p">[</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">3</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">miami:weather</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">report_emergency</span><span class="p">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="p">&quot;</span><span class="s2">category</span><span class="p">&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">&quot;</span><span class="s2">sharknado</span><span class="p">&quot;</span><span class="p">}</span><span class="p">]</span></code></pre>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="using_ssl.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Usando SSL
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

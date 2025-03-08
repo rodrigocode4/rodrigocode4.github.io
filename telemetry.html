@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Telemetria — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Telemetria</h1>
+
+
+  </div>
+
+<p>Neste guia, mostraremos como instrumentar e reportar eventos <code class="inline">:telemetry</code> em sua aplicação Phoenix.</p><blockquote><p><code class="inline">telemetria</code> - o processo de registrar e transmitir as leituras de um instrumento.</p></blockquote><p>Conforme você segue este guia, apresentaremos os conceitos principais da Telemetria, você inicializará um reporter para capturar os eventos da sua aplicação à medida que ocorrem, e o guiaremos pelos passos para instrumentar adequadamente suas próprias funções usando <code class="inline">:telemetry</code>. Vamos olhar mais de perto como a Telemetria funciona em sua aplicação.</p><h2 id="visão-geral" class="section-heading">
+  <a href="#visão-geral" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Visão Geral</span>
+</h2>
+<p>A biblioteca <code class="inline">[:telemetry]</code> permite emitir eventos em vários estágios do ciclo de vida de uma aplicação. Você pode então responder a esses eventos, entre outras coisas, agregando-os como métricas e enviando os dados de métricas para um destino de relatório.</p><p>A Telemetria armazena eventos pelo seu nome em uma tabela ETS, junto com o handler para cada evento. Então, quando um determinado evento é executado, a Telemetria procura seu handler e o invoca.</p><p>As ferramentas de Telemetria do Phoenix fornecem um supervisor que usa <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a> para definir a lista de eventos de Telemetria a serem tratados e como tratá-los, ou seja, como estruturá-los como um certo tipo de métrica. Este supervisor trabalha em conjunto com os reporters de Telemetria para responder aos eventos especificados de Telemetria, agregando-os como a métrica apropriada e enviando-os para o destino de relatório correto.</p><h2 id="o-supervisor-de-telemetria" class="section-heading">
+  <a href="#o-supervisor-de-telemetria" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">O supervisor de Telemetria</span>
+</h2>
+<p>Desde a v1.5, novas aplicações Phoenix são geradas com um supervisor de Telemetria. Este módulo é responsável por gerenciar o ciclo de vida dos seus processos de Telemetria. Ele também define uma função <code class="inline">metrics/0</code>, que retorna uma lista de <a href="https://hexdocs.pm/telemetry_metrics"><code class="inline">Telemetry.Metrics</code></a> que você define para sua aplicação.</p><p>Por padrão, o supervisor também inicia o <a href="https://hexdocs.pm/telemetry_poller"><code class="inline">:telemetry_poller</code></a>. Simplesmente adicionando <code class="inline">:telemetry_poller</code> como uma dependência, você pode receber eventos relacionados à VM em um intervalo especificado.</p><p>Se você está vindo de uma versão mais antiga do Phoenix, instale os pacotes <code class="inline">:telemetry_metrics</code> e <code class="inline">:telemetry_poller</code>:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="8904209669-1">{</span><span class="ss">:telemetry_metrics</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 1.0&quot;</span><span class="p" data-group-id="8904209669-1">}</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="8904209669-2">{</span><span class="ss">:telemetry_poller</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 1.0&quot;</span><span class="p" data-group-id="8904209669-2">}</span></code></pre><p>e crie seu supervisor de Telemetria em <code class="inline">lib/my_app_web/telemetry.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyAppWeb.Telemetry</span><span class="w"> </span><span class="k" data-group-id="4909631427-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Supervisor</span><span class="w">
+  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Telemetry.Metrics</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="4909631427-2">(</span><span class="n">arg</span><span class="p" data-group-id="4909631427-2">)</span><span class="w"> </span><span class="k" data-group-id="4909631427-3">do</span><span class="w">
+    </span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="4909631427-4">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="bp">__MODULE__</span><span class="p" data-group-id="4909631427-4">)</span><span class="w">
+  </span><span class="k" data-group-id="4909631427-3">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="4909631427-5">(</span><span class="c">_arg</span><span class="p" data-group-id="4909631427-5">)</span><span class="w"> </span><span class="k" data-group-id="4909631427-6">do</span><span class="w">
+    </span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4909631427-7">[</span><span class="w">
+      </span><span class="p" data-group-id="4909631427-8">{</span><span class="ss">:telemetry_poller</span><span class="p">,</span><span class="w"> </span><span class="ss">measurements</span><span class="p">:</span><span class="w"> </span><span class="n">periodic_measurements</span><span class="p" data-group-id="4909631427-9">(</span><span class="p" data-group-id="4909631427-9">)</span><span class="p">,</span><span class="w"> </span><span class="ss">period</span><span class="p">:</span><span class="w"> </span><span class="mi">10_000</span><span class="p" data-group-id="4909631427-8">}</span><span class="w">
+      </span><span class="c1"># Adicione reporters como filhos da sua árvore de supervisão.</span><span class="w">
+      </span><span class="c1"># {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}</span><span class="w">
+    </span><span class="p" data-group-id="4909631427-7">]</span><span class="w">
+
+    </span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">init</span><span class="p" data-group-id="4909631427-10">(</span><span class="n">children</span><span class="p">,</span><span class="w"> </span><span class="ss">strategy</span><span class="p">:</span><span class="w"> </span><span class="ss">:one_for_one</span><span class="p" data-group-id="4909631427-10">)</span><span class="w">
+  </span><span class="k" data-group-id="4909631427-6">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">metrics</span><span class="w"> </span><span class="k" data-group-id="4909631427-11">do</span><span class="w">
+    </span><span class="p" data-group-id="4909631427-12">[</span><span class="w">
+      </span><span class="c1"># Phoenix Metrics</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-13">(</span><span class="s">&quot;phoenix.endpoint.stop.duration&quot;</span><span class="p">,</span><span class="w">
+        </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4909631427-14">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="4909631427-14">}</span><span class="w">
+      </span><span class="p" data-group-id="4909631427-13">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-15">(</span><span class="s">&quot;phoenix.router_dispatch.stop.duration&quot;</span><span class="p">,</span><span class="w">
+        </span><span class="ss">tags</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4909631427-16">[</span><span class="ss">:route</span><span class="p" data-group-id="4909631427-16">]</span><span class="p">,</span><span class="w">
+        </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4909631427-17">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="4909631427-17">}</span><span class="w">
+      </span><span class="p" data-group-id="4909631427-15">)</span><span class="p">,</span><span class="w">
+      </span><span class="c1"># VM Metrics</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-18">(</span><span class="s">&quot;vm.memory.total&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4909631427-19">{</span><span class="ss">:byte</span><span class="p">,</span><span class="w"> </span><span class="ss">:kilobyte</span><span class="p" data-group-id="4909631427-19">}</span><span class="p" data-group-id="4909631427-18">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-20">(</span><span class="s">&quot;vm.total_run_queue_lengths.total&quot;</span><span class="p" data-group-id="4909631427-20">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-21">(</span><span class="s">&quot;vm.total_run_queue_lengths.cpu&quot;</span><span class="p" data-group-id="4909631427-21">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">summary</span><span class="p" data-group-id="4909631427-22">(</span><span class="s">&quot;vm.total_run_queue_lengths.io&quot;</span><span class="p" data-group-id="4909631427-22">)</span><span class="w">
+    </span><span class="p" data-group-id="4909631427-12">]</span><span class="w">
+  </span><span class="k" data-group-id="4909631427-11">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">periodic_measurements</span><span class="w"> </span><span class="k" data-group-id="4909631427-23">do</span><span class="w">
+    </span><span class="p" data-group-id="4909631427-24">[</span><span class="w">
+      </span><span class="c1"># Um módulo, função e argumentos a serem invocados periodicamente.</span><span class="w">
+      </span><span class="c1"># Esta função deve chamar :telemetry.execute/3 e uma métrica deve ser adicionada acima.</span><span class="w">
+      </span><span class="c1"># {MyApp, :count_users, []}</span><span class="w">
+    </span><span class="p" data-group-id="4909631427-24">]</span><span class="w">
+  </span><span class="k" data-group-id="4909631427-23">end</span><span class="w">
+</span><span class="k" data-group-id="4909631427-1">end</span></code></pre><p>Certifique-se de substituir MyApp pelo nome real da sua aplicação.</p><p>Em seguida, adicione à árvore de supervisão da sua aplicação principal (geralmente em <code class="inline">lib/my_app/application.ex</code>):</p><pre><code class="makeup elixir" translate="no"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3704635953-1">[</span><span class="w">
+  </span><span class="nc">MyAppWeb.Telemetry</span><span class="p">,</span><span class="w">
+  </span><span class="nc">MyApp.Repo</span><span class="p">,</span><span class="w">
+  </span><span class="nc">MyAppWeb.Endpoint</span><span class="p">,</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+</span><span class="p" data-group-id="3704635953-1">]</span></code></pre><h2 id="eventos-de-telemetria" class="section-heading">
+  <a href="#eventos-de-telemetria" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Eventos de Telemetria</span>
+</h2>
+<p>Muitas bibliotecas Elixir (incluindo Phoenix) já estão usando o pacote <a href="https://hexdocs.pm/telemetry"><code class="inline">:telemetry</code></a> como uma maneira de fornecer aos usuários mais insights sobre o comportamento de suas aplicações, emitindo eventos em momentos-chave do ciclo de vida da aplicação.</p><p>Um evento de Telemetria é composto pelo seguinte:</p><ul><li><p><code class="inline">name</code> - Uma string (ex: <code class="inline">&quot;my_app.worker.stop&quot;</code>) ou uma lista de átomos que identifica unicamente o evento.</p></li><li><p><code class="inline">measurements</code> - Um mapa de chaves atom (ex: <code class="inline">:duration</code>) e valores numéricos.</p></li><li><p><code class="inline">metadata</code> - Um mapa de pares chave-valor que podem ser usados para a marcação de métricas.</p></li></ul><h3 id="um-exemplo-do-phoenix" class="section-heading">
+  <a href="#um-exemplo-do-phoenix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Um Exemplo do Phoenix</span>
+</h3>
+<p>Aqui está um exemplo de um evento do seu endpoint:</p><ul><li><code class="inline">[:phoenix, :endpoint, :stop]</code> - despachado por <a href="https://hexdocs.pm/plug/1.16.1/Plug.Telemetry.html"><code class="inline">Plug.Telemetry</code></a>, um dos plugs padrão no seu endpoint, sempre que a resposta é enviada<ul><li><p>Measurement: <code class="inline">%{duration: native_time}</code></p></li><li><p>Metadata: <code class="inline">%{conn: Plug.Conn.t}</code></p></li></ul></li></ul><p>Isso significa que após cada requisição, <a href="https://hexdocs.pm/plug/1.16.1/Plug.html"><code class="inline">Plug</code></a>, via <code class="inline">:telemetry</code>, emitirá um evento &quot;stop&quot;, com uma medição de quanto tempo levou para obter a resposta:</p><pre><code class="makeup elixir" translate="no"><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="3478012824-1">(</span><span class="p" data-group-id="3478012824-2">[</span><span class="ss">:phoenix</span><span class="p">,</span><span class="w"> </span><span class="ss">:endpoint</span><span class="p">,</span><span class="w"> </span><span class="ss">:stop</span><span class="p" data-group-id="3478012824-2">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3478012824-3">%{</span><span class="ss">duration</span><span class="p">:</span><span class="w"> </span><span class="n">duration</span><span class="p" data-group-id="3478012824-3">}</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3478012824-4">%{</span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="n">conn</span><span class="p" data-group-id="3478012824-4">}</span><span class="p" data-group-id="3478012824-1">)</span></code></pre><h3 id="eventos-de-telemetria-do-phoenix" class="section-heading">
+  <a href="#eventos-de-telemetria-do-phoenix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Eventos de Telemetria do Phoenix</span>
+</h3>
+<p>Uma lista completa de todos os eventos de telemetria do Phoenix pode ser encontrada em <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Logger.html"><code class="inline">Phoenix.Logger</code></a></p><h2 id="métricas" class="section-heading">
+  <a href="#métricas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Métricas</span>
+</h2>
+<blockquote><p>Métricas são agregações de eventos de Telemetria com um nome específico, fornecendo uma visão do comportamento do sistema ao longo do tempo.</p><p>― <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a></p></blockquote><p>O pacote Telemetry.Metrics fornece uma interface comum para definir métricas. Ele expõe um conjunto de <a href="https://hexdocs.pm/telemetry_metrics/Telemetry.Metrics.html#module-metrics">cinco funções de tipo de métrica</a> que são responsáveis por estruturar um determinado evento de Telemetria como uma medição específica.</p><p>O próprio pacote não realiza nenhuma agregação das medições. Em vez disso, ele fornece a um reporter a definição do evento de Telemetria como medição, e o reporter usa essa definição para realizar agregações e reportá-las.</p><p>Discutiremos os reporters na próxima seção.</p><p>Vamos olhar alguns exemplos.</p><p>Usando <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a>, você pode definir uma métrica contador, que conta quantas requisições HTTP foram completadas:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Telemetry.Metrics</span><span class="o">.</span><span class="n">counter</span><span class="p" data-group-id="5832468987-1">(</span><span class="s">&quot;phoenix.endpoint.stop.duration&quot;</span><span class="p" data-group-id="5832468987-1">)</span></code></pre><p>ou você poderia usar uma métrica de distribuição para ver quantas requisições foram completadas em faixas de tempo específicas:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Telemetry.Metrics</span><span class="o">.</span><span class="n">distribution</span><span class="p" data-group-id="4559190460-1">(</span><span class="s">&quot;phoenix.endpoint.stop.duration&quot;</span><span class="p" data-group-id="4559190460-1">)</span></code></pre><p>Esta capacidade de introspecção de requisições HTTP é realmente poderosa -- e este é apenas um de <em>muitos</em> eventos de telemetria emitidos pelo framework Phoenix! Discutiremos mais desses eventos, bem como padrões específicos para extrair dados valiosos de eventos Phoenix/Plug na seção <a href="#phoenix-metrics">Métricas do Phoenix</a> mais adiante neste guia.</p><blockquote><p>A lista completa de eventos <code class="inline">:telemetry</code> emitidos pelo Phoenix, junto com suas medições e metadados, está disponível na seção &quot;Instrumentação&quot; da documentação do módulo <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Logger.html"><code class="inline">Phoenix.Logger</code></a>.</p></blockquote><h3 id="um-exemplo-do-ecto" class="section-heading">
+  <a href="#um-exemplo-do-ecto" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Um Exemplo do Ecto</span>
+</h3>
+<p>Assim como o Phoenix, o Ecto vem com eventos de Telemetria integrados. Isso significa que você pode obter introspecção nas suas camadas web e de banco de dados usando as mesmas ferramentas.</p><p>Aqui está um exemplo de um evento de Telemetria executado pelo Ecto quando um repositório Ecto inicia:</p><ul><li><code class="inline">[:ecto, :repo, :init]</code> - despachado por <a href="https://hexdocs.pm/ecto/3.12.5/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a><ul><li><p>Measurement: <code class="inline">%{system_time: native_time}</code></p></li><li><p>Metadata: <code class="inline">%{repo: Ecto.Repo, opts: Keyword.t()}</code></p></li></ul></li></ul><p>Isso significa que sempre que o <a href="https://hexdocs.pm/ecto/3.12.5/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a> inicia, ele emitirá um evento, via <code class="inline">:telemetry</code>, com uma medição do tempo no início.</p><pre><code class="makeup elixir" translate="no"><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="7222194333-1">(</span><span class="p" data-group-id="7222194333-2">[</span><span class="ss">:ecto</span><span class="p">,</span><span class="w"> </span><span class="ss">:repo</span><span class="p">,</span><span class="w"> </span><span class="ss">:init</span><span class="p" data-group-id="7222194333-2">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7222194333-3">%{</span><span class="ss">system_time</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">system_time</span><span class="p" data-group-id="7222194333-4">(</span><span class="p" data-group-id="7222194333-4">)</span><span class="p" data-group-id="7222194333-3">}</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7222194333-5">%{</span><span class="ss">repo</span><span class="p">:</span><span class="w"> </span><span class="n">repo</span><span class="p">,</span><span class="w"> </span><span class="ss">opts</span><span class="p">:</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="7222194333-5">}</span><span class="p" data-group-id="7222194333-1">)</span></code></pre><p>Eventos adicionais de Telemetria são executados pelos adaptadores do Ecto.</p><p>Um desses eventos específicos do adaptador é o evento <code class="inline">[:my_app, :repo, :query]</code>. 
+Por exemplo, se você quiser graficar o tempo de execução de consultas, pode usar a função <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html#summary/2"><code class="inline">Telemetry.Metrics.summary/2</code></a> para instruir seu reporter a calcular estatísticas do evento <code class="inline">[:my_app, :repo, :query]</code>, como máximo, média, percentis, etc.:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Telemetry.Metrics</span><span class="o">.</span><span class="n">summary</span><span class="p" data-group-id="3919450732-1">(</span><span class="s">&quot;my_app.repo.query.query_time&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3919450732-2">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="3919450732-2">}</span><span class="w">
+</span><span class="p" data-group-id="3919450732-1">)</span></code></pre><p>Ou você poderia usar a função <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html#distribution/2"><code class="inline">Telemetry.Metrics.distribution/2</code></a> para definir um histograma para outro evento específico do adaptador: <code class="inline">[:my_app, :repo, :query, :queue_time]</code>, visualizando assim quanto tempo as consultas passam na fila:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Telemetry.Metrics</span><span class="o">.</span><span class="n">distribution</span><span class="p" data-group-id="3052129230-1">(</span><span class="s">&quot;my_app.repo.query.queue_time&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3052129230-2">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="3052129230-2">}</span><span class="w">
+</span><span class="p" data-group-id="3052129230-1">)</span></code></pre><blockquote><p>Você pode aprender mais sobre a Telemetria do Ecto na seção &quot;Eventos de Telemetria&quot; da documentação do módulo <a href="https://hexdocs.pm/ecto/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a>.</p></blockquote><p>Até agora, vimos alguns dos eventos de Telemetria comuns às aplicações Phoenix, juntamente com alguns exemplos de suas várias medições e metadados. Com todos esses dados apenas esperando para serem consumidos, vamos falar sobre reporters.</p><h2 id="reporters" class="section-heading">
+  <a href="#reporters" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Reporters</span>
+</h2>
+<p>Os reporters se inscrevem em eventos de Telemetria usando a interface comum fornecida por <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a>. Eles então agregam as medições (dados) em métricas para fornecer informações significativas sobre sua aplicação.</p><p>Por exemplo, se a seguinte chamada <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html#summary/2"><code class="inline">Telemetry.Metrics.summary/2</code></a> for adicionada à função <code class="inline">metrics/0</code> do seu supervisor de Telemetria:</p><pre><code class="makeup elixir" translate="no"><span class="n">summary</span><span class="p" data-group-id="2274965041-1">(</span><span class="s">&quot;phoenix.endpoint.stop.duration&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2274965041-2">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="2274965041-2">}</span><span class="w">
+</span><span class="p" data-group-id="2274965041-1">)</span></code></pre><p>Então o reporter anexará um listener para o evento <code class="inline">&quot;phoenix.endpoint.stop.duration&quot;</code> e responderá a este evento calculando uma métrica sumária com os metadados do evento fornecidos e relatando sobre essa métrica para a fonte apropriada.</p><h3 id="phoenix-livedashboard" class="section-heading">
+  <a href="#phoenix-livedashboard" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Phoenix.LiveDashboard</span>
+</h3>
+<p>Para desenvolvedores interessados em visualizações em tempo real para suas métricas de Telemetria, você pode estar interessado em instalar o <a href="https://hexdocs.pm/phoenix_live_dashboard"><code class="inline">LiveDashboard</code></a>. O LiveDashboard atua como um reporter de Telemetry.Metrics para renderizar seus dados como belos gráficos em tempo real no dashboard.</p><h3 id="telemetry-metrics-consolereporter" class="section-heading">
+  <a href="#telemetry-metrics-consolereporter" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Telemetry.Metrics.ConsoleReporter</span>
+</h3>
+<p><a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a> vem com um <code class="inline">ConsoleReporter</code> que pode ser usado para imprimir eventos e métricas no terminal. Você pode usar este reporter para experimentar as métricas discutidas neste guia.</p><p>Descomente ou adicione o seguinte à lista de filhos na sua árvore de supervisão de Telemetria (geralmente em <code class="inline">lib/my_app_web/telemetry.ex</code>):</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="1948804073-1">{</span><span class="nc">Telemetry.Metrics.ConsoleReporter</span><span class="p">,</span><span class="w"> </span><span class="ss">metrics</span><span class="p">:</span><span class="w"> </span><span class="n">metrics</span><span class="p" data-group-id="1948804073-2">(</span><span class="p" data-group-id="1948804073-2">)</span><span class="p" data-group-id="1948804073-1">}</span></code></pre><blockquote><p>Existem numerosos reporters disponíveis, para serviços como StatsD, Prometheus e mais. Você pode encontrá-los pesquisando por &quot;telemetry_metrics&quot; em <a href="https://hex.pm/packages?search=telemetry_metrics">hex.pm</a>.</p></blockquote><h2 id="métricas-do-phoenix" class="section-heading">
+  <a href="#métricas-do-phoenix" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Métricas do Phoenix</span>
+</h2>
+<p>Anteriormente, examinamos o evento &quot;stop&quot; emitido por <a href="https://hexdocs.pm/plug/1.16.1/Plug.Telemetry.html"><code class="inline">Plug.Telemetry</code></a> e o usamos para contar o número de requisições HTTP. Na realidade, é apenas um pouco útil poder ver apenas o número total de requisições. E se você quisesse ver o número de requisições por rota, ou por rota <em>e</em> método?</p><p>Vamos dar uma olhada em outro evento emitido durante o ciclo de vida da requisição HTTP, desta vez do <a href="https://hexdocs.pm/phoenix/1.7.20/Phoenix.Router.html"><code class="inline">Phoenix.Router</code></a>:</p><ul><li><code class="inline">[:phoenix, :router_dispatch, :stop]</code> - despachado por Phoenix.Router após despachar com sucesso para uma rota correspondente<ul><li><p>Measurement: <code class="inline">%{duration: native_time}</code></p></li><li><p>Metadata: <code class="inline">%{conn: Plug.Conn.t, route: binary, plug: module, plug_opts: term, path_params: map, pipe_through: [atom]}</code></p></li></ul></li></ul><p>Vamos começar agrupando esses eventos por rota. Adicione o seguinte (se ainda não existir) à função <code class="inline">metrics/0</code> do seu supervisor de Telemetria (geralmente em <code class="inline">lib/my_app_web/telemetry.ex</code>):</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">metrics</span><span class="w"> </span><span class="k" data-group-id="4138771204-1">do</span><span class="w">
+  </span><span class="p" data-group-id="4138771204-2">[</span><span class="w">
+    </span><span class="n">...</span><span class="n">metrics</span><span class="n">...</span><span class="w">
+    </span><span class="n">summary</span><span class="p" data-group-id="4138771204-3">(</span><span class="s">&quot;phoenix.router_dispatch.stop.duration&quot;</span><span class="p">,</span><span class="w">
+      </span><span class="ss">tags</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4138771204-4">[</span><span class="ss">:route</span><span class="p" data-group-id="4138771204-4">]</span><span class="p">,</span><span class="w">
+      </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4138771204-5">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="4138771204-5">}</span><span class="w">
+    </span><span class="p" data-group-id="4138771204-3">)</span><span class="w">
+  </span><span class="p" data-group-id="4138771204-2">]</span><span class="w">
+</span><span class="k" data-group-id="4138771204-1">end</span></code></pre><p>Reinicie seu servidor e, em seguida, faça requisições para uma ou duas páginas. No seu terminal, você deve ver o ConsoleReporter imprimir logs para os eventos de Telemetria que recebeu como resultado das definições de métricas que você forneceu.</p><p>A linha de log para cada requisição contém a rota específica para essa requisição. Isso se deve à especificação da opção <code class="inline">:tags</code> para a métrica summary, que cuida do nosso primeiro requisito; podemos usar <code class="inline">:tags</code> para agrupar métricas por rota. Observe que os reporters necessariamente lidarão com tags de maneira diferente, dependendo do serviço subjacente em uso.</p><p>Olhando mais de perto o evento &quot;stop&quot; do Router, você pode ver que a estrutura <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html"><code class="inline">Plug.Conn</code></a> que representa a requisição está presente nos metadados, mas como você acessa as propriedades em <code class="inline">conn</code>?</p><p>Felizmente, <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a> fornece as seguintes opções para ajudá-lo a classificar seus eventos:</p><ul><li><p><code class="inline">:tags</code> - Uma lista de chaves de metadados para agrupamento;</p></li><li><p><code class="inline">:tag_values</code> - Uma função que transforma os metadados na forma desejada; Observe que esta função é chamada para cada evento, então é importante mantê-la rápida se a taxa de eventos for alta.</p></li></ul><blockquote><p>Saiba mais sobre todas as opções de métricas disponíveis na documentação do módulo <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a>.</p></blockquote><p>Vamos descobrir como extrair mais tags de eventos que incluem um <code class="inline">conn</code> em seus metadados.</p><h3 id="extraindo-valores-de-tags-de-plug-conn" class="section-heading">
+  <a href="#extraindo-valores-de-tags-de-plug-conn" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Extraindo valores de tags de Plug.Conn</span>
+</h3>
+<p>Vamos adicionar outra métrica para o evento de rota, desta vez para agrupar por rota e método:</p><pre><code class="makeup elixir" translate="no"><span class="n">summary</span><span class="p" data-group-id="3008028558-1">(</span><span class="s">&quot;phoenix.router_dispatch.stop.duration&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">tags</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3008028558-2">[</span><span class="ss">:method</span><span class="p">,</span><span class="w"> </span><span class="ss">:route</span><span class="p" data-group-id="3008028558-2">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">tag_values</span><span class="p">:</span><span class="w"> </span><span class="o">&amp;</span><span class="n">get_and_put_http_method</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3008028558-3">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="3008028558-3">}</span><span class="w">
+</span><span class="p" data-group-id="3008028558-1">)</span></code></pre><p>Introduzimos a opção <code class="inline">:tag_values</code> aqui, porque precisamos realizar uma transformação nos metadados do evento para obter os valores que precisamos.</p><p>Adicione a seguinte função privada ao seu módulo de Telemetria para elevar o valor <code class="inline">:method</code> da estrutura <a href="https://hexdocs.pm/plug/1.16.1/Plug.Conn.html"><code class="inline">Plug.Conn</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">get_and_put_http_method</span><span class="p" data-group-id="0511239004-1">(</span><span class="p" data-group-id="0511239004-2">%{</span><span class="ss">conn</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0511239004-3">%{</span><span class="ss">method</span><span class="p">:</span><span class="w"> </span><span class="n">method</span><span class="p" data-group-id="0511239004-3">}</span><span class="p" data-group-id="0511239004-2">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadata</span><span class="p" data-group-id="0511239004-1">)</span><span class="w"> </span><span class="k" data-group-id="0511239004-4">do</span><span class="w">
+  </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="0511239004-5">(</span><span class="n">metadata</span><span class="p">,</span><span class="w"> </span><span class="ss">:method</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p" data-group-id="0511239004-5">)</span><span class="w">
+</span><span class="k" data-group-id="0511239004-4">end</span></code></pre><p>Reinicie seu servidor e faça mais algumas requisições. Você deve começar a ver logs com tags para o método HTTP e a rota.</p><p>Observe que as opções <code class="inline">:tags</code> e <code class="inline">:tag_values</code> podem ser aplicadas a todos os tipos de <a href="https://hexdocs.pm/telemetry_metrics/1.1.0/Telemetry.Metrics.html"><code class="inline">Telemetry.Metrics</code></a>.</p><h3 id="renomeando-rótulos-de-valor-usando-valores-de-tag" class="section-heading">
+  <a href="#renomeando-rótulos-de-valor-usando-valores-de-tag" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Renomeando rótulos de valor usando valores de tag</span>
+</h3>
+<p>Às vezes, ao exibir uma métrica, o rótulo do valor pode precisar ser transformado para melhorar a legibilidade. Tome como exemplo a seguinte métrica que exibe a duração do callback <code class="inline">mount/3</code> de cada LiveView por status <code class="inline">connected?</code>.</p><pre><code class="makeup elixir" translate="no"><span class="n">summary</span><span class="p" data-group-id="6577973416-1">(</span><span class="s">&quot;phoenix.live_view.mount.stop.duration&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6577973416-2">{</span><span class="ss">:native</span><span class="p">,</span><span class="w"> </span><span class="ss">:millisecond</span><span class="p" data-group-id="6577973416-2">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">tags</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6577973416-3">[</span><span class="ss">:view</span><span class="p">,</span><span class="w"> </span><span class="ss">:connected?</span><span class="p" data-group-id="6577973416-3">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">tag_values</span><span class="p">:</span><span class="w"> </span><span class="o">&amp;</span><span class="n">live_view_metric_tag_values</span><span class="o">/</span><span class="mi">1</span><span class="w">
+</span><span class="p" data-group-id="6577973416-1">)</span></code></pre><p>A seguinte função eleva <code class="inline">metadata.socket.view</code> e <code class="inline">metadata.socket.connected?</code> para serem chaves de nível superior em <code class="inline">metadata</code>, como fizemos no exemplo anterior.</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">live_view_metric_tag_values</span><span class="p" data-group-id="9909930581-1">(</span><span class="n">metadata</span><span class="p" data-group-id="9909930581-1">)</span><span class="w"> </span><span class="k" data-group-id="9909930581-2">do</span><span class="w">
+  </span><span class="n">metadata</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="9909930581-3">(</span><span class="ss">:view</span><span class="p">,</span><span class="w"> </span><span class="n">metadata</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">view</span><span class="p" data-group-id="9909930581-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="9909930581-4">(</span><span class="ss">:connected?</span><span class="p">,</span><span class="w"> </span><span class="nc">Phoenix.LiveView</span><span class="o">.</span><span class="n">connected?</span><span class="p" data-group-id="9909930581-5">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">socket</span><span class="p" data-group-id="9909930581-5">)</span><span class="p" data-group-id="9909930581-4">)</span><span class="w">
+</span><span class="k" data-group-id="9909930581-2">end</span></code></pre><p>No entanto, ao renderizar essas métricas no LiveDashboard, o rótulo do valor é exibido como <code class="inline">&quot;Elixir.Phoenix.LiveDashboard.MetricsLive true&quot;</code>.</p><p>Para tornar o rótulo do valor mais fácil de ler, podemos atualizar nossa função privada para gerar nomes mais amigáveis. Passaremos o valor de <code class="inline">:view</code> através de <a href="https://hexdocs.pm/elixir/Kernel.html#inspect/1"><code class="inline">inspect/1</code></a> para remover o prefixo <code class="inline">Elixir.</code> e chamaremos outra função privada para converter o booleano <code class="inline">connected?</code> em texto legível por humanos.</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">live_view_metric_tag_values</span><span class="p" data-group-id="1655869847-1">(</span><span class="n">metadata</span><span class="p" data-group-id="1655869847-1">)</span><span class="w"> </span><span class="k" data-group-id="1655869847-2">do</span><span class="w">
+  </span><span class="n">metadata</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="1655869847-3">(</span><span class="ss">:view</span><span class="p">,</span><span class="w"> </span><span class="n">inspect</span><span class="p" data-group-id="1655869847-4">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">view</span><span class="p" data-group-id="1655869847-4">)</span><span class="p" data-group-id="1655869847-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="1655869847-5">(</span><span class="ss">:connected?</span><span class="p">,</span><span class="w"> </span><span class="n">get_connection_status</span><span class="p" data-group-id="1655869847-6">(</span><span class="nc">Phoenix.LiveView</span><span class="o">.</span><span class="n">connected?</span><span class="p" data-group-id="1655869847-7">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">socket</span><span class="p" data-group-id="1655869847-7">)</span><span class="p" data-group-id="1655869847-6">)</span><span class="p" data-group-id="1655869847-5">)</span><span class="w">
+</span><span class="k" data-group-id="1655869847-2">end</span><span class="w">
+
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">get_connection_status</span><span class="p" data-group-id="1655869847-8">(</span><span class="no">true</span><span class="p" data-group-id="1655869847-8">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Connected&quot;</span><span class="w">
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">get_connection_status</span><span class="p" data-group-id="1655869847-9">(</span><span class="no">false</span><span class="p" data-group-id="1655869847-9">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Disconnected&quot;</span></code></pre><p>Agora o rótulo do valor será renderizado como <code class="inline">&quot;Phoenix.LiveDashboard.MetricsLive Connected&quot;</code>.</p><p>Esperamos que isso lhe dê alguma inspiração sobre como usar a opção <code class="inline">:tag_values</code>. Apenas lembre-se de manter esta função rápida, já que ela é chamada em cada evento.</p><h2 id="medições-periódicas" class="section-heading">
+  <a href="#medições-periódicas" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Medições periódicas</span>
+</h2>
+<p>Você pode querer medir periodicamente pares de chave-valor dentro da sua aplicação. Felizmente, o pacote <a href="https://hexdocs.pm/telemetry_poller"><code class="inline">:telemetry_poller</code></a> fornece um mecanismo para medições personalizadas, que é útil para recuperar informações de processos ou para realizar medições personalizadas periodicamente.</p><p>Adicione o seguinte à lista na função <code class="inline">periodic_measurements/0</code> do seu supervisor de Telemetria, que é uma função privada que retorna uma lista de medições a serem realizadas em um intervalo especificado.</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">defp</span><span class="w"> </span><span class="nf">periodic_measurements</span><span class="w"> </span><span class="k" data-group-id="9423823252-1">do</span><span class="w">
+  </span><span class="p" data-group-id="9423823252-2">[</span><span class="w">
+    </span><span class="p" data-group-id="9423823252-3">{</span><span class="nc">MyApp</span><span class="p">,</span><span class="w"> </span><span class="ss">:measure_users</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9423823252-4">[</span><span class="p" data-group-id="9423823252-4">]</span><span class="p" data-group-id="9423823252-3">}</span><span class="p">,</span><span class="w">
+    </span><span class="p" data-group-id="9423823252-5">{</span><span class="ss">:process_info</span><span class="p">,</span><span class="w">
+      </span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9423823252-6">[</span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="ss">:my_server</span><span class="p" data-group-id="9423823252-6">]</span><span class="p">,</span><span class="w">
+      </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="nc">MyApp.MyServer</span><span class="p">,</span><span class="w">
+      </span><span class="ss">keys</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9423823252-7">[</span><span class="ss">:message_queue_len</span><span class="p">,</span><span class="w"> </span><span class="ss">:memory</span><span class="p" data-group-id="9423823252-7">]</span><span class="p" data-group-id="9423823252-5">}</span><span class="w">
+  </span><span class="p" data-group-id="9423823252-2">]</span><span class="w">
+</span><span class="k" data-group-id="9423823252-1">end</span></code></pre><p>onde <code class="inline">MyApp.measure_users/0</code> poderia ser escrito assim:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app.ex</span><span class="w">
+</span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp</span><span class="w"> </span><span class="k" data-group-id="0496959823-1">do</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">measure_users</span><span class="w"> </span><span class="k" data-group-id="0496959823-2">do</span><span class="w">
+    </span><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="0496959823-3">(</span><span class="p" data-group-id="0496959823-4">[</span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="ss">:users</span><span class="p" data-group-id="0496959823-4">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0496959823-5">%{</span><span class="ss">total</span><span class="p">:</span><span class="w"> </span><span class="nc">MyApp</span><span class="o">.</span><span class="n">users_count</span><span class="p" data-group-id="0496959823-6">(</span><span class="p" data-group-id="0496959823-6">)</span><span class="p" data-group-id="0496959823-5">}</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0496959823-7">%{</span><span class="p" data-group-id="0496959823-7">}</span><span class="p" data-group-id="0496959823-3">)</span><span class="w">
+  </span><span class="k" data-group-id="0496959823-2">end</span><span class="w">
+</span><span class="k" data-group-id="0496959823-1">end</span></code></pre><p>Agora, com as medições no lugar, você pode definir as métricas para os eventos acima:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app_web/telemetry.ex</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">metrics</span><span class="w"> </span><span class="k" data-group-id="6530431614-1">do</span><span class="w">
+  </span><span class="p" data-group-id="6530431614-2">[</span><span class="w">
+    </span><span class="n">...</span><span class="n">metrics</span><span class="n">...</span><span class="w">
+    </span><span class="c1"># MyApp Metrics</span><span class="w">
+    </span><span class="n">last_value</span><span class="p" data-group-id="6530431614-3">(</span><span class="s">&quot;my_app.users.total&quot;</span><span class="p" data-group-id="6530431614-3">)</span><span class="p">,</span><span class="w">
+    </span><span class="n">last_value</span><span class="p" data-group-id="6530431614-4">(</span><span class="s">&quot;my_app.my_server.memory&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">unit</span><span class="p">:</span><span class="w"> </span><span class="ss">:byte</span><span class="p" data-group-id="6530431614-4">)</span><span class="p">,</span><span class="w">
+    </span><span class="n">last_value</span><span class="p" data-group-id="6530431614-5">(</span><span class="s">&quot;my_app.my_server.message_queue_len&quot;</span><span class="p" data-group-id="6530431614-5">)</span><span class="w">
+    </span><span class="n">summary</span><span class="p" data-group-id="6530431614-6">(</span><span class="s">&quot;my_app.my_server.call.stop.duration&quot;</span><span class="p" data-group-id="6530431614-6">)</span><span class="p">,</span><span class="w">
+    </span><span class="n">counter</span><span class="p" data-group-id="6530431614-7">(</span><span class="s">&quot;my_app.my_server.call.exception&quot;</span><span class="p" data-group-id="6530431614-7">)</span><span class="w">
+  </span><span class="p" data-group-id="6530431614-2">]</span><span class="w">
+</span><span class="k" data-group-id="6530431614-1">end</span></code></pre><blockquote><p>Você implementará MyApp.MyServer na seção <a href="#custom-events">Eventos Personalizados</a>.</p></blockquote><h2 id="bibliotecas-usando-telemetria" class="section-heading">
+  <a href="#bibliotecas-usando-telemetria" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Bibliotecas usando Telemetria</span>
+</h2>
+<p>A Telemetria está rapidamente se tornando o padrão de facto para instrumentação de pacotes em Elixir. Aqui está uma lista de bibliotecas que atualmente emitem eventos <code class="inline">:telemetry</code>.</p><p>Os autores de bibliotecas são ativamente encorajados a enviar um PR adicionando as suas próprias (em ordem alfabética, por favor):</p><ul><li><a href="https://hexdocs.pm/absinthe">Absinthe</a> - <a href="https://hexdocs.pm/absinthe/telemetry.html">Events</a></li><li><a href="https://hexdocs.pm/ash">Ash Framework</a> - <a href="https://hexdocs.pm/ash/monitoring.html">Events</a></li><li><a href="https://hexdocs.pm/broadway">Broadway</a> - <a href="https://hexdocs.pm/broadway/Broadway.html#module-telemetry">Events</a></li><li><a href="https://hexdocs.pm/ecto">Ecto</a> - <a href="https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events">Events</a></li><li><a href="https://hexdocs.pm/oban">Oban</a> - <a href="https://hexdocs.pm/oban/Oban.Telemetry.html">Events</a></li><li><a href="https://hexdocs.pm/phoenix">Phoenix</a> - <a href="https://hexdocs.pm/phoenix/Phoenix.Logger.html#module-instrumentation">Events</a></li><li><a href="https://hexdocs.pm/plug">Plug</a> - <a href="https://hexdocs.pm/plug/Plug.Telemetry.html">Events</a></li><li><a href="https://hexdocs.pm/tesla">Tesla</a> - <a href="https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html">Events</a></li></ul><h2 id="eventos-personalizados" class="section-heading">
+  <a href="#eventos-personalizados" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Eventos Personalizados</span>
+</h2>
+<p>Se você precisa de métricas e instrumentação personalizadas em sua aplicação, você pode utilizar o pacote <code class="inline">:telemetry</code> (<a href="https://hexdocs.pm/telemetry">https://hexdocs.pm/telemetry</a>) assim como seus frameworks e bibliotecas favoritos.</p><p>Aqui está um exemplo de um GenServer simples que emite eventos de telemetria. Crie este arquivo em sua aplicação em <code class="inline">lib/my_app/my_server.ex</code>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app/my_server.ex</span><span class="w">
+</span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp.MyServer</span><span class="w"> </span><span class="k" data-group-id="0273268590-1">do</span><span class="w">
+  </span><span class="na">@moduledoc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Um exemplo de GenServer que executa funções arbitrárias e emite eventos de telemetria quando chamado.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">GenServer</span><span class="w">
+
+  </span><span class="c1"># Um prefixo comum para eventos :telemetry</span><span class="w">
+  </span><span class="na">@prefix</span><span class="w"> </span><span class="p" data-group-id="0273268590-2">[</span><span class="ss">:my_app</span><span class="p">,</span><span class="w"> </span><span class="ss">:my_server</span><span class="p">,</span><span class="w"> </span><span class="ss">:call</span><span class="p" data-group-id="0273268590-2">]</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="0273268590-3">(</span><span class="n">fun</span><span class="p" data-group-id="0273268590-3">)</span><span class="w"> </span><span class="k" data-group-id="0273268590-4">do</span><span class="w">
+    </span><span class="nc">GenServer</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="0273268590-5">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="n">fun</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="bp">__MODULE__</span><span class="p" data-group-id="0273268590-5">)</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-4">end</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Executa a função contida neste servidor.
+
+  ## Eventos
+
+  Os seguintes eventos podem ser emitidos:
+
+    * `[:my_app, :my_server, :call, :start]` - Despachado
+      imediatamente antes de invocar a função. Este evento
+      é sempre emitido.
+
+      * Measurement: `%{system_time: system_time}`
+
+      * Metadata: `%{}`
+
+    * `[:my_app, :my_server, :call, :stop]` - Despachado
+      imediatamente após invocar com sucesso a função.
+
+      * Measurement: `%{duration: native_time}`
+
+      * Metadata: `%{}`
+
+    * `[:my_app, :my_server, :call, :exception]` - Despachado
+      imediatamente após invocar a função, no caso
+      de a função lançar ou levantar uma exceção.
+
+      * Measurement: `%{duration: native_time}`
+
+      * Metadata: `%{kind: kind, reason: reason, stacktrace: stacktrace}`
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">call!</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">GenServer</span><span class="o">.</span><span class="n">call</span><span class="p" data-group-id="0273268590-6">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="ss">:called</span><span class="p" data-group-id="0273268590-6">)</span><span class="w">
+
+  </span><span class="na">@impl</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="0273268590-7">(</span><span class="n">fun</span><span class="p" data-group-id="0273268590-7">)</span><span class="w"> </span><span class="ow">when</span><span class="w"> </span><span class="n">is_function</span><span class="p" data-group-id="0273268590-8">(</span><span class="n">fun</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="0273268590-8">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0273268590-9">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">fun</span><span class="p" data-group-id="0273268590-9">}</span><span class="w">
+
+  </span><span class="na">@impl</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_call</span><span class="p" data-group-id="0273268590-10">(</span><span class="ss">:called</span><span class="p">,</span><span class="w"> </span><span class="c">_from</span><span class="p">,</span><span class="w"> </span><span class="n">fun</span><span class="p" data-group-id="0273268590-10">)</span><span class="w"> </span><span class="k" data-group-id="0273268590-11">do</span><span class="w">
+    </span><span class="c1"># Embrulhe a invocação da função em um &quot;span&quot;</span><span class="w">
+    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">telemetry_span</span><span class="p" data-group-id="0273268590-12">(</span><span class="n">fun</span><span class="p" data-group-id="0273268590-12">)</span><span class="w">
+
+    </span><span class="p" data-group-id="0273268590-13">{</span><span class="ss">:reply</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">fun</span><span class="p" data-group-id="0273268590-13">}</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-11">end</span><span class="w">
+
+  </span><span class="c1"># Emite eventos de telemetria relacionados à invocação da função</span><span class="w">
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">telemetry_span</span><span class="p" data-group-id="0273268590-14">(</span><span class="n">fun</span><span class="p" data-group-id="0273268590-14">)</span><span class="w"> </span><span class="k" data-group-id="0273268590-15">do</span><span class="w">
+    </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emit_start</span><span class="p" data-group-id="0273268590-16">(</span><span class="p" data-group-id="0273268590-16">)</span><span class="w">
+
+    </span><span class="k">try</span><span class="w"> </span><span class="k" data-group-id="0273268590-17">do</span><span class="w">
+      </span><span class="n">fun</span><span class="o">.</span><span class="p" data-group-id="0273268590-18">(</span><span class="p" data-group-id="0273268590-18">)</span><span class="w">
+    </span><span class="k" data-group-id="0273268590-17">catch</span><span class="w">
+      </span><span class="n">kind</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">stacktrace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">stacktrace</span><span class="p" data-group-id="0273268590-19">(</span><span class="p" data-group-id="0273268590-19">)</span><span class="w">
+        </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">monotonic_time</span><span class="p" data-group-id="0273268590-20">(</span><span class="p" data-group-id="0273268590-20">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w">
+        </span><span class="n">emit_exception</span><span class="p" data-group-id="0273268590-21">(</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">kind</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w"> </span><span class="n">stacktrace</span><span class="p" data-group-id="0273268590-21">)</span><span class="w">
+        </span><span class="nc">:erlang</span><span class="o">.</span><span class="n">raise</span><span class="p" data-group-id="0273268590-22">(</span><span class="n">kind</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w"> </span><span class="n">stacktrace</span><span class="p" data-group-id="0273268590-22">)</span><span class="w">
+    </span><span class="k" data-group-id="0273268590-17">else</span><span class="w">
+      </span><span class="n">result</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">monotonic_time</span><span class="p" data-group-id="0273268590-23">(</span><span class="p" data-group-id="0273268590-23">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="w">
+        </span><span class="n">emit_stop</span><span class="p" data-group-id="0273268590-24">(</span><span class="n">duration</span><span class="p" data-group-id="0273268590-24">)</span><span class="w">
+        </span><span class="n">result</span><span class="w">
+    </span><span class="k" data-group-id="0273268590-17">end</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-15">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">emit_start</span><span class="w"> </span><span class="k" data-group-id="0273268590-25">do</span><span class="w">
+    </span><span class="n">start_time_mono</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">monotonic_time</span><span class="p" data-group-id="0273268590-26">(</span><span class="p" data-group-id="0273268590-26">)</span><span class="w">
+
+    </span><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="0273268590-27">(</span><span class="w">
+      </span><span class="na">@prefix</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p" data-group-id="0273268590-28">[</span><span class="ss">:start</span><span class="p" data-group-id="0273268590-28">]</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-29">%{</span><span class="ss">system_time</span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">system_time</span><span class="p" data-group-id="0273268590-30">(</span><span class="p" data-group-id="0273268590-30">)</span><span class="p" data-group-id="0273268590-29">}</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-31">%{</span><span class="p" data-group-id="0273268590-31">}</span><span class="w">
+    </span><span class="p" data-group-id="0273268590-27">)</span><span class="w">
+
+    </span><span class="n">start_time_mono</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-25">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">emit_stop</span><span class="p" data-group-id="0273268590-32">(</span><span class="n">duration</span><span class="p" data-group-id="0273268590-32">)</span><span class="w"> </span><span class="k" data-group-id="0273268590-33">do</span><span class="w">
+    </span><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="0273268590-34">(</span><span class="w">
+      </span><span class="na">@prefix</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p" data-group-id="0273268590-35">[</span><span class="ss">:stop</span><span class="p" data-group-id="0273268590-35">]</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-36">%{</span><span class="ss">duration</span><span class="p">:</span><span class="w"> </span><span class="n">duration</span><span class="p" data-group-id="0273268590-36">}</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-37">%{</span><span class="p" data-group-id="0273268590-37">}</span><span class="w">
+    </span><span class="p" data-group-id="0273268590-34">)</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-33">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">emit_exception</span><span class="p" data-group-id="0273268590-38">(</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">kind</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w"> </span><span class="n">stacktrace</span><span class="p" data-group-id="0273268590-38">)</span><span class="w"> </span><span class="k" data-group-id="0273268590-39">do</span><span class="w">
+    </span><span class="nc">:telemetry</span><span class="o">.</span><span class="n">execute</span><span class="p" data-group-id="0273268590-40">(</span><span class="w">
+      </span><span class="na">@prefix</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p" data-group-id="0273268590-41">[</span><span class="ss">:exception</span><span class="p" data-group-id="0273268590-41">]</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-42">%{</span><span class="ss">duration</span><span class="p">:</span><span class="w"> </span><span class="n">duration</span><span class="p" data-group-id="0273268590-42">}</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-43">%{</span><span class="w">
+        </span><span class="ss">kind</span><span class="p">:</span><span class="w"> </span><span class="n">kind</span><span class="p">,</span><span class="w">
+        </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w">
+        </span><span class="ss">stacktrace</span><span class="p">:</span><span class="w"> </span><span class="n">stacktrace</span><span class="w">
+      </span><span class="p" data-group-id="0273268590-43">}</span><span class="w">
+    </span><span class="p" data-group-id="0273268590-40">)</span><span class="w">
+  </span><span class="k" data-group-id="0273268590-39">end</span><span class="w">
+</span><span class="k" data-group-id="0273268590-1">end</span></code></pre><p>e adicione-o à árvore de supervisão da sua aplicação (geralmente em <code class="inline">lib/my_app/application.ex</code>), dando a ele uma função para invocar quando chamado:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># lib/my_app/application.ex</span><span class="w">
+</span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="0099896396-1">[</span><span class="w">
+  </span><span class="c1"># Inicie um servidor que saúda o mundo</span><span class="w">
+  </span><span class="p" data-group-id="0099896396-2">{</span><span class="nc">MyApp.MyServer</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="0099896396-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;Olá, mundo!&quot;</span><span class="w"> </span><span class="k" data-group-id="0099896396-3">end</span><span class="p" data-group-id="0099896396-2">}</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="0099896396-1">]</span></code></pre><p>Agora inicie uma sessão IEx e chame o servidor:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">MyApp.MyServer</span><span class="o">.</span><span class="n">call!</span></code></pre><p>e você deve ver algo como a seguinte saída:</p><pre><code class="text">[Telemetry.Metrics.ConsoleReporter] Got new event!
+Event name: my_app.my_server.call.stop
+All measurements: %{duration: 4000}
+All metadata: %{}
+
+Metric measurement: #Function&lt;2.111777250/1 in Telemetry.Metrics.maybe_convert_measurement/2&gt; (summary)
+With value: 0.004 millisecond
+Tag values: %{}
+
+&quot;Olá, mundo!&quot;</code></pre>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="mix_tasks.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Tarefas Mix
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="asset_management.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Gerenciamento de Assets
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.37.3">
+    <meta name="project" content="Phoenix (pt-br) v1.7.20">
+
+
+    <title>Autenticação de API — Phoenix (pt-br) v1.7.20</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-6X3L5KMG.css" />
+
+    <script defer src="dist/sidebar_items-8B44DC9D.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-ALU6OERS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="overview.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Phoenix (pt-br)" />
+        </a>
+
+      <div>
+        <a href="overview.html" class="sidebar-projectName" translate="no">
+Phoenix (pt-br)
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.7.20
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="GUIAS"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Phoenix (pt-br)</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Autenticação de API</h1>
+
+
+  </div>
+
+<blockquote><p><strong>Requisito</strong>: Este guia espera que você tenha concluído o guia <a href="mix_phx_gen_auth.html"><code class="inline">mix phx.gen.auth</code></a>.</p></blockquote><p>Este guia mostra como adicionar autenticação de API em cima do <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a>. Como o gerador de autenticação já inclui uma tabela de tokens, nós a usamos para armazenar tokens de API também, seguindo as melhores práticas de segurança.</p><p>Dividiremos este guia em duas partes: ampliando o contexto e a implementação do plug. Vamos assumir que o seguinte comando <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a> foi executado:</p><pre><code class="makeup shell" translate="no"><span class="gp unselectable">$ </span><span class="">mix phx.gen.auth Accounts User users
+</span></code></pre><p>Se você executou algo diferente, deve ser trivial adaptar os nomes.</p><h2 id="adicionando-funções-de-api-ao-contexto" class="section-heading">
+  <a href="#adicionando-funções-de-api-ao-contexto" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Adicionando funções de API ao contexto</span>
+</h2>
+<p>Nosso sistema de autenticação exigirá duas funções. Uma para criar o token de API e outra para verificá-lo. Abra <code class="inline">lib/my_app/accounts.ex</code> e adicione estas duas novas funções:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="c1">## API</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Cria um novo token de api para um usuário.
+
+  O token retornado deve ser salvo em algum lugar seguro.
+  Este token não pode ser recuperado do banco de dados.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create_user_api_token</span><span class="p" data-group-id="4717357656-1">(</span><span class="n">user</span><span class="p" data-group-id="4717357656-1">)</span><span class="w"> </span><span class="k" data-group-id="4717357656-2">do</span><span class="w">
+    </span><span class="p" data-group-id="4717357656-3">{</span><span class="n">encoded_token</span><span class="p">,</span><span class="w"> </span><span class="n">user_token</span><span class="p" data-group-id="4717357656-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">UserToken</span><span class="o">.</span><span class="n">build_email_token</span><span class="p" data-group-id="4717357656-4">(</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;api-token&quot;</span><span class="p" data-group-id="4717357656-4">)</span><span class="w">
+    </span><span class="nc">Repo</span><span class="o">.</span><span class="n">insert!</span><span class="p" data-group-id="4717357656-5">(</span><span class="n">user_token</span><span class="p" data-group-id="4717357656-5">)</span><span class="w">
+    </span><span class="n">encoded_token</span><span class="w">
+  </span><span class="k" data-group-id="4717357656-2">end</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Busca o usuário pelo token de API.
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">fetch_user_by_api_token</span><span class="p" data-group-id="4717357656-6">(</span><span class="n">token</span><span class="p" data-group-id="4717357656-6">)</span><span class="w"> </span><span class="k" data-group-id="4717357656-7">do</span><span class="w">
+    </span><span class="k">with</span><span class="w"> </span><span class="p" data-group-id="4717357656-8">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p" data-group-id="4717357656-8">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">UserToken</span><span class="o">.</span><span class="n">verify_email_token_query</span><span class="p" data-group-id="4717357656-9">(</span><span class="n">token</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;api-token&quot;</span><span class="p" data-group-id="4717357656-9">)</span><span class="p">,</span><span class="w">
+         </span><span class="p" data-group-id="4717357656-10">%</span><span class="nc" data-group-id="4717357656-10">User</span><span class="p" data-group-id="4717357656-10">{</span><span class="p" data-group-id="4717357656-10">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">one</span><span class="p" data-group-id="4717357656-11">(</span><span class="n">query</span><span class="p" data-group-id="4717357656-11">)</span><span class="w"> </span><span class="k" data-group-id="4717357656-12">do</span><span class="w">
+      </span><span class="p" data-group-id="4717357656-13">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="4717357656-13">}</span><span class="w">
+    </span><span class="k" data-group-id="4717357656-12">else</span><span class="w">
+      </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:error</span><span class="w">
+    </span><span class="k" data-group-id="4717357656-12">end</span><span class="w">
+  </span><span class="k" data-group-id="4717357656-7">end</span></code></pre><p>As novas funções usam a funcionalidade existente do <code class="inline">UserToken</code> para armazenar um novo tipo de token chamado &quot;api-token&quot;. Como este é um token de email, se o usuário alterar seu email, os tokens serão expirados.</p><p>Observe também que chamamos a segunda função de <code class="inline">fetch_user_by_api_token</code>, em vez de <code class="inline">get_user_by_api_token</code>. Como queremos renderizar diferentes códigos de status em nossa API, dependendo se um usuário foi encontrado ou não, retornamos <code class="inline">{:ok, user}</code> ou <code class="inline">:error</code>. A convenção do Elixir é chamar essas funções de <code class="inline">fetch_*</code>, em vez de <code class="inline">get_*</code>, que geralmente retornaria <code class="inline">nil</code> em vez de tuplas.</p><p>Para garantir que nossas novas funções funcionem, vamos escrever testes. Abra <code class="inline">test/my_app/accounts_test.exs</code> e adicione este novo bloco describe:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="n">describe</span><span class="w"> </span><span class="s">&quot;create_user_api_token/1 and fetch_user_by_api_token/1&quot;</span><span class="w"> </span><span class="k" data-group-id="8545250483-1">do</span><span class="w">
+    </span><span class="n">test</span><span class="w"> </span><span class="s">&quot;creates and fetches by token&quot;</span><span class="w"> </span><span class="k" data-group-id="8545250483-2">do</span><span class="w">
+      </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_fixture</span><span class="p" data-group-id="8545250483-3">(</span><span class="p" data-group-id="8545250483-3">)</span><span class="w">
+      </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Accounts</span><span class="o">.</span><span class="n">create_user_api_token</span><span class="p" data-group-id="8545250483-4">(</span><span class="n">user</span><span class="p" data-group-id="8545250483-4">)</span><span class="w">
+      </span><span class="n">assert</span><span class="w"> </span><span class="nc">Accounts</span><span class="o">.</span><span class="n">fetch_user_by_api_token</span><span class="p" data-group-id="8545250483-5">(</span><span class="n">token</span><span class="p" data-group-id="8545250483-5">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="8545250483-6">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="8545250483-6">}</span><span class="w">
+      </span><span class="n">assert</span><span class="w"> </span><span class="nc">Accounts</span><span class="o">.</span><span class="n">fetch_user_by_api_token</span><span class="p" data-group-id="8545250483-7">(</span><span class="s">&quot;invalid&quot;</span><span class="p" data-group-id="8545250483-7">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:error</span><span class="w">
+    </span><span class="k" data-group-id="8545250483-2">end</span><span class="w">
+  </span><span class="k" data-group-id="8545250483-1">end</span></code></pre><p>Se você executar os testes, eles realmente falharão. Algo semelhante a isto:</p><pre><code class="makeup elixir" translate="no"><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">create_user_api_token</span><span class="o">/</span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">fetch_user_by_api_token</span><span class="o">/</span><span class="mi">1</span><span class="w"> </span><span class="n">creates</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="p" data-group-id="2160850638-1">(</span><span class="nc">Demo.AccountsTest</span><span class="p" data-group-id="2160850638-1">)</span><span class="w">
+   </span><span class="n">test</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">accounts_test</span><span class="o">.</span><span class="n">exs</span><span class="p">:</span><span class="mi">21</span><span class="w">
+   </span><span class="gt">** (FunctionClauseError) no function clause matching in Demo.Accounts.UserToken.days_for_context/1</span><span class="w">
+
+   </span><span class="nc">The</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">arguments</span><span class="w"> </span><span class="n">were</span><span class="w"> </span><span class="n">given</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="nc">Demo.Accounts.UserToken</span><span class="o">.</span><span class="n">days_for_context</span><span class="o">/</span><span class="mi">1</span><span class="p">:</span><span class="w">
+
+       </span><span class="c1"># 1</span><span class="w">
+       </span><span class="s">&quot;api-token&quot;</span><span class="w">
+
+   </span><span class="nc">Attempted</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">clauses</span><span class="w"> </span><span class="p" data-group-id="2160850638-2">(</span><span class="n">showing</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="2160850638-2">)</span><span class="p">:</span><span class="w">
+
+       </span><span class="kd">defp</span><span class="w"> </span><span class="nf">days_for_context</span><span class="p" data-group-id="2160850638-3">(</span><span class="s">&quot;confirm&quot;</span><span class="p" data-group-id="2160850638-3">)</span><span class="w">
+       </span><span class="kd">defp</span><span class="w"> </span><span class="nf">days_for_context</span><span class="p" data-group-id="2160850638-4">(</span><span class="s">&quot;reset_password&quot;</span><span class="p" data-group-id="2160850638-4">)</span><span class="w">
+
+   </span><span class="ss">code</span><span class="p">:</span><span class="w"> </span><span class="n">assert</span><span class="w"> </span><span class="nc">Accounts</span><span class="o">.</span><span class="n">verify_api_token</span><span class="p" data-group-id="2160850638-5">(</span><span class="n">token</span><span class="p" data-group-id="2160850638-5">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="2160850638-6">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="2160850638-6">}</span><span class="w">
+   </span><span class="ss">stacktrace</span><span class="p">:</span><span class="w">
+     </span><span class="p" data-group-id="2160850638-7">(</span><span class="n">demo</span><span class="w"> </span><span class="mf">0.1</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="2160850638-7">)</span><span class="w"> </span><span class="n">lib</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">accounts</span><span class="o">/</span><span class="n">user_token</span><span class="o">.</span><span class="n">ex</span><span class="p">:</span><span class="mi">129</span><span class="p">:</span><span class="w"> </span><span class="nc">Demo.Accounts.UserToken</span><span class="o">.</span><span class="n">days_for_context</span><span class="o">/</span><span class="mi">1</span><span class="w">
+     </span><span class="p" data-group-id="2160850638-8">(</span><span class="n">demo</span><span class="w"> </span><span class="mf">0.1</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="2160850638-8">)</span><span class="w"> </span><span class="n">lib</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">accounts</span><span class="o">/</span><span class="n">user_token</span><span class="o">.</span><span class="n">ex</span><span class="p">:</span><span class="mi">114</span><span class="p">:</span><span class="w"> </span><span class="nc">Demo.Accounts.UserToken</span><span class="o">.</span><span class="n">verify_email_token_query</span><span class="o">/</span><span class="mi">2</span><span class="w">
+     </span><span class="p" data-group-id="2160850638-9">(</span><span class="n">demo</span><span class="w"> </span><span class="mf">0.1</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="2160850638-9">)</span><span class="w"> </span><span class="n">lib</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">accounts</span><span class="o">.</span><span class="n">ex</span><span class="p">:</span><span class="mi">301</span><span class="p">:</span><span class="w"> </span><span class="nc">Demo.Accounts</span><span class="o">.</span><span class="n">verify_api_token</span><span class="o">/</span><span class="mi">1</span><span class="w">
+     </span><span class="n">test</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">accounts_test</span><span class="o">.</span><span class="n">exs</span><span class="p">:</span><span class="mi">24</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2160850638-10">(</span><span class="n">test</span><span class="p" data-group-id="2160850638-10">)</span></code></pre><p>Se preferir, tente olhar o erro e corrigi-lo você mesmo. A explicação virá a seguir.</p><p>O módulo <code class="inline">UserToken</code> espera que declaremos a validade de cada token e não definimos uma para &quot;api-token&quot;. A duração dependerá da sua aplicação e quão sensível ela é em termos de segurança. Para este exemplo, vamos dizer que o token é válido por 365 dias.</p><p>Abra <code class="inline">lib/my_app/accounts/user_token.ex</code>, encontre onde <code class="inline">defp days_for_context</code> está definido e adicione uma nova cláusula, assim:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">days_for_context</span><span class="p" data-group-id="7240525753-1">(</span><span class="s">&quot;api-token&quot;</span><span class="p" data-group-id="7240525753-1">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="mi">365</span><span class="w">
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">days_for_context</span><span class="p" data-group-id="7240525753-2">(</span><span class="s">&quot;confirm&quot;</span><span class="p" data-group-id="7240525753-2">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="na">@confirm_validity_in_days</span><span class="w">
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">days_for_context</span><span class="p" data-group-id="7240525753-3">(</span><span class="s">&quot;reset_password&quot;</span><span class="p" data-group-id="7240525753-3">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="na">@reset_password_validity_in_days</span></code></pre><p>Agora os testes devem passar e estamos prontos para seguir em frente!</p><h2 id="plug-de-autenticação-de-api" class="section-heading">
+  <a href="#plug-de-autenticação-de-api" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Plug de autenticação de API</span>
+</h2>
+<p>A última parte é adicionar autenticação à nossa API.</p><p>Quando executamos <a href="https://hexdocs.pm/phoenix/1.7.20/Mix.Tasks.Phx.Gen.Auth.html"><code class="inline">mix phx.gen.auth</code></a>, ele gerou um módulo <code class="inline">MyAppWeb.UserAuth</code> com vários plugs, que são pequenas funções que recebem o <code class="inline">conn</code> e personalizam nosso ciclo de vida de requisição/resposta. Abra <code class="inline">lib/my_app_web/user_auth.ex</code> e adicione esta nova função:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">fetch_api_user</span><span class="p" data-group-id="9250584484-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_opts</span><span class="p" data-group-id="9250584484-1">)</span><span class="w"> </span><span class="k" data-group-id="9250584484-2">do</span><span class="w">
+  </span><span class="k">with</span><span class="w"> </span><span class="p" data-group-id="9250584484-3">[</span><span class="s">&quot;Bearer &quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">token</span><span class="p" data-group-id="9250584484-3">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">get_req_header</span><span class="p" data-group-id="9250584484-4">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;authorization&quot;</span><span class="p" data-group-id="9250584484-4">)</span><span class="p">,</span><span class="w">
+       </span><span class="p" data-group-id="9250584484-5">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="9250584484-5">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">Accounts</span><span class="o">.</span><span class="n">fetch_user_by_api_token</span><span class="p" data-group-id="9250584484-6">(</span><span class="n">token</span><span class="p" data-group-id="9250584484-6">)</span><span class="w"> </span><span class="k" data-group-id="9250584484-7">do</span><span class="w">
+    </span><span class="n">assign</span><span class="p" data-group-id="9250584484-8">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="ss">:current_user</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p" data-group-id="9250584484-8">)</span><span class="w">
+  </span><span class="k" data-group-id="9250584484-7">else</span><span class="w">
+    </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+      </span><span class="n">conn</span><span class="w">
+      </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">send_resp</span><span class="p" data-group-id="9250584484-9">(</span><span class="ss">:unauthorized</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;No access for you&quot;</span><span class="p" data-group-id="9250584484-9">)</span><span class="w">
+      </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">halt</span><span class="p" data-group-id="9250584484-10">(</span><span class="p" data-group-id="9250584484-10">)</span><span class="w">
+  </span><span class="k" data-group-id="9250584484-7">end</span><span class="w">
+</span><span class="k" data-group-id="9250584484-2">end</span></code></pre><p>Nossa função recebe a conexão e verifica se o cabeçalho &quot;authorization&quot; foi definido com &quot;Bearer TOKEN&quot;, onde &quot;TOKEN&quot; é o valor retornado por <code class="inline">Accounts.create_user_api_token/1</code>. Caso o token não seja válido ou não exista tal usuário, abortamos a requisição.</p><p>Finalmente, precisamos adicionar este <code class="inline">plug</code> ao nosso pipeline. Abra <code class="inline">lib/my_app_web/router.ex</code> e você encontrará um pipeline para API. Vamos adicionar nosso novo plug abaixo dele, assim:</p><pre><code class="makeup elixir" translate="no"><span class="w">  </span><span class="n">pipeline</span><span class="w"> </span><span class="ss">:api</span><span class="w"> </span><span class="k" data-group-id="2162156416-1">do</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:accepts</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2162156416-2">[</span><span class="s">&quot;json&quot;</span><span class="p" data-group-id="2162156416-2">]</span><span class="w">
+    </span><span class="n">plug</span><span class="w"> </span><span class="ss">:fetch_api_user</span><span class="w">
+  </span><span class="k" data-group-id="2162156416-1">end</span></code></pre><p>Agora você está pronto para receber e validar requisições de API. Sinta-se à vontade para abrir <code class="inline">test/my_app_web/user_auth_test.exs</code> e escrever seu próprio teste. Você pode usar os testes para outros plugs como modelos!</p><h2 id="sua-vez" class="section-heading">
+  <a href="#sua-vez" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Sua vez</span>
+</h2>
+<p>O fluxo geral de autenticação de API dependerá da sua aplicação.</p><p>Se você quiser usar este token em um cliente JavaScript, precisará alterar ligeiramente o <code class="inline">UserSessionController</code> para invocar <code class="inline">Accounts.create_user_api_token/1</code> e retornar uma resposta JSON e incluir o token retornado.</p><p>Se você quiser fornecer APIs para usuários de terceiros, precisará permitir que eles criem tokens e mostrar o resultado de <code class="inline">Accounts.create_user_api_token/1</code> para eles. Eles devem salvar esses tokens em algum lugar seguro e incluí-los como parte de suas requisições usando o cabeçalho &quot;authorization&quot;.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="mix_phx_gen_auth.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+mix phx.gen.auth
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="channels.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Canais
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Phoenix (pt-br).epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.37.3) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
